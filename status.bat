@@ -32,6 +32,7 @@ echo [Scripts]
 echo   status.bat                - Este arquivo
 echo   melhoria-status.js        - Dashboard de melhorias
 echo   cron-report.js            - Report elegante para cron
+echo   agent-guardian.js         - Gestao de agentes
 echo   scripts-index.js          - Indice de scripts
 echo   context-compactor.js      - Gestao de contexto
 echo   repo-init.js              - Inicializacao do repo
