@@ -67,11 +67,22 @@ function formatTime(hours) {
     return `${Math.round(hours / 24)}d`;
 }
 
+function checkAgentCorp() {
+    try {
+        const acPath = 'C:\\Users\\joaov\\github\\AgentCorp';
+        if (require('fs').existsSync(acPath)) {
+            return '✅';
+        }
+    } catch {}
+    return '❌';
+}
+
 function main() {
     const bp = getBackpressure();
     const count = getImprovementCount();
     const last = getLastImprovement();
     const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const acStatus = checkAgentCorp();
     
     // Header minimalista
     console.log(`\n🦊 ${time} │ Melhoria Contínua`);
@@ -85,6 +96,7 @@ function main() {
     // Métricas
     console.log(`📊 melhorias   │ ${count} total`);
     console.log(`📝 última      │ ${last.substring(11, 15)}`);
+    console.log(`🏢 AgentCorp   │ ${acStatus}`);
     
     // Ação recomendada
     console.log('─'.repeat(45));
