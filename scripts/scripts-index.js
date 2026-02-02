@@ -12,28 +12,28 @@ const SCRIPTS = [
         file: 'melhoria-status.js',
         type: 'node',
         category: 'dashboard',
-        desc: 'Dashboard completo de melhorias',
+        desc: 'Dashboard completo',
         cmd: 'node scripts/melhoria-status.js'
     },
     {
         file: 'cron-report.js',
         type: 'node',
         category: 'report',
-        desc: 'Report elegante para cron',
+        desc: 'Report elegante',
         cmd: 'node scripts/cron-report.js'
     },
     {
         file: 'scripts-index.js',
         type: 'node',
         category: 'index',
-        desc: 'Índice interativo de scripts',
+        desc: 'Índice interativo',
         cmd: 'node scripts/scripts-index.js'
     },
     {
         file: 'agent-guardian.js',
         type: 'node',
         category: 'monitoring',
-        desc: 'Gestão saudável de agentes',
+        desc: 'Gestão de agentes',
         cmd: 'node scripts/agent-guardian.js'
     },
     {
@@ -61,35 +61,35 @@ const SCRIPTS = [
         file: 'melhoria-consolidator.js',
         type: 'node',
         category: 'batch',
-        desc: 'Consolida para batch PR',
+        desc: 'Consolida batch PR',
         cmd: 'node scripts/melhoria-consolidator.js'
     },
     {
         file: 'repo-init.js',
         type: 'node',
         category: 'infra',
-        desc: 'Inicialização do repositório',
+        desc: 'Inicializa repo',
         cmd: 'node scripts/repo-init.js'
     },
     {
         file: 'check-backpressure.ps1',
         type: 'powershell',
         category: 'monitoring',
-        desc: 'Verifica backlog de PRs',
+        desc: 'Verifica backlog',
         cmd: '.\\scripts\\check-backpressure.ps1 -VerboseOutput'
     },
     {
         file: 'git-sync.ps1',
         type: 'powershell',
         category: 'git',
-        desc: 'Sincronização segura',
+        desc: 'Sync seguro',
         cmd: '.\\scripts\\git-sync.ps1'
     },
     {
         file: 'status.bat',
         type: 'batch',
         category: 'quick',
-        desc: 'Status rápido do sistema',
+        desc: 'Status rápido',
         cmd: '.\\status.bat'
     }
 ];
