@@ -63,5 +63,33 @@ cat memory/improvements/CONSOLIDADO-BATCH.md
 2. `node scripts/repo-init.js`
 3. Push para origin
 
+## Dicas Rápidas
+
+### Ver tudo em uma linha
+```bash
+# Status completo em sequência
+.\status.bat && node scripts/cron-report.js
+```
+
+### Alias úteis (adicionar ao profile)
+```powershell
+# PowerShell
+Set-Alias ks node scripts/scripts-index.js
+Set-Alias kc node scripts/cron-report.js
+Set-Alias kd node scripts/melhoria-status.js
+```
+
+### Troubleshooting
+```bash
+# Contexto muito grande?
+node scripts/context-compactor.js
+
+# Não sabe se pode fazer PR?
+.\scripts\check-backpressure.ps1 -VerboseOutput
+
+# Quer ver o que vai commitar?
+node scripts/auto-commit.js
+```
+
 ---
-*Gerado em: 2026-02-02*
+*Atualizado: 2026-02-02*
