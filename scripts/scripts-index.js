@@ -58,6 +58,13 @@ const SCRIPTS = [
         cmd: 'node scripts/melhoria-consolidator.js'
     },
     {
+        file: 'repo-init.js',
+        type: 'node',
+        category: 'infra',
+        desc: 'Inicialização do repositório',
+        cmd: 'node scripts/repo-init.js'
+    },
+    {
         file: 'check-backpressure.ps1',
         type: 'powershell',
         category: 'monitoring',
