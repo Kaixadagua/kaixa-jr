@@ -16,6 +16,7 @@ Localizados em `scripts/`:
 - **cron-report.js** → Report elegante para execuções de melhoria contínua
 - **scripts-index.js** → Índice interativo de todos os scripts
 - **context-compactor.js** → Análise e gestão de contexto
+- **repo-init.js** → Inicialização e organização do repositório
 - **health-check.js** → Health check com backpressure e sessões
 - **auto-commit.js** → Auxilia commits com mensagens sugeridas + backpressure check
 - **melhoria-consolidator.js** → Consolida melhorias locais para batch PR
@@ -41,7 +42,7 @@ node scripts/melhoria-status.js
 ## Métricas do Sistema
 
 - **Workspace:** `C:\Users\joaov\.openclaw\workspace`
-- **Melhorias:** `memory/improvements/` (35 melhorias + CONSOLIDADO-BATCH.md)
+- **Melhorias:** `memory/improvements/` (36 melhorias + CONSOLIDADO-BATCH.md)
 - **Cadência:** Cron 5min + Heartbeat 30min
 - **Backpressure:** Ativo quando ≥9 PRs abertos
 

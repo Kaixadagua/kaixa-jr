@@ -17,6 +17,7 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 | `cron-report.js` | Report elegante para execuções de melhoria contínua | `node scripts/cron-report.js` |
 | `scripts-index.js` | Índice interativo de todos os scripts | `node scripts/scripts-index.js` |
 | `context-compactor.js` | Análise e gestão de contexto | `node scripts/context-compactor.js` |
+| `repo-init.js` | Inicialização e organização do repositório | `node scripts/repo-init.js` |
 
 ### PowerShell
 

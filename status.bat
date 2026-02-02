@@ -34,6 +34,7 @@ echo   melhoria-status.js        - Dashboard de melhorias
 echo   cron-report.js            - Report elegante para cron
 echo   scripts-index.js          - Indice de scripts
 echo   context-compactor.js      - Gestao de contexto
+echo   repo-init.js              - Inicializacao do repo
 echo   health-check.js           - Saude do ambiente
 echo   auto-commit.js            - Auxilio a commits
 echo   git-sync.ps1              - Sync com remote
