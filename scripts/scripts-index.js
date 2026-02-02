@@ -30,6 +30,13 @@ const SCRIPTS = [
         cmd: 'node scripts/scripts-index.js'
     },
     {
+        file: 'agent-guardian.js',
+        type: 'node',
+        category: 'monitoring',
+        desc: 'Gestão saudável de agentes',
+        cmd: 'node scripts/agent-guardian.js'
+    },
+    {
         file: 'context-compactor.js',
         type: 'node',
         category: 'diagnostic',
