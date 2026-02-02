@@ -2,6 +2,28 @@
 
 This folder is home. Treat it that way.
 
+## Arquitetura de Agentes (2026-02-02)
+
+**Máximo: 1 agente ativo** para não pesar o sistema.
+
+O agente principal (Kaixa Jr) pode atuar como co-ajudante de programação quando necessário, mas mantemos apenas 1 sessão ativa por padrão.
+
+### Configuração
+```json
+{
+  "maxConcurrent": 1,
+  "subagents": {
+    "maxConcurrent": 0
+  }
+}
+```
+
+### Quando usar o agente
+- Tarefas complexas que precisam de análise paralela
+- Code review de melhorias
+- Refatorações grandes
+- Spikes técnicos
+
 ## First Run
 
 If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
