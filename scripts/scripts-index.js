@@ -72,6 +72,20 @@ const SCRIPTS = [
         cmd: 'node scripts/repo-init.js'
     },
     {
+        file: 'improvement-health.js',
+        type: 'node',
+        category: 'diagnostic',
+        desc: 'Health do sistema',
+        cmd: 'node scripts/improvement-health.js'
+    },
+    {
+        file: 'setup-agentcorp.js',
+        type: 'node',
+        category: 'infra',
+        desc: 'Setup AgentCorp',
+        cmd: 'node scripts/setup-agentcorp.js'
+    },
+    {
         file: 'check-backpressure.ps1',
         type: 'powershell',
         category: 'monitoring',
