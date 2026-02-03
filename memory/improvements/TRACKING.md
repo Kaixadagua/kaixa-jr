@@ -93,6 +93,13 @@ Status: 🔴 BACKPRESSURE ATIVO (persistente)
 4. [ ] Mais testes para app.js
 5. [ ] Revisar se melhorias locais podem virar PRs
 
+### 🐛 Bugs/Issues Identificados
+| Issue | Severidade | Descrição | Script |
+|-------|------------|-----------|--------|
+| Falso positivo agentes | 🔴 Baixa | kaixa-guardian conta sessões de cron como "agentes" | `kaixa-guardian.js` |
+
+**Detalhe:** O script reporta 3/1 agentes, mas são: sessão cron atual, sessão principal Telegram, e cron anterior (já finalizado). São sessões de sistema legítimas, não subagentes de IA. Precisa filtrar por `kind: "subagent"` ao invés de contar todas as sessões.
+
 ---
 
 ---
