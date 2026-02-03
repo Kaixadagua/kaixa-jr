@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Autonomous AI Agent for Continuous Software Improvement",
   "main": "src/core/agent.js",
+  "bin": {
+    "kaixa": "./bin/kaixa.js"
+  },
   "scripts": {
     "start": "node src/core/agent.js",
     "health": "node scripts/health/kaixa-guardian.js",

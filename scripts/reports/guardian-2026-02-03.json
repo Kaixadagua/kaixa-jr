@@ -54,5 +54,12 @@
     "totalTokens": 133078,
     "status": "critical",
     "action": "reduce-agents"
+  },
+  {
+    "timestamp": "2026-02-03T21:23:30.088Z",
+    "agentCount": 3,
+    "totalTokens": 140331,
+    "status": "critical",
+    "action": "reduce-agents"
   }
 ]
