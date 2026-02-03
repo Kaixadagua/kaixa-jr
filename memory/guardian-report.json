@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-02-03T05:31:46.289Z",
+  "guardian": "Kaixa Guardian v1.0",
+  "checks": {
+    "memory": {
+      "status": "ok",
+      "tokens": 2536
+    },
+    "sessions": {
+      "status": "ok",
+      "cleaned": 0
+    },
+    "backup": {
+      "status": "ok",
+      "file": "C:\\Users\\joaov\\.openclaw\\workspace\\backups\\kaixa-state-2026-02-03T05-31-46-285Z.json"
+    },
+    "logs": {
+      "status": "ok",
+      "rotated": 0
+    }
+  },
+  "overall": "healthy"
+}

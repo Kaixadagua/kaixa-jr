@@ -1,0 +1,44 @@
+{
+  "name": "kaixa-jr",
+  "version": "1.0.0",
+  "description": "Autonomous AI Agent for Continuous Software Improvement",
+  "main": "src/core/agent.js",
+  "scripts": {
+    "start": "node src/core/agent.js",
+    "health": "node scripts/health/kaixa-guardian.js",
+    "report": "node scripts/reports/kaixa-report-35min.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/ scripts/",
+    "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.js\"",
+    "sync": "node scripts/sync/git-sync.js"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "autonomous",
+    "continuous-improvement",
+    "automation"
+  ],
+  "author": "Kaixa Jr <kaixa@example.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaixadagua/kaixa-jr.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kaixadagua/kaixa-jr/issues"
+  },
+  "homepage": "https://github.com/kaixadagua/kaixa-jr#readme"
+}
