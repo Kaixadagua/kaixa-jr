@@ -101,7 +101,14 @@ function cleanInactiveSessions() {
       cwd: CONFIG.workspace
     });
     
-    const sessions = JSON.parse(result || '[]');
+    let sessions = [];
+    try {
+      sessions = JSON.parse(result || '[]');
+      if (!Array.isArray(sessions)) sessions = [];
+    } catch (e) {
+      sessions = [];
+    }
+    
     const now = Date.now();
     const maxInactive = 60 * 60 * 1000; // 1 hora
     
