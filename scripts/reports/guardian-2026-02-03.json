@@ -1,0 +1,58 @@
+[
+  {
+    "timestamp": "2026-02-03T05:43:27.309Z",
+    "agentCount": 3,
+    "totalTokens": 136164,
+    "status": "critical",
+    "action": "reduce-agents"
+  },
+  {
+    "timestamp": "2026-02-03T05:48:41.988Z",
+    "agentCount": 3,
+    "totalTokens": 136164,
+    "status": "critical",
+    "action": "reduce-agents"
+  },
+  {
+    "timestamp": "2026-02-03T05:49:36.206Z",
+    "agentCount": 3,
+    "totalTokens": 135757,
+    "status": "critical",
+    "action": "reduce-agents"
+  },
+  {
+    "timestamp": "2026-02-03T05:54:20.500Z",
+    "agentCount": 3,
+    "totalTokens": 135849,
+    "status": "critical",
+    "action": "reduce-agents"
+  },
+  {
+    "timestamp": "2026-02-03T05:59:42.432Z",
+    "agentCount": 3,
+    "totalTokens": 135849,
+    "status": "critical",
+    "action": "reduce-agents"
+  },
+  {
+    "timestamp": "2026-02-03T06:05:07.569Z",
+    "agentCount": 3,
+    "totalTokens": 131346,
+    "status": "critical",
+    "action": "reduce-agents"
+  },
+  {
+    "timestamp": "2026-02-03T06:10:40.679Z",
+    "agentCount": 3,
+    "totalTokens": 132508,
+    "status": "critical",
+    "action": "reduce-agents"
+  },
+  {
+    "timestamp": "2026-02-03T21:18:09.319Z",
+    "agentCount": 3,
+    "totalTokens": 133078,
+    "status": "critical",
+    "action": "reduce-agents"
+  }
+]
