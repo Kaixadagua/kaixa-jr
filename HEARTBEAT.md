@@ -18,6 +18,12 @@ Se backpressure ativo (≥9 PRs abertos), fazer melhoria local/documentação se
 3. Se ≥ 9 PRs: Melhoria local/documentação/consolidação
 4. Registrar em `memory/improvements/`
 
+## Verificações de Heartbeat (sessão principal)
+1. **Kaixa Guardian**: Ver se rodou (cada 5min)
+2. **Pending Reports**: Verificar `memory/.report-pending` e enviar para Kaua
+3. **Backpressure**: Checar status atual
+4. **Próximo report**: A cada 35min, enviar status manualmente se cron falhar
+
 ## Validação
 ```bash
 # Verificar melhorias aplicadas
