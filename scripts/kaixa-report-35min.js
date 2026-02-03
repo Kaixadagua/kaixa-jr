@@ -31,9 +31,11 @@ function getImprovementsCount() {
 
 function getAgentCorpCommits() {
   try {
-    const result = execSync('git log --oneline dev-kaixa | wc -l', {
+    // Windows-compatible: usa PowerShell ao invés de wc
+    const result = execSync('git log --oneline dev-kaixa 2>$null | Measure-Object | Select-Object -ExpandProperty Count', {
       cwd: CONFIG.agentCorp,
-      encoding: 'utf8'
+      encoding: 'utf8',
+      shell: 'powershell.exe'
     });
     return parseInt(result.trim()) || 0;
   } catch {
@@ -95,6 +97,10 @@ _Estado: Operacional 🛡️_
   const reportFile = path.join(CONFIG.workspace, 'memory', 'kaixa-report-latest.txt');
   fs.writeFileSync(reportFile, report);
   
+  // Cria flag de pending report para sessão principal enviar
+  const pendingFile = path.join(CONFIG.workspace, 'memory', '.report-pending');
+  fs.writeFileSync(pendingFile, new Date().toISOString());
+  
   return report;
 }
 
@@ -102,13 +108,5 @@ _Estado: Operacional 🛡️_
 const report = generateReport();
 console.log(report);
 
-// Envia mensagem se tiver gateway disponível
-if (process.env.OPENCLAW_GATEWAY_URL) {
-  try {
-    execSync(`openclaw message send "${report.replace(/"/g, '\\"')}"`, {
-      cwd: CONFIG.workspace
-    });
-  } catch {
-    // Silencioso - não quebra se não conseguir enviar
-  }
-}
+// Em sessões isoladas, apenas salva o flag - a sessão principal enviará
+console.log('[INFO] Report salvo. Flag de pending criado para envio pela sessão principal.');
