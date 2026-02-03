@@ -2,21 +2,24 @@
 
 This folder is home. Treat it that way.
 
-## Arquitetura de Agentes (2026-02-02)
+## Arquitetura de Agentes (2026-02-03)
 
-**Máximo: 1 agente ativo** para não pesar o sistema.
+**Máximo: 2 agentes ativos** para não pesar o sistema.
 
-O agente principal (Kaixa Jr) pode atuar como co-ajudante de programação quando necessário, mas mantemos apenas 1 sessão ativa por padrão.
+O agente principal (Kaixa Jr) pode atuar como co-ajudante de programação quando necessário. Cron jobs executam em sessões isoladas e temporárias.
 
 ### Configuração
 ```json
 {
-  "maxConcurrent": 1,
+  "maxConcurrent": 2,
   "subagents": {
-    "maxConcurrent": 0
+    "maxConcurrent": 1
   }
 }
 ```
+
+### Nota sobre Cron Jobs
+Sessões de cron (`sessionKey` contendo `cron:`) são temporárias e não devem contar no limite de agentes principais. O Guardian deve ignorá-las ao calcular carga.
 
 ### Quando usar o agente
 - Tarefas complexas que precisam de análise paralela

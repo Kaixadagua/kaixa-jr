@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CONFIG = {
-    maxAgents: 1,
+    maxAgents: 2,          // Matches openclaw.json maxConcurrent
     maxTokensPerAgent: 180000,
     warningTokens: 150000,
     checkInterval: 300000, // 5 minutos (cron interval)
@@ -23,14 +23,25 @@ function getSessionStatus() {
     }
 }
 
+function isCronSession(sessionKey) {
+    return sessionKey && sessionKey.includes(':cron:');
+}
+
 function analyzeHealth() {
     const status = getSessionStatus();
     
     let totalTokens = 0;
     let agentCount = 0;
+    let cronCount = 0;
     let warnings = [];
     
     status.sessions.forEach(s => {
+        // Ignorar sessões de cron - são temporárias e esperadas
+        if (isCronSession(s.key)) {
+            cronCount++;
+            return;
+        }
+        
         totalTokens += s.totalTokens || 0;
         agentCount++;
         
