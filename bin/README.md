@@ -71,6 +71,29 @@ Validate that all required configuration is present.
 kaixa validate
 ```
 
+### `kaixa generate` (or `kaixa g`)
+
+Generate code from templates.
+
+```bash
+# Generate new system module
+kaixa generate system MySystem "My system description"
+
+# Generate test file
+kaixa generate test MySystem src/systems
+
+# Generate new skill
+kaixa generate skill MySkill "My skill description"
+```
+
+### `kaixa docs` (or `kaixa d`)
+
+Generate documentation from JSDoc comments.
+
+```bash
+kaixa docs
+```
+
 ### `kaixa version` (or `kaixa -v`)
 
 Show version information.

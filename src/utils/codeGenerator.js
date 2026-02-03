@@ -1,0 +1,317 @@
+/**
+ * Kaixa Jr Code Generator
+ * Generates boilerplate code from templates
+ * 
+ * @module src/utils/codeGenerator
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+/**
+ * Code Generator
+ * @class CodeGenerator
+ */
+class CodeGenerator {
+  constructor() {
+    this.templatesDir = path.join(__dirname, '..', '..', 'templates');
+  }
+  
+  /**
+   * Generate a new system module
+   * @method generateSystem
+   * @param {string} name - System name
+   * @param {string} description - System description
+   */
+  generateSystem(name, description) {
+    const className = this.toPascalCase(name);
+    const fileName = this.toKebabCase(name) + '.js';
+    
+    const template = `/**
+ * ${description}
+ * 
+ * @module src/systems/${this.toKebabCase(name)}
+ */
+
+/**
+ * ${className} system
+ * @class ${className}
+ */
+class ${className} {
+  constructor(options = {}) {
+    this.options = options;
+    console.log('${className}: Inicializado');
+  }
+  
+  /**
+   * Initialize the system
+   * @method init
+   */
+  init() {
+    // TODO: Implement initialization
+    console.log('${className}: Init');
+  }
+  
+  /**
+   * Run system logic
+   * @method run
+   */
+  run() {
+    // TODO: Implement main logic
+    return { status: 'ok' };
+  }
+  
+  /**
+   * Generate report
+   * @method generateReport
+   * @returns {Object} System report
+   */
+  generateReport() {
+    return {
+      system: '${className}',
+      status: 'active',
+      timestamp: new Date().toISOString()
+    };
+  }
+}
+
+// Export for global use
+if (typeof window !== 'undefined') {
+  window.${className} = ${className};
+}
+
+// Export for Node.js
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ${className} };
+}
+
+// Run if called directly
+if (require.main === module) {
+  const system = new ${className}();
+  system.init();
+  console.log(system.generateReport());
+}
+`;
+    
+    const outputPath = path.join(process.cwd(), 'src', 'systems', fileName);
+    fs.writeFileSync(outputPath, template);
+    
+    console.log(`✅ Generated: ${outputPath}`);
+    return outputPath;
+  }
+  
+  /**
+   * Generate a test file
+   * @method generateTest
+   * @param {string} moduleName - Module to test
+   * @param {string} modulePath - Path to module
+   */
+  generateTest(moduleName, modulePath) {
+    const className = this.toPascalCase(moduleName);
+    const testFileName = `${this.toKebabCase(moduleName)}.test.js`;
+    
+    const template = `/**
+ * Tests for ${className}
+ * 
+ * @module tests/${modulePath.replace(/\\/g, '/')}/${testFileName}
+ */
+
+const { ${className} } = require('../../${modulePath}');
+
+describe('${className}', () => {
+  let instance;
+  
+  beforeEach(() => {
+    instance = new ${className}();
+  });
+  
+  describe('constructor', () => {
+    it('should create instance with default options', () => {
+      expect(instance).toBeDefined();
+      expect(instance.options).toEqual({});
+    });
+    
+    it('should accept custom options', () => {
+      const custom = new ${className}({ custom: true });
+      expect(custom.options.custom).toBe(true);
+    });
+  });
+  
+  describe('init', () => {
+    it('should initialize without errors', () => {
+      expect(() => instance.init()).not.toThrow();
+    });
+  });
+  
+  describe('run', () => {
+    it('should return status object', () => {
+      const result = instance.run();
+      expect(result).toHaveProperty('status');
+      expect(result.status).toBe('ok');
+    });
+  });
+  
+  describe('generateReport', () => {
+    it('should return report object', () => {
+      const report = instance.generateReport();
+      expect(report).toHaveProperty('system', '${className}');
+      expect(report).toHaveProperty('status');
+      expect(report).toHaveProperty('timestamp');
+    });
+  });
+});
+`;
+    
+    // Determine test path based on module path
+    const testPath = modulePath.replace('src/', '').replace(/\\/g, '/');
+    const outputDir = path.join(process.cwd(), 'tests', testPath);
+    
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+    
+    const outputPath = path.join(outputDir, testFileName);
+    fs.writeFileSync(outputPath, template);
+    
+    console.log(`✅ Generated test: ${outputPath}`);
+    return outputPath;
+  }
+  
+  /**
+   * Generate a new skill
+   * @method generateSkill
+   * @param {string} name - Skill name
+   * @param {string} description - Skill description
+   */
+  generateSkill(name, description) {
+    const skillDir = path.join(process.cwd(), 'skills', this.toKebabCase(name));
+    
+    if (!fs.existsSync(skillDir)) {
+      fs.mkdirSync(skillDir, { recursive: true });
+    }
+    
+    // Generate SKILL.md
+    const skillMd = `# ${this.toPascalCase(name)}
+
+${description}
+
+## Usage
+
+\`\`\`javascript
+const skill = require('./skills/${this.toKebabCase(name)}');
+\`\`\`
+
+## API
+
+### Methods
+
+#### run()
+
+Execute the skill.
+
+**Returns:** {Object} Result
+
+## Examples
+
+\`\`\`javascript
+// TODO: Add examples
+\`\`\`
+
+---
+
+*Skill generated by Kaixa Jr*
+`;
+    
+    fs.writeFileSync(path.join(skillDir, 'SKILL.md'), skillMd);
+    
+    // Generate index.js
+    const indexJs = `/**
+ * ${description}
+ * 
+ * @module skills/${this.toKebabCase(name)}
+ */
+
+/**
+ * Run the skill
+ * @returns {Object} Result
+ */
+function run() {
+  // TODO: Implement skill logic
+  return { status: 'success', skill: '${name}' };
+}
+
+module.exports = { run };
+`;
+    
+    fs.writeFileSync(path.join(skillDir, 'index.js'), indexJs);
+    
+    console.log(`✅ Generated skill: ${skillDir}`);
+    return skillDir;
+  }
+  
+  /**
+   * Convert string to PascalCase
+   * @method toPascalCase
+   */
+  toPascalCase(str) {
+    return str
+      .replace(/[-_]/g, ' ')
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => 
+        index === 0 ? word.toUpperCase() : word.toUpperCase()
+      )
+      .replace(/\s+/g, '');
+  }
+  
+  /**
+   * Convert string to kebab-case
+   * @method toKebabCase
+   */
+  toKebabCase(str) {
+    return str
+      .replace(/([a-z])([A-Z])/g, '$1-$2')
+      .replace(/[\s_]+/g, '-')
+      .toLowerCase();
+  }
+}
+
+// CLI interface
+if (require.main === module) {
+  const args = process.argv.slice(2);
+  const command = args[0];
+  const generator = new CodeGenerator();
+  
+  switch (command) {
+    case 'system':
+      if (args[1] && args[2]) {
+        generator.generateSystem(args[1], args[2]);
+      } else {
+        console.log('Usage: node codeGenerator.js system <name> <description>');
+      }
+      break;
+      
+    case 'test':
+      if (args[1] && args[2]) {
+        generator.generateTest(args[1], args[2]);
+      } else {
+        console.log('Usage: node codeGenerator.js test <name> <module-path>');
+      }
+      break;
+      
+    case 'skill':
+      if (args[1] && args[2]) {
+        generator.generateSkill(args[1], args[2]);
+      } else {
+        console.log('Usage: node codeGenerator.js skill <name> <description>');
+      }
+      break;
+      
+    default:
+      console.log('Kaixa Jr Code Generator\n');
+      console.log('Commands:');
+      console.log('  system <name> <description>  Generate new system module');
+      console.log('  test <name> <path>        Generate test file');
+      console.log('  skill <name> <desc>        Generate new skill');
+  }
+}
+
+module.exports = { CodeGenerator };

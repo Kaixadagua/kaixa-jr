@@ -25,6 +25,7 @@
 - [ ] Web dashboard
 - [ ] Real-time metrics visualization
 - [ ] Slack/Discord integration
+- [x] Code generation tools
 - [ ] Automated PR review suggestions
 
 ### Improvements
@@ -34,6 +35,7 @@
 - [ ] Memory usage optimization
 
 ### Documentation
+- [x] Auto-generate docs from JSDoc
 - [ ] Video tutorials
 - [ ] Deployment guide
 - [ ] Docker setup

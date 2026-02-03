@@ -43,6 +43,14 @@ const COMMANDS = {
     description: 'Validate configuration',
     usage: 'kaixa validate'
   },
+  'generate': {
+    description: 'Generate code (system, test, skill, docs)',
+    usage: 'kaixa generate <type> [args...]'
+  },
+  'docs': {
+    description: 'Generate documentation from JSDoc',
+    usage: 'kaixa docs'
+  },
   'version': {
     description: 'Show version',
     usage: 'kaixa version'
@@ -239,6 +247,53 @@ function showVersion() {
 }
 
 /**
+ * Generate code from templates
+ */
+function generateCode(type, ...args) {
+  const { CodeGenerator } = require('../src/utils/codeGenerator');
+  const generator = new CodeGenerator();
+  
+  switch (type) {
+    case 'system':
+      if (args[0] && args[1]) {
+        generator.generateSystem(args[0], args[1]);
+      } else {
+        console.log('Usage: kaixa generate system <name> <description>');
+      }
+      break;
+      
+    case 'test':
+      if (args[0] && args[1]) {
+        generator.generateTest(args[0], args[1]);
+      } else {
+        console.log('Usage: kaixa generate test <name> <module-path>');
+      }
+      break;
+      
+    case 'skill':
+      if (args[0] && args[1]) {
+        generator.generateSkill(args[0], args[1]);
+      } else {
+        console.log('Usage: kaixa generate skill <name> <description>');
+      }
+      break;
+      
+    default:
+      console.log('Generate types: system, test, skill');
+      console.log('Usage: kaixa generate <type> [args...]');
+  }
+}
+
+/**
+ * Generate documentation from JSDoc
+ */
+function generateDocs() {
+  const { DocGenerator } = require('../src/utils/docGenerator');
+  const generator = new DocGenerator();
+  generator.generateAll();
+}
+
+/**
  * Main CLI handler
  */
 function main() {
@@ -280,6 +335,16 @@ function main() {
     case 'validate':
     case 'v':
       validateConfig();
+      break;
+      
+    case 'generate':
+    case 'g':
+      generateCode(args[1], ...args.slice(2));
+      break;
+      
+    case 'docs':
+    case 'd':
+      generateDocs();
       break;
       
     case 'version':
