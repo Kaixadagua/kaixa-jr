@@ -12,9 +12,18 @@
     "report": "node scripts/reports/kaixa-report-35min.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "lint": "eslint src/ scripts/",
-    "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.js\"",
-    "sync": "node scripts/sync/git-sync.js"
+    "test:watch": "jest --watch",
+    "lint": "eslint src/ tests/ scripts/",
+    "lint:fix": "eslint src/ tests/ scripts/ --fix",
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\" \"scripts/**/*.js\" \"bin/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"tests/**/*.js\"",
+    "validate": "node -e \"const c=require('./src/core/config').getConfig();process.exit(c.validate().valid?0:1)\"",
+    "docker:build": "docker build -t kaixa-jr:latest .",
+    "docker:run": "docker run -d --name kaixa-jr -v $(pwd)/memory:/app/memory kaixa-jr:latest",
+    "docker:compose": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "sync": "node scripts/sync/git-sync.js",
+    "deploy": "./scripts/deploy.sh"
   },
   "keywords": [
     "ai",

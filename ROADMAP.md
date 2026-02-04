@@ -15,17 +15,35 @@
 - [x] CI/CD pipeline (GitHub Actions)
 - [x] Documentation (Architecture, API, Guides)
 - [x] MIT License
+- [x] Code generation tools
+- [x] Auto-generate docs from JSDoc
+
+---
+
+## v1.0.1 (Completed!)
+
+### 🔴 Prioridade Alta - RESOLVIDO ✅
+- [x] **Migrar scripts legacy** → src/systems/
+- [x] **Adicionar testes** → 11 arquivos, ~70% cobertura
+- [x] **Implementar skills** → 3 skills funcionais
+
+---
+
+## v1.0.2 (Completed!)
+
+### 🟡 Prioridade Média - RESOLVIDO ✅
+- [x] **Docker/containerization** → Dockerfile + docker-compose.yml
+- [x] **Deploy documentation** → docs/guides/deployment.md completo
+- [x] **Notificações Telegram** → Reporter configurado
 
 ---
 
 ## v1.1.0 (Next)
 
 ### Features
-- [ ] Plugin/Skill system
 - [ ] Web dashboard
 - [ ] Real-time metrics visualization
 - [ ] Slack/Discord integration
-- [x] Code generation tools
 - [ ] Automated PR review suggestions
 
 ### Improvements
@@ -35,10 +53,7 @@
 - [ ] Memory usage optimization
 
 ### Documentation
-- [x] Auto-generate docs from JSDoc
 - [ ] Video tutorials
-- [ ] Deployment guide
-- [ ] Docker setup
 
 ---
 
@@ -79,11 +94,11 @@
 Want to help with the roadmap? Open an issue or PR!
 
 Priority areas:
-1. 🧪 Test coverage
+1. 🧪 Test coverage (atual: ~70%, meta: 80%)
 2. 📚 Documentation
 3. 🔧 Bug fixes
 4. ✨ New features
 
 ---
 
-*Last updated: 2026-02-03*
+*Last updated: 2026-02-04*
