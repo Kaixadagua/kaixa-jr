@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // kaixa-guardian.js - Sistema de gestão saudável de agentes Kaixa
 // Última atualização: 2026-02-03
+// Uso: node scripts/kaixa-guardian.js [--silent|-s]
 
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -11,7 +12,8 @@ const CONFIG = {
     maxTokensPerAgent: 180000,
     warningTokens: 150000,
     checkInterval: 300000, // 5 minutos (cron interval)
-    reportDir: 'scripts/reports'
+    reportDir: 'scripts/reports',
+    silentMode: process.argv.includes('--silent') || process.argv.includes('-s')
 };
 
 function getSessionStatus() {
@@ -77,6 +79,32 @@ function ensureReportDir() {
     return dir;
 }
 
+function loadHistory() {
+    const reportDir = ensureReportDir();
+    const filename = `guardian-${new Date().toISOString().slice(0,10)}.json`;
+    const filepath = path.join(reportDir, filename);
+    
+    if (fs.existsSync(filepath)) {
+        try {
+            return JSON.parse(fs.readFileSync(filepath, 'utf8'));
+        } catch {}
+    }
+    return [];
+}
+
+function calculateTrend(history, current) {
+    if (history.length < 2) return { tokens: 'stable', agents: 'stable' };
+    
+    const prev = history[history.length - 1];
+    const tokenDiff = current.totalTokens - prev.totalTokens;
+    const agentDiff = current.agentCount - prev.agentCount;
+    
+    return {
+        tokens: tokenDiff > 10000 ? 'rising' : tokenDiff < -10000 ? 'falling' : 'stable',
+        agents: agentDiff > 0 ? 'rising' : agentDiff < 0 ? 'falling' : 'stable'
+    };
+}
+
 function saveReport(health) {
     const reportDir = ensureReportDir();
     const filename = `guardian-${new Date().toISOString().slice(0,10)}.json`;
@@ -104,14 +132,32 @@ function saveReport(health) {
 }
 
 function main() {
+    const health = analyzeHealth();
+    const history = loadHistory();
+    const trend = calculateTrend(history, health);
+    
+    // Modo silencioso para cron - só sai se houver problema
+    if (CONFIG.silentMode && health.status === 'healthy') {
+        saveReport(health);
+        process.exit(0);
+    }
+    
     console.log('\n🦊 Kaixa Guardian - Gestão Saudável\n');
     console.log('─'.repeat(50));
-    
-    const health = analyzeHealth();
     
     console.log(`📊 Agentes: ${health.agentCount}/${CONFIG.maxAgents}`);
     console.log(`💾 Tokens: ${(health.totalTokens/1000).toFixed(0)}k/${(CONFIG.maxTokensPerAgent * CONFIG.maxAgents / 1000).toFixed(0)}k`);
     console.log(`📈 Status: ${health.status.toUpperCase()}`);
+    
+    // Mostrar tendências
+    if (history.length > 0) {
+        const trendIcon = {
+            rising: '📈',
+            falling: '📉',
+            stable: '➡️'
+        };
+        console.log(`   ${trendIcon[trend.tokens]} Tokens: ${trend.tokens}`);
+    }
     
     if (health.warnings.length > 0) {
         console.log('\n⚠️  Alertas:');

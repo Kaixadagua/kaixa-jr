@@ -152,5 +152,124 @@
     "totalTokens": 290917,
     "status": "healthy",
     "action": null
+  },
+  {
+    "timestamp": "2026-02-03T22:35:48.775Z",
+    "agentCount": 2,
+    "totalTokens": 291911,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T22:41:05.860Z",
+    "agentCount": 2,
+    "totalTokens": 291911,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T22:46:18.027Z",
+    "agentCount": 2,
+    "totalTokens": 291911,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T22:51:35.474Z",
+    "agentCount": 2,
+    "totalTokens": 291911,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T22:56:58.001Z",
+    "agentCount": 2,
+    "totalTokens": 291911,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:02:13.210Z",
+    "agentCount": 2,
+    "totalTokens": 292717,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:07:30.716Z",
+    "agentCount": 2,
+    "totalTokens": 292717,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:12:46.214Z",
+    "agentCount": 2,
+    "totalTokens": 292717,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:17:59.962Z",
+    "agentCount": 2,
+    "totalTokens": 292717,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:23:15.576Z",
+    "agentCount": 2,
+    "totalTokens": 292717,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:28:28.890Z",
+    "agentCount": 2,
+    "totalTokens": 292717,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:33:43.081Z",
+    "agentCount": 2,
+    "totalTokens": 293211,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:38:56.564Z",
+    "agentCount": 2,
+    "totalTokens": 293211,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:44:08.655Z",
+    "agentCount": 2,
+    "totalTokens": 293211,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:49:21.738Z",
+    "agentCount": 2,
+    "totalTokens": 293211,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:54:37.002Z",
+    "agentCount": 2,
+    "totalTokens": 293211,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-03T23:59:49.776Z",
+    "agentCount": 2,
+    "totalTokens": 293211,
+    "status": "healthy",
+    "action": null
   }
 ]

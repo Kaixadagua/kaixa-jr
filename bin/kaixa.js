@@ -51,6 +51,10 @@ const COMMANDS = {
     description: 'Generate documentation from JSDoc',
     usage: 'kaixa docs'
   },
+  'skill': {
+    description: 'Run a skill (health, git, progress)',
+    usage: 'kaixa skill <name>'
+  },
   'version': {
     description: 'Show version',
     usage: 'kaixa version'
@@ -294,6 +298,42 @@ function generateDocs() {
 }
 
 /**
+ * Run a skill
+ */
+function runSkill(name) {
+  const skillsDir = path.join(process.cwd(), 'skills');
+  
+  const skillMap = {
+    'health': 'agent-health-monitor',
+    'agent-health': 'agent-health-monitor',
+    'git': 'git-readonly',
+    'progress': 'progressao-continua',
+    'progressao': 'progressao-continua'
+  };
+  
+  const skillDir = skillMap[name] || name;
+  const skillPath = path.join(skillsDir, skillDir, 'index.js');
+  
+  if (!fs.existsSync(skillPath)) {
+    console.log(`\n❌ Skill not found: ${name}`);
+    console.log('\nAvailable skills:');
+    console.log('  health, git, progress');
+    return;
+  }
+  
+  try {
+    const skill = require(skillPath);
+    if (skill.run) {
+      skill.run();
+    } else {
+      console.log(`\n❌ Skill ${name} has no run() function`);
+    }
+  } catch (e) {
+    console.error(`\n❌ Error running skill ${name}:`, e.message);
+  }
+}
+
+/**
  * Main CLI handler
  */
 function main() {
@@ -345,6 +385,11 @@ function main() {
     case 'docs':
     case 'd':
       generateDocs();
+      break;
+      
+    case 'skill':
+    case 'k':
+      runSkill(args[1]);
       break;
       
     case 'version':

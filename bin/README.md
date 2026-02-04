@@ -94,6 +94,16 @@ Generate documentation from JSDoc comments.
 kaixa docs
 ```
 
+### `kaixa skill` (or `kaixa k`)
+
+Run a skill.
+
+```bash
+kaixa skill health      # Run agent-health-monitor
+kaixa skill git         # Run git-readonly
+kaixa skill progress    # Run progressao-continua
+```
+
 ### `kaixa version` (or `kaixa -v`)
 
 Show version information.

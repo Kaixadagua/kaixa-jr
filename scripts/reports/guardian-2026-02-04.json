@@ -1,0 +1,352 @@
+[
+  {
+    "timestamp": "2026-02-04T00:52:23.490Z",
+    "agentCount": 2,
+    "totalTokens": 294788,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T00:57:36.784Z",
+    "agentCount": 2,
+    "totalTokens": 294788,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:02:51.286Z",
+    "agentCount": 2,
+    "totalTokens": 295532,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:08:06.637Z",
+    "agentCount": 2,
+    "totalTokens": 295532,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:14:07.376Z",
+    "agentCount": 2,
+    "totalTokens": 295532,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:19:23.963Z",
+    "agentCount": 2,
+    "totalTokens": 295532,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:24:41.444Z",
+    "agentCount": 2,
+    "totalTokens": 295532,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:29:54.085Z",
+    "agentCount": 2,
+    "totalTokens": 295532,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:35:12.711Z",
+    "agentCount": 2,
+    "totalTokens": 296241,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:41:05.712Z",
+    "agentCount": 2,
+    "totalTokens": 296241,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:46:19.155Z",
+    "agentCount": 2,
+    "totalTokens": 296241,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:51:40.256Z",
+    "agentCount": 2,
+    "totalTokens": 296241,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T01:56:51.919Z",
+    "agentCount": 2,
+    "totalTokens": 296241,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:02:05.833Z",
+    "agentCount": 2,
+    "totalTokens": 296896,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:07:19.011Z",
+    "agentCount": 2,
+    "totalTokens": 296896,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:12:34.512Z",
+    "agentCount": 2,
+    "totalTokens": 296896,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:17:52.158Z",
+    "agentCount": 2,
+    "totalTokens": 296896,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:23:09.720Z",
+    "agentCount": 2,
+    "totalTokens": 296896,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:28:21.909Z",
+    "agentCount": 2,
+    "totalTokens": 296896,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:33:37.566Z",
+    "agentCount": 2,
+    "totalTokens": 297489,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:38:50.585Z",
+    "agentCount": 2,
+    "totalTokens": 297489,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:44:02.606Z",
+    "agentCount": 2,
+    "totalTokens": 297489,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:49:14.234Z",
+    "agentCount": 2,
+    "totalTokens": 297489,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:54:27.397Z",
+    "agentCount": 2,
+    "totalTokens": 297489,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T02:59:42.482Z",
+    "agentCount": 2,
+    "totalTokens": 297489,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:04:56.419Z",
+    "agentCount": 2,
+    "totalTokens": 298287,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:10:12.924Z",
+    "agentCount": 2,
+    "totalTokens": 298287,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:15:27.765Z",
+    "agentCount": 2,
+    "totalTokens": 298287,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:20:43.147Z",
+    "agentCount": 2,
+    "totalTokens": 298287,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:26:41.240Z",
+    "agentCount": 2,
+    "totalTokens": 298287,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:31:53.565Z",
+    "agentCount": 2,
+    "totalTokens": 298935,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:42:29.567Z",
+    "agentCount": 2,
+    "totalTokens": 298935,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:53:10.324Z",
+    "agentCount": 2,
+    "totalTokens": 298935,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T03:58:25.296Z",
+    "agentCount": 2,
+    "totalTokens": 298935,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T04:03:39.639Z",
+    "agentCount": 2,
+    "totalTokens": 299865,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T04:08:53.074Z",
+    "agentCount": 2,
+    "totalTokens": 299865,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T04:14:09.888Z",
+    "agentCount": 2,
+    "totalTokens": 299865,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T04:19:55.601Z",
+    "agentCount": 2,
+    "totalTokens": 144898,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-04T04:25:07.590Z",
+    "agentCount": 2,
+    "totalTokens": 300132,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T04:30:23.792Z",
+    "agentCount": 2,
+    "totalTokens": 300132,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T04:35:42.765Z",
+    "agentCount": 2,
+    "totalTokens": 301015,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T04:41:03.893Z",
+    "agentCount": 2,
+    "totalTokens": 301015,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T04:46:19.188Z",
+    "agentCount": 2,
+    "totalTokens": 301015,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T04:51:35.776Z",
+    "agentCount": 2,
+    "totalTokens": 301015,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T04:57:33.502Z",
+    "agentCount": 2,
+    "totalTokens": 301561,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T05:02:46.813Z",
+    "agentCount": 2,
+    "totalTokens": 302187,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T05:08:47.112Z",
+    "agentCount": 2,
+    "totalTokens": 302187,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T05:14:00.160Z",
+    "agentCount": 2,
+    "totalTokens": 302187,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T05:24:33.003Z",
+    "agentCount": 2,
+    "totalTokens": 307329,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T05:29:48.206Z",
+    "agentCount": 2,
+    "totalTokens": 307329,
+    "status": "warning",
+    "action": "flush-context"
+  }
+]

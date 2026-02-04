@@ -4,20 +4,32 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 
 ---
 
+## 📁 Diretórios
+
+| Diretório | Conteúdo |
+|-----------|----------|
+| `health/` | Scripts específicos de health check |
+| `reports/` | Geração de relatórios e dashboards |
+| `sync/` | Sincronização e backup |
+
+---
+
 ## 📜 Scripts Disponíveis
 
 ### Node.js
 
 | Script | Descrição | Uso |
 |--------|-----------|-----|
-| `melhoria-status.js` | Dashboard de melhorias com categorização automática | `node scripts/melhoria-status.js` |
-| `health-check.js` | Saúde do ambiente (git, backpressure, stats) | `node scripts/health-check.js` |
+| `kaixa-guardian.js` | Guardian principal - verifica saúde do sistema | `node scripts/kaixa-guardian.js` |
+| `kaixa-report-35min.js` | Report periódico de status (35min) | `node scripts/kaixa-report-35min.js` |
+| `improvement-health.js` | Health check específico de melhorias | `node scripts/improvement-health.js` |
+| `health-check.js` | Saúde geral do ambiente (git, backpressure, stats) | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits com mensagens sugeridas | `node scripts/auto-commit.js` |
-| `melhoria-consolidator.js` | Consolida melhorias para batch PR | `node scripts/melhoria-consolidator.js` |
-| `cron-report.js` | Report elegante para execuções de melhoria contínua | `node scripts/cron-report.js` |
 | `scripts-index.js` | Índice interativo de todos os scripts | `node scripts/scripts-index.js` |
 | `context-compactor.js` | Análise e gestão de contexto | `node scripts/context-compactor.js` |
 | `repo-init.js` | Inicialização e organização do repositório | `node scripts/repo-init.js` |
+| `agent-guardian.js` | Guardian de agentes (legado) | `node scripts/agent-guardian.js` |
+| `setup-agentcorp.js` | Setup inicial do AgentCorp | `node scripts/setup-agentcorp.js` |
 
 ### PowerShell
 
@@ -45,11 +57,14 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 # Status rápido (batch)
 .\status.bat
 
-# Dashboard detalhado (Node)
-node scripts/melhoria-status.js
+# Guardian principal (Node)
+node scripts/kaixa-guardian.js
 
 # Saúde completa (Node)
 node scripts/health-check.js
+
+# Health de melhorias (Node)
+node scripts/improvement-health.js
 ```
 
 ### Antes de criar melhoria
@@ -66,17 +81,13 @@ node scripts/health-check.js
 2. Implementar melhoria local (docs, scripts, config)
 3. Registrar: `memory/improvements/YYYY-MM-DD-HHMM-melhoria.md`
 4. Preparar commit: `node scripts/auto-commit.js`
-5. Atualizar TRACKING.md
 
-### Preparar batch PR (quando backpressure liberar)
+### Quando backpressure liberar
 ```bash
-# Consolidar todas as melhorias locais
-node scripts/melhoria-consolidator.js
+# Verificar status
+node scripts/health-check.js
 
-# Verificar o consolidado gerado
-cat memory/improvements/CONSOLIDADO-BATCH.md
-
-# Criar branch e commit quando liberado
+# Criar branch e commit quando GREEN
 node scripts/auto-commit.js
 ```
 
@@ -91,4 +102,4 @@ node scripts/auto-commit.js
 
 ---
 
-*Documentação gerada automaticamente - Kaixa Jr 🦊*
+*Atualizado: 2026-02-04 - Kaixa Jr 🦊*
