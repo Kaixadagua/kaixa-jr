@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kaixa Jr Dashboard - Monitoramento em tempo real">
+  <title>Kaixa Jr Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0b14;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .header .emoji {
+      font-size: 3rem;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background: #13141f;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid #2a2b3d;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.1);
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    
+    .card-icon.health { background: rgba(34, 197, 94, 0.1); }
+    .card-icon.improvements { background: rgba(99, 102, 241, 0.1); }
+    .card-icon.metrics { background: rgba(245, 158, 11, 0.1); }
+    .card-icon.system { background: rgba(239, 68, 68, 0.1); }
+    
+    .card-title {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .card-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+    
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+    
+    .status.ok {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+    
+    .status.warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+    
+    .status.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    
+    .chart-container {
+      background: #13141f;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid #2a2b3d;
+      margin-bottom: 2rem;
+    }
+    
+    .chart-title {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-bar {
+      height: 8px;
+      background: #1c1d2e;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .log-container {
+      background: #13141f;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid #2a2b3d;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .log-entry {
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.875rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #2a2b3d;
+    }
+    
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .timestamp {
+      color: #6366f1;
+    }
+    
+    .refresh-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+      transition: transform 0.2s;
+    }
+    
+    .refresh-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header h1 {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="emoji">🦊</div>
+    <h1>Kaixa Jr Dashboard</h1>
+    <p>Monitoramento em tempo real</p>
+  </header>
+  
+  <div class="container">
+    <!-- Metrics Grid -->
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon health">💚</div>
+          <div class="card-title">Status do Sistema</div>
+        </div>
+        <div class="card-value" id="system-status">HEALTHY</div>
+        <div class="status ok" id="status-badge">
+          <span>●</span> Operacional
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon improvements">📈</div>
+          <div class="card-title">Melhorias</div>
+        </div>
+        <div class="card-value" id="improvements-count">0</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="improvements-progress" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon metrics">📊</div>
+          <div class="card-title">Cobertura de Testes</div>
+        </div>
+        <div class="card-value" id="coverage">70%</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="coverage-progress" style="width: 70%"></div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon system">⚡</div>
+          <div class="card-title">Agentes Ativos</div>
+        </div>
+        <div class="card-value" id="agents">2/2</div>
+        <div class="status warning" id="agents-badge">
+          <span>●</span> No limite
+        </div>
+      </div>
+    </div>
+    
+    <!-- Improvements Chart -->
+    <div class="chart-container">
+      <h2 class="chart-title">📈 Melhorias por Dia</h2>
+      <div id="improvements-chart">
+        <div class="log-entry">
+          <span class="timestamp">Carregando dados...</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- System Logs -->
+    <div class="log-container">
+      <h2 class="chart-title">📝 Logs do Sistema</h2>
+      <div id="system-logs">
+        <div class="log-entry">
+          <span class="timestamp">[02:50:00]</span> Guardian executado - Sistema saudável
+        </div>
+        <div class="log-entry">
+          <span class="timestamp">[02:45:00]</span> Prioridades médias resolvidas
+        </div>
+        <div class="log-entry">
+          <span class="timestamp">[02:30:00]</span> Deploy documentation criada
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <button class="refresh-btn" onclick="refreshData()" title="Atualizar">↻</button>
+  
+  <script>
+    // Mock data - in real implementation, fetch from API
+    const mockData = {
+      improvements: 67,
+      coverage: 70,
+      agents: 2,
+      maxAgents: 2,
+      status: 'HEALTHY'
+    };
+    
+    function updateDashboard() {
+      // Update improvements
+      document.getElementById('improvements-count').textContent = mockData.improvements;
+      document.getElementById('improvements-progress').style.width = '75%';
+      
+      // Update coverage
+      document.getElementById('coverage').textContent = mockData.coverage + '%';
+      document.getElementById('coverage-progress').style.width = mockData.coverage + '%';
+      
+      // Update agents
+      document.getElementById('agents').textContent = `${mockData.agents}/${mockData.maxAgents}`;
+      
+      // Update status
+      const statusEl = document.getElementById('system-status');
+      const statusBadge = document.getElementById('status-badge');
+      statusEl.textContent = mockData.status;
+      
+      if (mockData.status === 'HEALTHY') {
+        statusBadge.className = 'status ok';
+        statusBadge.innerHTML = '<span>●</span> Operacional';
+      }
+    }
+    
+    function refreshData() {
+      const btn = document.querySelector('.refresh-btn');
+      btn.style.transform = 'rotate(360deg)';
+      setTimeout(() => {
+        btn.style.transform = 'rotate(0deg)';
+        updateDashboard();
+      }, 500);
+    }
+    
+    // Initial load
+    updateDashboard();
+    
+    // Auto refresh every 30 seconds
+    setInterval(updateDashboard, 30000);
+  </script>
+</body>
+</html>

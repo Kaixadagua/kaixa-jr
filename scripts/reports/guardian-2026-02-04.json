@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-02-04T01:08:06.637Z",
-    "agentCount": 2,
-    "totalTokens": 295532,
-    "status": "healthy",
-    "action": null
-  },
-  {
-    "timestamp": "2026-02-04T01:14:07.376Z",
-    "agentCount": 2,
-    "totalTokens": 295532,
-    "status": "healthy",
-    "action": null
-  },
-  {
     "timestamp": "2026-02-04T01:19:23.963Z",
     "agentCount": 2,
     "totalTokens": 295532,
@@ -346,6 +332,20 @@
     "timestamp": "2026-02-04T05:45:31.910Z",
     "agentCount": 2,
     "totalTokens": 328723,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T05:50:50.847Z",
+    "agentCount": 2,
+    "totalTokens": 337363,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T05:56:18.967Z",
+    "agentCount": 2,
+    "totalTokens": 337363,
     "status": "warning",
     "action": "flush-context"
   }
