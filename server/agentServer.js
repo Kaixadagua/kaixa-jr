@@ -57,13 +57,14 @@ function completeTask() {
 
 /**
  * Cria servidor HTTP
+ * IMPORTANTE: Escuta em '0.0.0.0' para permitir acesso do Docker
  */
 function createServer() {
   const server = http.createServer((req, res) => {
-    // CORS headers
+    // CORS headers - PERMITE TODAS AS ORIGENS (necessário para Docker)
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Content-Type', 'application/json');
     
     if (req.method === 'OPTIONS') {
@@ -91,10 +92,13 @@ function createServer() {
     }
   });
   
-  server.listen(PORT, () => {
-    console.log(`🦊 Kaixa Jr Agent Server rodando em http://localhost:${PORT}`);
-    console.log(`📡 Endpoint: http://localhost:${PORT}/status`);
-    console.log(`💡 Use este URL no AgentCorp para conectar`);
+  // ESCUTA EM 0.0.0.0 (não localhost!) - necessário para Docker
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🦊 Kaixa Jr Agent Server rodando!`);
+    console.log(`📡 Endpoint Local: http://localhost:${PORT}/status`);
+    console.log(`🐳 Endpoint Docker: http://host.docker.internal:${PORT}/status`);
+    console.log(`🌐 Endpoint Rede: http://0.0.0.0:${PORT}/status`);
+    console.log(`\n💡 Para AgentCorp Docker, use: http://host.docker.internal:${PORT}/status`);
   });
   
   return server;
