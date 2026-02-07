@@ -117,5 +117,19 @@
     "totalTokens": 382531,
     "status": "warning",
     "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-07T23:45:40.049Z",
+    "agentCount": 2,
+    "totalTokens": 186308,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-07T23:50:55.621Z",
+    "agentCount": 2,
+    "totalTokens": 186787,
+    "status": "healthy",
+    "action": null
   }
 ]
