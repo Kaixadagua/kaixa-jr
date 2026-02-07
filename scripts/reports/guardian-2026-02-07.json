@@ -75,5 +75,47 @@
     "totalTokens": 374074,
     "status": "warning",
     "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-07T22:57:53.650Z",
+    "agentCount": 2,
+    "totalTokens": 379861,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-07T23:03:23.879Z",
+    "agentCount": 2,
+    "totalTokens": 379861,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-07T23:08:41.582Z",
+    "agentCount": 2,
+    "totalTokens": 379861,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-07T23:13:57.625Z",
+    "agentCount": 2,
+    "totalTokens": 381455,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-07T23:24:30.310Z",
+    "agentCount": 2,
+    "totalTokens": 381953,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-07T23:29:57.121Z",
+    "agentCount": 2,
+    "totalTokens": 382531,
+    "status": "warning",
+    "action": "flush-context"
   }
 ]
