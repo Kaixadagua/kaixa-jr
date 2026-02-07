@@ -22,6 +22,8 @@
     "docker:run": "docker run -d --name kaixa-jr -v $(pwd)/memory:/app/memory kaixa-jr:latest",
     "docker:compose": "docker-compose up -d",
     "docker:stop": "docker-compose down",
+    "worker": "node server/agentCorpWorker.js",
+    "server": "node server/agentServer.js",
     "sync": "node scripts/sync/git-sync.js",
     "deploy": "./scripts/deploy.sh"
   },
