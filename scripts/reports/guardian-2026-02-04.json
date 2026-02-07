@@ -1,33 +1,5 @@
 [
   {
-    "timestamp": "2026-02-04T01:19:23.963Z",
-    "agentCount": 2,
-    "totalTokens": 295532,
-    "status": "healthy",
-    "action": null
-  },
-  {
-    "timestamp": "2026-02-04T01:24:41.444Z",
-    "agentCount": 2,
-    "totalTokens": 295532,
-    "status": "healthy",
-    "action": null
-  },
-  {
-    "timestamp": "2026-02-04T01:29:54.085Z",
-    "agentCount": 2,
-    "totalTokens": 295532,
-    "status": "healthy",
-    "action": null
-  },
-  {
-    "timestamp": "2026-02-04T01:35:12.711Z",
-    "agentCount": 2,
-    "totalTokens": 296241,
-    "status": "healthy",
-    "action": null
-  },
-  {
     "timestamp": "2026-02-04T01:41:05.712Z",
     "agentCount": 2,
     "totalTokens": 296241,
@@ -346,6 +318,34 @@
     "timestamp": "2026-02-04T05:56:18.967Z",
     "agentCount": 2,
     "totalTokens": 337363,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T06:06:50.373Z",
+    "agentCount": 2,
+    "totalTokens": 347466,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T06:12:23.453Z",
+    "agentCount": 2,
+    "totalTokens": 347761,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T06:17:46.464Z",
+    "agentCount": 2,
+    "totalTokens": 347761,
+    "status": "warning",
+    "action": "flush-context"
+  },
+  {
+    "timestamp": "2026-02-04T06:23:00.168Z",
+    "agentCount": 2,
+    "totalTokens": 347761,
     "status": "warning",
     "action": "flush-context"
   }

@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2026-02-07T21:48:52.972Z",
+    "agentCount": 2,
+    "totalTokens": 347910,
+    "status": "warning",
+    "action": "flush-context"
+  }
+]
