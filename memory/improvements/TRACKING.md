@@ -1,12 +1,30 @@
 # 📊 Tracking de Melhorias Contínuas
 
+## Dashboard - 2026-02-08 00:57
+
+### Melhoria #44 (2026-02-08 00:57)
+**Branch:** `feature/format-duration-001` → **Pushed**
+- `formatDuration(ms)` - Formata duração para formato legível
+- Integrado nos logs de finalização para tracking de performance
+- Tracking de `startTime` na execução
+- +25 linhas, -2 removidas no `continuousImprovement.js`
+
+### Melhoria #43 (2026-02-08 00:46)
+**Branch:** `feature/rollback-safety-001` → **PR Pendente (backpressure)**
+- `saveState()` - Salva estado do repo antes de alterações
+- `rollbackChanges()` - Desfaz alterações se algo der errado
+- Melhor tratamento de erro no fluxo principal
+- Rollback automático em caso de falha no push
+- +75 linhas no continuousImprovement.js
+
 ## Dashboard - 2026-02-08 00:04
 
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **42** |
-| PRs criados | 12 (abertos) |
+| **Total de melhorias** | **44** |
+| PRs criados | 13 (pushed, aguardando PR) |
+| Melhorias locais | 19 |
 | Melhorias locais | 19 |
 | Tempo total | ~2880 min (48h+) |
 | Tempo médio/melhoria | ~70.2 min |
