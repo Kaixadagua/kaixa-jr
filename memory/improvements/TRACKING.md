@@ -1,23 +1,34 @@
 # 📊 Tracking de Melhorias Contínuas
 
-## Dashboard - 2026-02-08 09:54
+## Dashboard - 2026-02-08 11:56
 
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **56** |
-| PRs criados | 16 (abertos - backpressure persistente) |
+| **Total de melhorias** | **57** |
+| PRs criados | 17 (abertos - backpressure persistente) |
 | Melhorias locais | 23 |
-| Melhorias PR | 32 |
-| Tempo total | ~2916 min (48h+) |
-| Tempo médio/melhoria | ~52.1 min |
-| **Throughput** | **~1.15 melhorias/hora** (sustentável com backpressure) |
+| Melhorias PR | 33 |
+| Tempo total | ~2922 min (48h+) |
+| Tempo médio/melhoria | ~51.3 min |
+| **Throughput** | **~1.17 melhorias/hora** (sustentável com backpressure) |
 
 ### Backlog
 ```
-████████████████████ 13/9 PRs abertos
+████████████████████ 34/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
+
+### Melhoria #57 (2026-02-08 11:56) - 🆕
+**Branch:** `feature/retry-async-58` → **retryAsync() - Retry com backoff exponencial**
+- Função `retryAsync(fn, options)` para operações resilientes
+- Backoff exponencial com jitter: `delay = min(baseDelay * 2^(attempt-1) + random, maxDelay)`
+- Configuração flexível: `maxRetries`, `baseDelay`, `maxDelay`
+- Logging estruturado em cada tentativa (sucesso/erro/retry)
+- Documentação JSDoc completa com @param, @returns, @throws, @example
+- Aplicável a qualquer operação async (git push, API calls, etc.)
+- 47 linhas de código robusto para lidar com falhas transitórias
+- 🎯 **57 melhorias totais!** Resiliência = confiabilidade!
 
 ### Melhoria #56 (2026-02-08 09:54) - 🆕 PR #30
 **Branch:** `feature/ensure-file-exists-56` → **ensureFileExists() - Robusteza para arquivos inexistentes**
