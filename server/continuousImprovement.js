@@ -404,9 +404,21 @@ function pushBranch(branch) {
 /**
  * Documenta melhoria local
  */
-function documentLocal(improvement, result) {
+function documentLocal(improvement, result, perf, metrics) {
   const timestamp = getTimestamp();
   const filename = `memory/improvements/${timestamp}-melhoria.md`;
+  
+  const perfSection = perf ? `
+## Performance
+- ⏱️ Tempo de execução: ${perf.durationMs}ms (${perf.durationSec}s)
+` : '';
+
+  const metricsSection = metrics ? `
+## Métricas Acumuladas
+- Total de runs: ${metrics.totalRuns}
+- Média de duração: ${metrics.avgDurationMs}ms
+- Último run: ${new Date(metrics.lastRun).toLocaleString()}
+` : '';
   
   const content = `# Melhoria: ${timestamp}
 
@@ -424,7 +436,7 @@ ${improvement.title}
 
 ## Commits
 - [kaixa-auto] ${improvement.title}
-
+${perfSection}${metricsSection}
 ## Status
 ✅ Implementada localmente
 🔄 Aguardando merge para criar PR
@@ -438,14 +450,81 @@ ${improvement.title}
 }
 
 /**
+ * Métricas de Performance
+ * @namespace PerformanceMetrics
+ */
+const PerformanceMetrics = {
+  startTime: null,
+  endTime: null,
+  
+  start() {
+    this.startTime = process.hrtime.bigint();
+    return this.startTime;
+  },
+  
+  end() {
+    this.endTime = process.hrtime.bigint();
+    const durationMs = Number(this.endTime - this.startTime) / 1_000_000;
+    return {
+      durationMs: Math.round(durationMs * 100) / 100,
+      durationSec: Math.round((durationMs / 1000) * 100) / 100
+    };
+  },
+  
+  saveMetrics(improvement, result, perf) {
+    const metricsPath = 'memory/improvements/performance-metrics.json';
+    let metrics = { runs: [], totalRuns: 0 };
+    
+    if (fs.existsSync(metricsPath)) {
+      try {
+        metrics = JSON.parse(fs.readFileSync(metricsPath, 'utf8'));
+      } catch (e) {
+        // Arquivo corrompido, inicia novo
+      }
+    }
+    
+    metrics.runs.push({
+      timestamp: new Date().toISOString(),
+      type: improvement.type,
+      title: improvement.title,
+      file: result.file,
+      linesAdded: result.lines,
+      durationMs: perf.durationMs,
+      success: true
+    });
+    
+    metrics.totalRuns = metrics.runs.length;
+    metrics.avgDurationMs = Math.round(
+      metrics.runs.reduce((a, r) => a + r.durationMs, 0) / metrics.runs.length * 100
+    ) / 100;
+    metrics.lastRun = new Date().toISOString();
+    
+    // Mantém apenas últimos 100 runs
+    if (metrics.runs.length > 100) {
+      metrics.runs = metrics.runs.slice(-100);
+    }
+    
+    fs.writeFileSync(metricsPath, JSON.stringify(metrics, null, 2));
+    return metrics;
+  }
+};
+
+/**
  * EXECUTA 1 MELHORIA
  */
 async function run() {
   const logger = ImprovementLogger;
   
+  // Inicia métricas
+  PerformanceMetrics.start();
+  
   logger.info('🦊 KAIXA JR - MELHORIA CONTÍNUA iniciada', {
     timestamp: new Date().toISOString()
   });
+  
+  // Detecta arquivos modificados antes
+  const modifiedBefore = detectModifiedFiles();
+  logger.info(`📊 Estado inicial: ${modifiedBefore.length} arquivos modificados`);
   
   // Seleciona melhoria (inteligente: detecta estado do repo)
   const improvement = suggestImprovement();
@@ -466,6 +545,14 @@ async function run() {
   const timestamp = Date.now().toString(36);
   const branch = createBranch(timestamp);
   
+  // Finaliza métricas de performance
+  const perf = PerformanceMetrics.end();
+  logger.info(`⏱️ Tempo de execução: ${perf.durationMs}ms (${perf.durationSec}s)`);
+  
+  // Salva métricas
+  const metrics = PerformanceMetrics.saveMetrics(improvement, result, perf);
+  logger.info(`📈 Métricas: ${metrics.totalRuns} runs | avg: ${metrics.avgDurationMs}ms`);
+  
   if (branch) {
     const committed = commitChanges(improvement.title);
     
@@ -475,8 +562,8 @@ async function run() {
       if (pushed) {
         logger.info('🚀 Push realizado com sucesso', { branch });
         
-        // Documenta
-        documentLocal(improvement, result);
+        // Documenta com métricas
+        documentLocal(improvement, result, perf, metrics);
         
         // Volta para branch principal
         try {
@@ -486,25 +573,27 @@ async function run() {
         logger.info('✅ MELHORIA COMPLETA!', { 
           success: true, 
           branch, 
-          file: result.file 
+          file: result.file,
+          durationMs: perf.durationMs
         });
         
-        return { success: true, branch, file: result.file };
+        return { success: true, branch, file: result.file, perf };
       }
     }
   }
   
-  // Se falhou, documenta local
+  // Se falhou, documenta local com métricas
   logger.warn('Documentando melhoria localmente (backpressure ou erro)');
-  documentLocal(improvement, result);
+  documentLocal(improvement, result, perf, metrics);
   
   logger.info('✅ MELHORIA DOCUMENTADA (local)', { 
     success: true, 
     local: true, 
-    file: result.file 
+    file: result.file,
+    durationMs: perf.durationMs
   });
   
-  return { success: true, local: true, file: result.file };
+  return { success: true, local: true, file: result.file, perf };
 }
 
 // Executa
