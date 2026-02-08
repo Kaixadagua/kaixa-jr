@@ -70,6 +70,30 @@ const ImprovementLogger = {
 };
 
 /**
+ * Garante que um arquivo exista, criando-o com conteúdo padrão se necessário
+ * @param {string} filePath - Caminho do arquivo
+ * @param {string} defaultContent - Conteúdo padrão se arquivo não existir
+ * @returns {boolean} True se arquivo existe ou foi criado
+ */
+function ensureFileExists(filePath, defaultContent = '') {
+  try {
+    if (!fs.existsSync(filePath)) {
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(filePath, defaultContent);
+      ImprovementLogger.info(`📁 Arquivo criado: ${filePath}`);
+      return true;
+    }
+    return true;
+  } catch (e) {
+    ImprovementLogger.error(`❌ Erro ao criar arquivo ${filePath}:`, e.message);
+    return false;
+  }
+}
+
+/**
  * Detecta arquivos modificados no git
  * @returns {string[]} Lista de arquivos modificados
  */
@@ -191,6 +215,18 @@ function getTimestamp() {
  */
 function addJSDoc() {
   const file = 'src/core/utils.js';
+  const defaultContent = `/**
+ * Core Utilities
+ * Funções utilitárias do sistema
+ */
+
+module.exports = {};
+`;
+  
+  if (!ensureFileExists(file, defaultContent)) {
+    return { file, type: 'docs', lines: 0, error: 'Não foi possível criar arquivo' };
+  }
+  
   const content = `/**
  * Função utilitária adicionada em ${new Date().toISOString()}
  * @param {string} input - Input string
@@ -212,6 +248,19 @@ module.exports = { processInput };
  */
 function addTest() {
   const file = 'tests/core/config.test.js';
+  const defaultContent = `const Config = require('../../src/core/config');
+
+describe('Config', () => {
+  it('should be defined', () => {
+    expect(Config).toBeDefined();
+  });
+});
+`;
+  
+  if (!ensureFileExists(file, defaultContent)) {
+    return { file, type: 'test', lines: 0, error: 'Não foi possível criar arquivo' };
+  }
+  
   const test = `
   it('should handle edge case: empty config', () => {
     const config = new Config();
@@ -222,7 +271,7 @@ function addTest() {
   
   // Adiciona antes do último fechamento
   const content = fs.readFileSync(file, 'utf8');
-  const newContent = content.replace('});', test + '});');
+  const newContent = content.replace(/\}\);\s*$/, test + '});');
   fs.writeFileSync(file, newContent);
   
   return { file, type: 'test', lines: 5 };
@@ -232,7 +281,6 @@ function addTest() {
  * Refatora variável
  */
 function refactorVariable() {
-  // Cria arquivo com melhoria de exemplo
   const file = 'src/utils/stringUtils.js';
   const content = `/**
  * String Utilities
@@ -253,7 +301,30 @@ const StringUtils = {
 module.exports = StringUtils;
 `;
   
-  fs.writeFileSync(file, content);
+  if (!ensureFileExists(file, content)) {
+    return { file, type: 'refactor', lines: 0, error: 'Não foi possível criar arquivo' };
+  }
+  
+  // Se arquivo já existia, adiciona nova função
+  const existingContent = fs.readFileSync(file, 'utf8');
+  if (!existingContent.includes('toSnakeCase')) {
+    const newFunction = `
+  /**
+   * Converte para snake_case
+   * @param {string} str - String input
+   * @returns {string} snake_case string
+   */
+  toSnakeCase: (str) => {
+    return str.replace(/[A-Z]/g, (letter) => '_' + letter.toLowerCase());
+  },`;
+    const updatedContent = existingContent.replace(
+      'toCamelCase:',
+      newFunction + '\n  toCamelCase:'
+    );
+    fs.writeFileSync(file, updatedContent);
+    return { file, type: 'refactor', lines: 8 };
+  }
+  
   return { file, type: 'refactor', lines: 15 };
 }
 
@@ -262,14 +333,35 @@ module.exports = StringUtils;
  */
 function addComment() {
   const file = 'src/core/config.js';
+  const defaultContent = `class Config {
+  constructor() {
+    this.values = {};
+  }
+  
+  get(key) {
+    return this.values[key] || null;
+  }
+}
+
+module.exports = Config;
+`;
+  
+  if (!ensureFileExists(file, defaultContent)) {
+    return { file, type: 'docs', lines: 0, error: 'Não foi possível criar arquivo' };
+  }
+  
   const comment = `// NOTE: Configuração carregada em ${new Date().toLocaleString()}
 // Esta classe gerencia todas as configurações do sistema
 `;
   
   const content = fs.readFileSync(file, 'utf8');
-  fs.writeFileSync(file, comment + content);
+  // Só adiciona comentário se ainda não existe
+  if (!content.includes('NOTE: Configuração carregada')) {
+    fs.writeFileSync(file, comment + content);
+    return { file, type: 'docs', lines: 2 };
+  }
   
-  return { file, type: 'docs', lines: 2 };
+  return { file, type: 'docs', lines: 0, note: 'Comentário já existe' };
 }
 
 /**
@@ -320,7 +412,28 @@ console.log('Valid:', validation.valid);
  */
 function addValidation() {
   const file = 'src/core/logger.js';
-  const validation = `
+  const defaultContent = `class Logger {
+  constructor() {
+    this.level = 'INFO';
+  }
+  
+  log(message) {
+    console.log(message);
+  }
+}
+
+module.exports = Logger;
+`;
+  
+  if (!ensureFileExists(file, defaultContent)) {
+    return { file, type: 'code', lines: 0, error: 'Não foi possível criar arquivo' };
+  }
+  
+  const content = fs.readFileSync(file, 'utf8');
+  
+  // Só adiciona se ainda não existe
+  if (!content.includes('_validateLevel')) {
+    const validation = `
   /**
    * Valida nível de log
    * @private
@@ -333,11 +446,11 @@ function addValidation() {
     return level.toUpperCase();
   }
 `;
+    fs.writeFileSync(file, content + validation);
+    return { file, type: 'code', lines: 10 };
+  }
   
-  const content = fs.readFileSync(file, 'utf8');
-  fs.writeFileSync(file, content + validation);
-  
-  return { file, type: 'code', lines: 10 };
+  return { file, type: 'code', lines: 0, note: 'Validação já existe' };
 }
 
 /**
@@ -444,7 +557,9 @@ async function run() {
   const logger = ImprovementLogger;
   
   logger.info('🦊 KAIXA JR - MELHORIA CONTÍNUA iniciada', {
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    version: '1.1.0',
+    improvement: 'Robust file handling with ensureFileExists'
   });
   
   // Seleciona melhoria (inteligente: detecta estado do repo)
