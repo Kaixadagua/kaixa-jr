@@ -5,7 +5,7 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **44** |
+| **Total de melhorias** | **46** |
 | PRs criados | 12 (abertos) |
 | Melhorias locais | 20 |
 | Tempo total | ~2890 min (48h+) |
@@ -17,6 +17,18 @@
 ████████████████████ 12/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~104h)
 ```
+
+### Melhoria #46 (2026-02-08 01:31)
+**Branch:** `improve/scripts-readme` → **JSDoc no kaixa-guardian.js**
+- Documentação completa com @fileoverview
+- JSDoc em todas as 8 funções
+- Tipos de parâmetros e retornos especificados
+- Melhora DX e manutenibilidade
+
+### Melhoria #45 (2026-02-08 01:21)
+**Branch:** `improve/scripts-readme` → **Report guardian atualizado**
+- Atualização de `scripts/reports/guardian-2026-02-08.json`
+- +14 entradas de métricas do sistema
 
 ### Melhoria #44 (2026-02-08 01:20)
 **Local** → **Índice de Reports do Guardian**
