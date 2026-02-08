@@ -5,10 +5,10 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **51** |
+| **Total de melhorias** | **52** |
 | PRs criados | 14 (abertos - backpressure persistente) |
-| Melhorias locais | 21 |
-| Melhorias locais | 20 |
+| Melhorias locais | 22 |
+| Melhorias PR | 30 |
 | Tempo total | ~2900 min (48h+) |
 | Tempo médio/melhoria | ~61.2 min |
 | **Throughput** | **~0.99 melhorias/hora** (sustentável com backpressure) |
@@ -18,6 +18,16 @@
 █████████████████████ 13/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
+
+### Melhoria #52 (2026-02-08 06:14) - 🆕 LOCAL
+**Branch:** `improve/scripts-readme` → **System Cleanup - Manutenção automatizada**
+- Script `system-cleanup.js` para análise de arquivos antigos
+- Detecta melhorias +30 dias, arquivos temp, relatórios +14 dias
+- Formatação inteligente de bytes (B/KB/MB/GB)
+- Proteção de arquivos críticos (TRACKING.md, metrics.json)
+- Retorna exit code para automação (0 = saudável, 1 = ação necessária)
+- Primeiro scan: 103 melhorias, 1 temp (720B), 21 relatórios - sistema saudável ✅
+- 🎯 **52 melhorias - 22 locais consecutivas em backpressure!**
 
 ### Melhoria #51 (2026-02-08 04:27) - 🆕
 **Branch:** `feature/metrics-persistent-51` → **PR #19 - Sistema de métricas persistentes**
