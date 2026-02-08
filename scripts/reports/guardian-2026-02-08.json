@@ -131,5 +131,48 @@
     "totalTokens": 0,
     "status": "healthy",
     "action": null
+  },
+  {
+    "timestamp": "2026-02-08T04:34:29.718Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-08T04:34:46.575Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-08T04:40:01.556Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-08T04:45:42.458Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-08T04:46:35.001Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
   }
 ]
