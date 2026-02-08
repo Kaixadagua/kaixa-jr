@@ -12,8 +12,9 @@
  *   logger.metric('Nome', valor);
  *   logger.time('operação');
  *   logger.timeEnd('operação'); // → ⏱️ operação: 150ms
+ *   logger.progress('Processando', 5, 10); // → 🔄 Processando [█████░░░░░] 5/10 items (50%)
  * 
- * Última atualização: 2026-02-08 - Adicionado time/timeEnd para performance
+ * Última atualização: 2026-02-08 - Adicionado progress() para tracking visual
  */
 
 const fs = require('fs');
@@ -140,6 +141,45 @@ class Logger {
     delete this._timers[label];
     this.metric(`⏱️ ${label}`, `${duration}ms`);
     return duration;
+  }
+
+  /**
+   * Mostra progresso visual de operações longas
+   * @param {string} label - Nome da operação
+   * @param {number} current - Item atual
+   * @param {number} total - Total de itens
+   * @param {Object} [options] - Opções adicionais
+   * @param {string} [options.itemName='item'] - Nome do item sendo processado
+   * @param {boolean} [options.inline=true] - Se true, atualiza na mesma linha
+   * @returns {string} Barra de progresso formatada
+   * 
+   * @example
+   * for (let i = 0; i < files.length; i++) {
+   *   processFile(files[i]);
+   *   logger.progress('Processando arquivos', i + 1, files.length, { itemName: 'arquivo' });
+   * }
+   * // Saída: 🔄 Processando arquivos [██████░░░░] 6/10 arquivos (60%)
+   */
+  progress(label, current, total, options = {}) {
+    const { itemName = 'item', inline = true } = options;
+    const percentage = Math.min(100, Math.round((current / total) * 100));
+    const filled = Math.round((percentage / 100) * 10);
+    const empty = 10 - filled;
+    const bar = '█'.repeat(filled) + '░'.repeat(empty);
+    
+    const output = `🔄 ${label} [${bar}] ${current}/${total} ${itemName}s (${percentage}%)`;
+    
+    if (inline && process.stdout && process.stdout.write) {
+      // Limpa linha anterior e escreve nova (para atualização inline)
+      process.stdout.write(`\r${COLORS.INFO}${output}${COLORS.RESET}`);
+      if (current === total) {
+        process.stdout.write('\n'); // Nova linha no final
+      }
+    } else {
+      this.info(output);
+    }
+    
+    return output;
   }
 }
 
