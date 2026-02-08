@@ -1,10 +1,10 @@
 {
-  "totalRuns": 110,
-  "successfulRuns": 110,
-  "localImprovements": 36,
+  "totalRuns": 111,
+  "successfulRuns": 111,
+  "localImprovements": 37,
   "prImprovements": 35,
   "byType": {
-    "docs": 19,
+    "docs": 20,
     "code": 24,
     "refactor": 10,
     "config": 3,
@@ -13,30 +13,30 @@
   },
   "history": [
     {
+      "timestamp": "2026-02-08T22:49:00.000Z",
+      "success": true,
+      "type": "docs",
+      "file": "memory/improvements/2026-02-08-1949-guardian-exec.md",
+      "lines": 28,
+      "local": true
+    },
+    {
       "timestamp": "2026-02-08T14:23:00.000Z",
       "success": true,
       "type": "refactor",
       "file": "scripts/lib/logger.js",
       "lines": 109,
       "local": true
-    },
-    {
-      "timestamp": "2026-02-08T14:13:00.000Z",
-      "success": true,
-      "type": "docs",
-      "file": "memory/improvements/metrics.json",
-      "lines": 30,
-      "local": true
     }
   ],
-  "throughput24h": "1.15",
-  "lastUpdated": "2026-02-08T22:43:00.000Z",
-  "backpressureDuration": 105,
-  "totalImprovements": 71,
+  "throughput24h": "1.16",
+  "lastUpdated": "2026-02-08T22:49:00.000Z",
+  "backpressureDuration": 106,
+  "totalImprovements": 72,
   "lastImprovement": {
-    "timestamp": "2026-02-08T22:43:00.000Z",
+    "timestamp": "2026-02-08T22:49:00.000Z",
     "type": "docs",
-    "title": "Consolidação de mudanças pendentes - métricas e tracking",
+    "title": "Registro estruturado de execução do Guardian",
     "local": true,
     "backpressure": true
   },
