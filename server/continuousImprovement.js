@@ -187,10 +187,39 @@ function getTimestamp() {
 }
 
 /**
+ * Garante que um arquivo existe, criando-o se necessário
+ * @param {string} filePath - Caminho do arquivo
+ * @param {string} [defaultContent=''] - Conteúdo padrão se arquivo não existir
+ * @returns {boolean} True se arquivo existe ou foi criado
+ */
+function ensureFileExists(filePath, defaultContent = '') {
+  const dir = path.dirname(filePath);
+  
+  // Cria diretório se não existir
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    ImprovementLogger.info(`📁 Diretório criado: ${dir}`);
+  }
+  
+  // Cria arquivo se não existir
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, defaultContent);
+    ImprovementLogger.info(`📄 Arquivo criado: ${filePath}`);
+    return true;
+  }
+  
+  return true;
+}
+
+/**
  * Adiciona JSDoc
  */
 function addJSDoc() {
   const file = 'src/core/utils.js';
+  
+  // Garante que arquivo existe antes de modificar
+  ensureFileExists(file, '// Utilities module\n');
+  
   const content = `/**
  * Função utilitária adicionada em ${new Date().toISOString()}
  * @param {string} input - Input string
@@ -212,6 +241,14 @@ module.exports = { processInput };
  */
 function addTest() {
   const file = 'tests/core/config.test.js';
+  
+  // Garante que arquivo existe antes de modificar
+  ensureFileExists(file, `const { Config } = require('../../src/core/config');
+
+describe('Config', () => {
+});
+`);
+  
   const test = `
   it('should handle edge case: empty config', () => {
     const config = new Config();
@@ -262,6 +299,10 @@ module.exports = StringUtils;
  */
 function addComment() {
   const file = 'src/core/config.js';
+  
+  // Garante que arquivo existe antes de modificar
+  ensureFileExists(file, '// Config module\n');
+  
   const comment = `// NOTE: Configuração carregada em ${new Date().toLocaleString()}
 // Esta classe gerencia todas as configurações do sistema
 `;
@@ -320,6 +361,10 @@ console.log('Valid:', validation.valid);
  */
 function addValidation() {
   const file = 'src/core/logger.js';
+  
+  // Garante que arquivo existe antes de modificar
+  ensureFileExists(file, '// Logger module\n');
+  
   const validation = `
   /**
    * Valida nível de log
@@ -345,6 +390,14 @@ function addValidation() {
  */
 function updateChangelog() {
   const file = 'CHANGELOG.md';
+  
+  // Garante que arquivo existe antes de modificar
+  ensureFileExists(file, `# Changelog
+
+## [Unreleased]
+
+`);
+  
   const entry = `\n## [1.0.3] - ${new Date().toISOString().slice(0, 10)}
 
 ### Melhorias Automáticas
