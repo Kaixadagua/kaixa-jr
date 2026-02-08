@@ -187,6 +187,36 @@ function getTimestamp() {
 }
 
 /**
+ * Formata duração em tempo humano legível
+ * @param {number} ms - Duração em milissegundos
+ * @returns {string} Tempo formatado (ex: "2h 30m", "45s", "5d 3h")
+ * @example
+ * formatDuration(9000000) // "2h 30m"
+ * formatDuration(45000)   // "45s"
+ * formatDuration(453000000) // "5d 5h"
+ */
+function formatDuration(ms) {
+  if (ms < 0) return '0s';
+  if (ms < 1000) return `${ms}ms`;
+  
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  
+  if (days > 0) {
+    return `${days}d ${hours % 24}h`;
+  }
+  if (hours > 0) {
+    return `${hours}h ${minutes % 60}m`;
+  }
+  if (minutes > 0) {
+    return `${minutes}m ${seconds % 60}s`;
+  }
+  return `${seconds}s`;
+}
+
+/**
  * Adiciona JSDoc
  */
 function addJSDoc() {
@@ -442,6 +472,7 @@ ${improvement.title}
  */
 async function run() {
   const logger = ImprovementLogger;
+  const startTime = Date.now();
   
   logger.info('🦊 KAIXA JR - MELHORIA CONTÍNUA iniciada', {
     timestamp: new Date().toISOString()
@@ -483,13 +514,16 @@ async function run() {
           execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
         } catch {}
         
+              const duration = formatDuration(Date.now() - startTime);
+        
         logger.info('✅ MELHORIA COMPLETA!', { 
           success: true, 
           branch, 
-          file: result.file 
+          file: result.file,
+          duration
         });
         
-        return { success: true, branch, file: result.file };
+        return { success: true, branch, file: result.file, duration };
       }
     }
   }
@@ -498,13 +532,16 @@ async function run() {
   logger.warn('Documentando melhoria localmente (backpressure ou erro)');
   documentLocal(improvement, result);
   
+  const duration = formatDuration(Date.now() - startTime);
+  
   logger.info('✅ MELHORIA DOCUMENTADA (local)', { 
     success: true, 
     local: true, 
-    file: result.file 
+    file: result.file,
+    duration
   });
   
-  return { success: true, local: true, file: result.file };
+  return { success: true, local: true, file: result.file, duration };
 }
 
 // Executa
