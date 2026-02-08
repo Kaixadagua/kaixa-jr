@@ -1,0 +1,21 @@
+{
+  "totalRuns": 1,
+  "successfulRuns": 1,
+  "localImprovements": 0,
+  "prImprovements": 1,
+  "byType": {
+    "code": 1
+  },
+  "history": [
+    {
+      "timestamp": "2026-02-08T07:27:00.000Z",
+      "success": true,
+      "type": "code",
+      "file": "server/continuousImprovement.js",
+      "lines": 45,
+      "local": false,
+      "branch": "feature/metrics-persistent-51"
+    }
+  ],
+  "throughput24h": "0.04"
+}
