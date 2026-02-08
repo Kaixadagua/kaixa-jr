@@ -1,10 +1,10 @@
 {
   "totalRuns": 110,
   "successfulRuns": 110,
-  "localImprovements": 36,
+  "localImprovements": 37,
   "prImprovements": 35,
   "byType": {
-    "docs": 19,
+    "docs": 20,
     "code": 24,
     "refactor": 10,
     "config": 3,
@@ -12,6 +12,14 @@
     "other": 7
   },
   "history": [
+    {
+      "timestamp": "2026-02-08T22:55:00.000Z",
+      "success": true,
+      "type": "docs",
+      "file": "scripts/reports/guardian-2026-02-08.json",
+      "lines": 1,
+      "local": true
+    },
     {
       "timestamp": "2026-02-08T14:23:00.000Z",
       "success": true,
@@ -29,14 +37,14 @@
       "local": true
     }
   ],
-  "throughput24h": "1.15",
-  "lastUpdated": "2026-02-08T22:43:00.000Z",
+  "throughput24h": "1.16",
+  "lastUpdated": "2026-02-08T22:55:00.000Z",
   "backpressureDuration": 105,
-  "totalImprovements": 71,
+  "totalImprovements": 72,
   "lastImprovement": {
-    "timestamp": "2026-02-08T22:43:00.000Z",
+    "timestamp": "2026-02-08T22:55:00.000Z",
     "type": "docs",
-    "title": "Consolidação de mudanças pendentes - métricas e tracking",
+    "title": "Consolidação de Métricas - Execução Cron 19:55",
     "local": true,
     "backpressure": true
   },
