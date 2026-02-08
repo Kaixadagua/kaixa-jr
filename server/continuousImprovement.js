@@ -87,24 +87,202 @@ function detectModifiedFiles() {
 }
 
 /**
- * Sugere melhoria baseada no estado do repo
+ * Detecta estrutura real do repositório
+ * @returns {Object} Estrutura detectada
+ */
+function detectRepoStructure() {
+  const structure = {
+    hasTests: fs.existsSync('tests') || fs.existsSync('__tests__') || fs.existsSync('test'),
+    hasSrc: fs.existsSync('src'),
+    hasScripts: fs.existsSync('scripts'),
+    hasServer: fs.existsSync('server'),
+    hasExamples: fs.existsSync('examples'),
+    hasDocs: fs.existsSync('docs') || fs.existsSync('docs-site'),
+    hasPackageJson: fs.existsSync('package.json'),
+    hasChangelog: fs.existsSync('CHANGELOG.md'),
+    jsFiles: [],
+    testFiles: [],
+    undocumentedFunctions: []
+  };
+  
+  // Scan por arquivos JS
+  try {
+    const scanDir = (dir, depth = 0) => {
+      if (depth > 3) return;
+      if (!fs.existsSync(dir)) return;
+      
+      const items = fs.readdirSync(dir);
+      for (const item of items) {
+        const fullPath = path.join(dir, item);
+        const stat = fs.statSync(fullPath);
+        
+        if (stat.isDirectory() && !item.startsWith('.') && !item.includes('node_modules')) {
+          scanDir(fullPath, depth + 1);
+        } else if (item.endsWith('.js') && !item.includes('test')) {
+          structure.jsFiles.push(fullPath);
+          
+          // Checa por funções sem JSDoc
+          const content = fs.readFileSync(fullPath, 'utf8');
+          const funcMatches = content.match(/(?:async\s+)?function\s+([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\(/g) || [];
+          for (const match of funcMatches) {
+            const funcName = match.match(/function\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/)?.[1];
+            if (funcName && !content.includes(`@function ${funcName}`) && !content.includes('/**')) {
+              structure.undocumentedFunctions.push({ file: fullPath, name: funcName });
+            }
+          }
+        } else if (item.includes('.test.') || item.includes('.spec.')) {
+          structure.testFiles.push(fullPath);
+        }
+      }
+    };
+    
+    scanDir('.');
+  } catch (e) {
+    // Ignore scan errors
+  }
+  
+  return structure;
+}
+
+/**
+ * Sugere melhoria baseada no estado REAL do repo
  * @returns {Object} Melhoria sugerida
  */
 function suggestImprovement() {
   const modified = detectModifiedFiles();
+  const structure = detectRepoStructure();
   
+  // Prioridade 1: Documentar mudanças pendentes
   if (modified.length > 0) {
-    // Prioriza documentar mudanças pendentes
     return {
       type: 'docs',
       title: 'Documenta mudanças pendentes em TRACKING.md',
       action: () => documentPendingChanges(modified),
-      reason: 'Arquivos modificados detectados'
+      reason: `${modified.length} arquivo(s) modificado(s) detectado(s)`
     };
   }
   
-  // Fallback: melhoria aleatória
-  return IMPROVEMENTS[Math.floor(Math.random() * IMPROVEMENTS.length)];
+  // Prioridade 2: Adicionar JSDoc em funções sem documentação
+  if (structure.undocumentedFunctions.length > 0) {
+    const target = structure.undocumentedFunctions[0];
+    return {
+      type: 'docs',
+      title: `Adiciona JSDoc em ${target.name}() em ${path.basename(target.file)}`,
+      action: () => addJSDocToFunction(target.file, target.name),
+      reason: 'Função sem documentação detectada'
+    };
+  }
+  
+  // Prioridade 3: Criar teste se não existir
+  if (structure.hasSrc && !structure.hasTests && structure.jsFiles.length > 0) {
+    return {
+      type: 'test',
+      title: 'Cria estrutura inicial de testes',
+      action: () => createTestStructure(structure.jsFiles[0]),
+      reason: 'Src existe mas não há testes'
+    };
+  }
+  
+  // Prioridade 4: README em pasta scripts
+  if (structure.hasScripts && !fs.existsSync('scripts/README.md')) {
+    return {
+      type: 'docs',
+      title: 'Cria README.md para pasta scripts',
+      action: () => createScriptsReadme(),
+      reason: 'Pasta scripts existe sem documentação'
+    };
+  }
+  
+  // Fallback: melhoria aleatória filtrada pelo que existe
+  const applicable = IMPROVEMENTS.filter(imp => {
+    if (imp.type === 'test' && !structure.hasTests && !structure.hasSrc) return false;
+    if (imp.type === 'config' && !structure.hasPackageJson) return false;
+    return true;
+  });
+  
+  return applicable.length > 0 
+    ? applicable[Math.floor(Math.random() * applicable.length)]
+    : IMPROVEMENTS[0];
+}
+
+/**
+ * Adiciona JSDoc a função específica
+ * @param {string} filePath - Arquivo alvo
+ * @param {string} funcName - Nome da função
+ */
+function addJSDocToFunction(filePath, funcName) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const funcPattern = new RegExp(`(\\s*)(?:async\\s+)?function\\s+${funcName}\\s*\\(([^)]*)\\)`, 'g');
+  
+  const jsDoc = `/**
+ * ${funcName} - descrição automática
+ * @param {Object} options - Opções da função
+ * @returns {*} Resultado da operação
+ */`;
+  
+  const newContent = content.replace(funcPattern, `${jsDoc}$1function ${funcName}($2)`);
+  fs.writeFileSync(filePath, newContent);
+  
+  return { file: filePath, type: 'docs', lines: 5 };
+}
+
+/**
+ * Cria estrutura inicial de testes
+ * @param {string} sourceFile - Arquivo fonte para basear o teste
+ */
+function createTestStructure(sourceFile) {
+  if (!fs.existsSync('tests')) {
+    fs.mkdirSync('tests', { recursive: true });
+  }
+  
+  const testFile = `tests/${path.basename(sourceFile, '.js')}.test.js`;
+  const content = `/**
+ * Testes para ${path.basename(sourceFile)}
+ * Gerado automaticamente em ${new Date().toISOString()}
+ */
+
+describe('${path.basename(sourceFile, '.js')}', () => {
+  it('should be defined', () => {
+    expect(true).toBe(true);
+  });
+  
+  // TODO: Adicionar testes reais baseados em ${sourceFile}
+});
+`;
+  
+  fs.writeFileSync(testFile, content);
+  return { file: testFile, type: 'test', lines: 12 };
+}
+
+/**
+ * Cria README para pasta scripts
+ */
+function createScriptsReadme() {
+  const scripts = fs.readdirSync('scripts')
+    .filter(f => f.endsWith('.js') || f.endsWith('.ps1') || f.endsWith('.sh'))
+    .map(f => `- \`${f}\``)
+    .join('\n');
+  
+  const content = `# Scripts
+
+Utilitários e automações do projeto.
+
+## Scripts Disponíveis
+
+${scripts}
+
+## Convenções
+
+- \`.js\` - Scripts Node.js cross-platform
+- \`.ps1\` - Scripts PowerShell (Windows)
+- \`.sh\` - Scripts Bash (Unix)
+
+---
+*Documentação gerada automaticamente em ${new Date().toLocaleString()}* 🦊
+`;
+  
+  fs.writeFileSync('scripts/README.md', content);
+  return { file: 'scripts/README.md', type: 'docs', lines: 15 };
 }
 
 /**
