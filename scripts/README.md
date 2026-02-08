@@ -21,6 +21,7 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 | Script | Descrição | Uso |
 |--------|-----------|-----|
 | `kaixa-guardian.js` | Guardian principal - verifica saúde do sistema | `node scripts/kaixa-guardian.js` |
+| `kaixa-sessions.js` | Listador de sessões ativas do OpenClaw | `node scripts/kaixa-sessions.js` |
 | `kaixa-report-35min.js` | Report periódico de status (35min) | `node scripts/kaixa-report-35min.js` |
 | `improvement-health.js` | Health check específico de melhorias | `node scripts/improvement-health.js` |
 | `health-check.js` | Saúde geral do ambiente (git, backpressure, stats) | `node scripts/health-check.js` |

@@ -9,6 +9,7 @@
 |--------|-----------|-----|
 | `melhoria-status.js` | Dashboard de melhorias | `node scripts/melhoria-status.js` |
 | `kaixa-metrics.js` | **Metrics em tempo real** | `node scripts/kaixa-metrics.js --mini` |
+| `kaixa-sessions.js` | **Listador de sessões ativas** | `node scripts/kaixa-sessions.js` |
 | `health-check.js` | Saúde do ambiente | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
 | `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
