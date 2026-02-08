@@ -5,19 +5,31 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **56** |
-| PRs criados | 16 (abertos - backpressure persistente) |
+| **Total de melhorias** | **57** |
+| PRs criados | 17 (abertos - backpressure persistente) |
 | Melhorias locais | 23 |
-| Melhorias PR | 32 |
+| Melhorias PR | 33 |
 | Tempo total | ~2916 min (48h+) |
 | Tempo médio/melhoria | ~52.1 min |
 | **Throughput** | **~1.15 melhorias/hora** (sustentável com backpressure) |
 
 ### Backlog
 ```
-████████████████████ 13/9 PRs abertos
+████████████████████ 14/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
+
+### Melhoria #57 (2026-02-08 11:44) - 🆕 PR #34
+**Branch:** `feature/retry-async-57` → **retryAsync() - Retry com backoff exponencial**
+- Função `retryAsync()` para operações async com retry automático
+- **Backoff exponencial**: delay dobra a cada tentativa (1s, 2s, 4s, 8s...)
+- **Jitter**: +random(0-1000ms) para evitar thundering herd
+- **Max delay**: Cap de 30s para evitar esperas excessivas
+- **Callback onRetry**: Hook para logging ou métricas customizadas
+- Exportações adicionadas: `ImprovementLogger`, `retryAsync`, `run`
+- 63 linhas de código com JSDoc completo
+- 🎯 **57 melhorias totais!** Resiliência reforçada!
+🔗 https://github.com/Kaixadagua/kaixa-jr/pull/34
 
 ### Melhoria #56 (2026-02-08 09:54) - 🆕 PR #30
 **Branch:** `feature/ensure-file-exists-56` → **ensureFileExists() - Robusteza para arquivos inexistentes**
