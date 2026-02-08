@@ -102,4 +102,31 @@ node scripts/auto-commit.js
 
 ---
 
-*Atualizado: 2026-02-04 - Kaixa Jr 🦊*
+## 📊 Status dos Scripts
+
+Indicadores de maturidade e manutenção:
+
+| Script | Status | Descrição |
+|--------|--------|-----------|
+| `kaixa-guardian.js` | ✅ Estável | Core do sistema, testado em produção |
+| `health-check.js` | ✅ Estável | Health check completo com métricas |
+| `auto-commit.js` | ✅ Estável | Auxiliar de commits com análise |
+| `scripts-index.js` | ✅ Estável | Índice interativo funcional |
+| `check-backpressure.ps1` | ✅ Estável | Backpressure detection funcional |
+| `status.bat` | ✅ Estável | Status rápido diário |
+| `kaixa-report-35min.js` | 📝 Beta | Reports periódicos, em validação |
+| `improvement-health.js` | 📝 Beta | Health específico de melhorias |
+| `context-compactor.js` | 🆕 Novo | Recém criado, em testes |
+| `smart-merge.ps1` | 🆕 Novo | Merge inteligente, em testes |
+| `kaixa-watchdog.ps1` | ⚠️ Legado | Funcional mas será substituído |
+| `agent-guardian.js` | ⚠️ Legado | Versão anterior do guardian |
+
+**Legenda:**
+- ✅ Estável — Testado em produção, confiável
+- 📝 Beta — Funcional mas em observação
+- 🆕 Novo — Recém criado, validação em andamento  
+- ⚠️ Legado — Funciona mas será depreciado
+
+---
+
+*Atualizado: 2026-02-08 - Kaixa Jr 🦊*
