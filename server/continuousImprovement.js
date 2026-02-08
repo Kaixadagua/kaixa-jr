@@ -343,6 +343,71 @@ function pushBranch(branch) {
 }
 
 /**
+ * Rollback - desfaz alterações em caso de erro
+ * @param {string} branch - Branch criada
+ * @param {string[]} modifiedFiles - Arquivos modificados antes da melhoria
+ * @returns {boolean} Sucesso do rollback
+ */
+function rollbackChanges(branch, modifiedFiles = []) {
+  console.log('\n🔄 Iniciando rollback...');
+  
+  try {
+    // 1. Volta para branch anterior
+    const currentBranch = execSync('git branch --show-current', { 
+      cwd: process.cwd(), 
+      encoding: 'utf8' 
+    }).trim();
+    
+    if (currentBranch === branch) {
+      execSync('git checkout -', { cwd: process.cwd() });
+    }
+    
+    // 2. Remove branch criada (forçado)
+    try {
+      execSync(`git branch -D ${branch}`, { cwd: process.cwd() });
+      console.log(`🗑️ Branch ${branch} removida`);
+    } catch {
+      console.log('⚠️ Não foi possível remover branch');
+    }
+    
+    // 3. Restaura arquivos modificados
+    if (modifiedFiles.length > 0) {
+      execSync('git checkout -- .', { cwd: process.cwd() });
+      console.log('📄 Arquivos restaurados');
+    }
+    
+    console.log('✅ Rollback completo');
+    return true;
+  } catch (e) {
+    console.log('❌ Erro no rollback:', e.message);
+    return false;
+  }
+}
+
+/**
+ * Salva estado atual antes da melhoria
+ * @returns {Object} Estado do repo
+ */
+function saveState() {
+  try {
+    const branch = execSync('git branch --show-current', { 
+      cwd: process.cwd(), 
+      encoding: 'utf8' 
+    }).trim();
+    
+    const modified = detectModifiedFiles();
+    
+    return {
+      branch,
+      modified,
+      timestamp: new Date().toISOString()
+    };
+  } catch {
+    return { branch: 'unknown', modified: [], timestamp: null };
+  }
+}
+
+/**
  * Documenta melhoria local
  */
 function documentLocal(improvement, result) {
@@ -387,6 +452,13 @@ async function run() {
   console.log(`⏰ ${new Date().toLocaleString()}`);
   console.log('='.repeat(60));
   
+  // Salva estado para possível rollback
+  const state = saveState();
+  console.log(`\n💾 Estado salvo: ${state.branch}`);
+  if (state.modified.length > 0) {
+    console.log(`⚠️ ${state.modified.length} arquivo(s) já modificado(s)`);
+  }
+  
   // Seleciona melhoria (inteligente: detecta estado do repo)
   const improvement = suggestImprovement();
   console.log(`\n🎯 Melhoria: ${improvement.title}`);
@@ -397,9 +469,16 @@ async function run() {
   
   // Executa
   console.log('\n🔨 Executando...');
-  const result = improvement.action();
-  console.log(`✅ Arquivo: ${result.file}`);
-  console.log(`📊 Linhas: +${result.lines}`);
+  let result;
+  try {
+    result = improvement.action();
+    console.log(`✅ Arquivo: ${result.file}`);
+    console.log(`📊 Linhas: +${result.lines}`);
+  } catch (e) {
+    console.log(`❌ Erro na execução: ${e.message}`);
+    rollbackChanges(null, state.modified);
+    return { success: false, error: e.message };
+  }
   
   // Tenta criar branch e commit
   const timestamp = Date.now().toString(36);
@@ -420,7 +499,7 @@ async function run() {
         
         // Volta para branch principal
         try {
-          execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
+          execSync(`git checkout ${state.branch}`, { cwd: process.cwd() });
         } catch {}
         
         console.log('\n' + '='.repeat(60));
@@ -432,7 +511,10 @@ async function run() {
     }
   }
   
-  // Se falhou, documenta local
+  // Se falhou, faz rollback e documenta local
+  console.log('\n🔄 Falha no push, fazendo rollback...');
+  rollbackChanges(branch, state.modified);
+  
   console.log('\n📝 Documentando localmente...');
   documentLocal(improvement, result);
   
