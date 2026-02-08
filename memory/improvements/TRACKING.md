@@ -5,7 +5,7 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **57** |
+| **Total de melhorias** | **58** |
 | PRs criados | 16 (abertos - backpressure persistente) |
 | Melhorias locais | 24 |
 | Melhorias PR | 32 |
@@ -18,6 +18,17 @@
 ████████████████████ 13/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
+
+### Melhoria #58 (2026-02-08 16:56) - 🆕 LOCAL
+**Arquivo:** `scripts/pr-auto-queue.js` → **PR Auto-Queue - Sistema de fila automática para PRs**
+- Script inteligente que monitora backpressure em tempo real
+- Detecta melhorias locais candidatas a virar PR (últimos 7 dias)
+- Converte automaticamente para batch PR quando limite liberar
+- Modo JSON (`--status`) para integração com outros scripts
+- Modo FORCE (`--force`) para ignorar backpressure (cuidado!)
+- JSDoc completo com @typedef para todos os objetos
+- Exporta funções para testes: `checkBackpressure`, `checkQueueStatus`, etc.
+- 🎯 **58 melhorias totais!** Automação de fluxo = eficiência máxima!
 
 ### Melhoria #57 (2026-02-08 14:15) - 🆕 LOCAL
 **Arquivo:** `scripts/improvement-quickview.js` → **QuickView de Melhorias - Visualização rápida**
