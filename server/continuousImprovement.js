@@ -3,7 +3,14 @@
  * Kaixa Jr - Continuous Improvement
  * Sempre gera 1 melhoria, ignore backpressure
  * 
+ * CLI Arguments:
+ *   --dry-run, -d     Simula sem fazer alterações
+ *   --local, -l       Força melhoria local (sem branch/PR)
+ *   --type=<tipo>     Força tipo específico (docs|test|refactor|config|code)
+ *   --verbose, -v     Output detalhado
+ * 
  * @module server/continuousImprovement
+ * @usage node server/continuousImprovement.js [--dry-run] [--local] [--type=docs]
  */
 
 const { execSync } = require('child_process');
@@ -438,17 +445,52 @@ ${improvement.title}
 }
 
 /**
+ * Parse CLI arguments
+ * @returns {Object} Opções parseadas
+ */
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const options = {
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    local: args.includes('--local') || args.includes('-l'),
+    forceType: null,
+    verbose: args.includes('--verbose') || args.includes('-v')
+  };
+  
+  // Parse --type=<value>
+  const typeArg = args.find(arg => arg.startsWith('--type='));
+  if (typeArg) {
+    options.forceType = typeArg.split('=')[1];
+  }
+  
+  return options;
+}
+
+/**
  * EXECUTA 1 MELHORIA
  */
 async function run() {
   const logger = ImprovementLogger;
+  const options = parseArgs();
   
   logger.info('🦊 KAIXA JR - MELHORIA CONTÍNUA iniciada', {
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    options
   });
   
+  if (options.dryRun) {
+    logger.info('🔍 MODO DRY-RUN: Simulando sem alterações');
+  }
+  
   // Seleciona melhoria (inteligente: detecta estado do repo)
-  const improvement = suggestImprovement();
+  let improvement;
+  if (options.forceType) {
+    const filtered = IMPROVEMENTS.filter(i => i.type === options.forceType);
+    improvement = filtered[0] || suggestImprovement();
+    logger.info(`🎯 Tipo forçado: ${options.forceType}`);
+  } else {
+    improvement = suggestImprovement();
+  }
   logger.info(`🎯 Melhoria selecionada: ${improvement.title}`, {
     type: improvement.type,
     reason: improvement.reason || 'fallback'
@@ -456,13 +498,35 @@ async function run() {
   
   // Executa
   logger.info('🔨 Executando melhoria...');
-  const result = improvement.action();
-  logger.info(`✅ Melhoria aplicada em ${result.file}`, {
-    linesAdded: result.lines,
-    type: result.type
-  });
   
-  // Tenta criar branch e commit
+  let result;
+  if (options.dryRun) {
+    // Simula resultado sem modificar arquivos
+    result = { file: 'DRY-RUN', type: improvement.type, lines: 0 };
+    logger.info(`🔍 [DRY-RUN] Simulado: ${improvement.title}`, {
+      type: improvement.type
+    });
+  } else {
+    result = improvement.action();
+    logger.info(`✅ Melhoria aplicada em ${result.file}`, {
+      linesAdded: result.lines,
+      type: result.type
+    });
+  }
+  
+  // Se --local, força documentação local
+  if (options.local) {
+    logger.info('📝 MODO LOCAL: Documentando sem branch/PR');
+    documentLocal(improvement, result);
+    return { success: true, local: true, file: result.file, mode: 'forced-local' };
+  }
+  
+  // Tenta criar branch e commit (exceto em dry-run)
+  if (options.dryRun) {
+    logger.info('🔍 [DRY-RUN] Pulando git operations');
+    return { success: true, dryRun: true, improvement: improvement.title };
+  }
+  
   const timestamp = Date.now().toString(36);
   const branch = createBranch(timestamp);
   
