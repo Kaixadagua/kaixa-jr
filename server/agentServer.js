@@ -1,7 +1,10 @@
 /**
- * Kaixa Jr Agent Server
- * Servidor HTTP para conexão com AgentCorp
- * 
+ * @fileoverview Kaixa Jr Agent Server - API HTTP para integração com AgentCorp
+ * @description Servidor HTTP leve que expõe status e health check do agente Kaixa Jr.
+ *              Permite integração com sistemas externos via endpoints REST.
+ *              Escuta em 0.0.0.0 para compatibilidade com Docker/containers.
+ * @author Kaixa Jr 🦊
+ * @version 1.0.3
  * @module server/agentServer
  */
 
@@ -11,7 +14,26 @@ const { getConfig } = require('../src/core/config');
 const config = getConfig();
 const PORT = process.env.AGENT_PORT || 5000;
 
-// Status atual do agente
+/**
+ * Status atual do agente Kaixa Jr
+ * @typedef {Object} AgentStatus
+ * @property {string} id - Identificador único do agente
+ * @property {string} name - Nome do agente
+ * @property {string} surname - Sobrenome/tipo do agente
+ * @property {string} emoji - Representação emoji do agente
+ * @property {'idle'|'working'|'busy'} status - Estado atual do agente
+ * @property {string|null} task - Tarefa em execução ou null
+ * @property {number} tasks_completed - Total de tarefas finalizadas
+ * @property {number} energy - Nível de energia (0-100)
+ * @property {number} health - Nível de saúde (0-100)
+ * @property {number} happiness - Nível de felicidade (0-100)
+ * @property {number} efficiency - Eficiência atual (0-100)
+ * @property {number} last_active - Timestamp da última atividade (ms)
+ * @property {string[]} capabilities - Lista de capacidades do agente
+ * @property {string} version - Versão do agente
+ */
+
+/** @type {AgentStatus} */
 let agentStatus = {
   id: 'kaixa-jr-001',
   name: 'Kaixa Jr',
@@ -45,7 +67,9 @@ function updateStatus(status, task = null) {
 }
 
 /**
- * Incrementa tarefas completadas
+ * Incrementa contador de tarefas completadas
+ * Atualiza status para 'idle' e limpa tarefa atual
+ * @returns {number} Novo total de tarefas completadas
  */
 function completeTask() {
   agentStatus.tasks_completed++;
@@ -56,10 +80,14 @@ function completeTask() {
 }
 
 /**
- * Cria servidor HTTP
+ * Cria e inicia servidor HTTP para API do agente
  * IMPORTANTE: Escuta em '0.0.0.0' para permitir acesso do Docker
+ * 
+ * @returns {http.Server} Instância do servidor HTTP criado
+ * @example
+ * const server = createServer();
+ * // Servidor rodando em http://0.0.0.0:5000
  */
-function createServer() {
   const server = http.createServer((req, res) => {
     // CORS headers - PERMITE TODAS AS ORIGENS (necessário para Docker)
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -104,12 +132,27 @@ function createServer() {
   return server;
 }
 
-// Exporta funções
+/**
+ * Obtém cópia do status atual do agente
+ * @returns {AgentStatus} Cópia do estado atual do agente
+ */
+function getStatus() {
+  return { ...agentStatus };
+}
+
+/**
+ * Exportações do módulo
+ * @namespace AgentServerAPI
+ */
 module.exports = {
+  /** @type {Function} Cria servidor HTTP */
   createServer,
+  /** @type {Function} Atualiza status do agente */
   updateStatus,
+  /** @type {Function} Marca tarefa como completa */
   completeTask,
-  getStatus: () => ({ ...agentStatus })
+  /** @type {Function} Obtém status atual */
+  getStatus
 };
 
 // Se executado diretamente
