@@ -12,6 +12,7 @@
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
 | `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
 | `system-cleanup.js` | Limpeza e manutenção | `node scripts/system-cleanup.js` |
+| `improvement-quickview.js` | QuickView de melhorias | `node scripts/improvement-quickview.js` |
 
 ### PowerShell
 | Script | Descrição | Uso |
@@ -41,6 +42,7 @@
 node scripts/melhoria-status.js
 node scripts/health-check.js
 node scripts/submodule-manager.js
+node scripts/improvement-quickview.js  # Quick view das últimas 5
 ```
 
 ### Antes de commit
@@ -55,5 +57,5 @@ node scripts/auto-commit.js
 ```
 
 ---
-*Índice gerado: 2026-02-08 02:28*
-*17 melhorias locais consecutivas em backpressure*
+*Índice atualizado: 2026-02-08 14:15*
+*Melhoria #57 - QuickView de Melhorias adicionado*
