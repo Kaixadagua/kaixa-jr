@@ -1,22 +1,39 @@
 #!/usr/bin/env node
-// kaixa-guardian.js - Sistema de gestão saudável de agentes Kaixa
-// Última atualização: 2026-02-07
-// Uso: node scripts/kaixa-guardian.js [--silent|-s]
-// Fix: Agora filtra corretamente por kind: 'subagent' (não conta sessão main)
+/**
+ * @fileoverview Kaixa Guardian - Sistema de gestão saudável de agentes
+ * @description Monitora sessões do OpenClaw, tokens e saúde do sistema
+ * @author Kaixa Jr 🦊
+ * @version 1.2.0
+ * @usage node scripts/kaixa-guardian.js [--silent|-s]
+ */
 
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * Configuração do Guardian
+ * @constant {Object}
+ * @property {number} maxAgents - Máximo de agentes simultâneos
+ * @property {number} maxTokensPerAgent - Limite de tokens por agente
+ * @property {number} warningTokens - Threshold de alerta de tokens
+ * @property {number} checkInterval - Intervalo de verificação (ms)
+ * @property {string} reportDir - Diretório de relatórios
+ * @property {boolean} silentMode - Modo silencioso para cron
+ */
 const CONFIG = {
-    maxAgents: 2,          // Matches openclaw.json maxConcurrent
+    maxAgents: 2,
     maxTokensPerAgent: 180000,
     warningTokens: 150000,
-    checkInterval: 300000, // 5 minutos (cron interval)
+    checkInterval: 300000,
     reportDir: 'scripts/reports',
     silentMode: process.argv.includes('--silent') || process.argv.includes('-s')
 };
 
+/**
+ * Obtém lista de sessões do OpenClaw via CLI
+ * @returns {Object} Objeto com array de sessões { sessions: [] }
+ */
 function getSessionStatus() {
     try {
         const output = execSync('openclaw sessions list --json', { encoding: 'utf8' });
@@ -26,10 +43,26 @@ function getSessionStatus() {
     }
 }
 
+/**
+ * Verifica se uma chave de sessão pertence a um cron job
+ * @param {string} sessionKey - Chave da sessão
+ * @returns {boolean} True se for sessão de cron
+ */
 function isCronSession(sessionKey) {
     return sessionKey && sessionKey.includes(':cron:');
 }
 
+/**
+ * Analisa saúde do sistema baseado nas sessões ativas
+ * @returns {Object} Status de saúde com agentes, tokens e alertas
+ * @property {number} agentCount - Quantidade de subagentes
+ * @property {number} totalTokens - Total de tokens em uso
+ * @property {number} systemCount - Sessões de sistema ignoradas
+ * @property {string[]} warnings - Lista de alertas
+ * @property {string} status - Estado: 'healthy'|'warning'|'critical'
+ * @property {string} [action] - Ação recomendada se necessário
+ * @property {string} timestamp - ISO timestamp da análise
+ */
 function analyzeHealth() {
     const status = getSessionStatus();
     
@@ -81,6 +114,10 @@ function analyzeHealth() {
     return health;
 }
 
+/**
+ * Garante que o diretório de relatórios existe
+ * @returns {string} Caminho absoluto do diretório de relatórios
+ */
 function ensureReportDir() {
     const dir = path.join(process.cwd(), CONFIG.reportDir);
     if (!fs.existsSync(dir)) {
@@ -89,6 +126,10 @@ function ensureReportDir() {
     return dir;
 }
 
+/**
+ * Carrega histórico de relatórios do dia
+ * @returns {Object[]} Array de entradas de saúde anteriores
+ */
 function loadHistory() {
     const reportDir = ensureReportDir();
     const filename = `guardian-${new Date().toISOString().slice(0,10)}.json`;
@@ -102,6 +143,12 @@ function loadHistory() {
     return [];
 }
 
+/**
+ * Calcula tendência de tokens e agentes comparando com histórico
+ * @param {Object[]} history - Histórico de análises
+ * @param {Object} current - Análise atual
+ * @returns {Object} Tendências { tokens: string, agents: string }
+ */
 function calculateTrend(history, current) {
     if (history.length < 2) return { tokens: 'stable', agents: 'stable' };
     
@@ -115,6 +162,15 @@ function calculateTrend(history, current) {
     };
 }
 
+/**
+ * Salva relatório de saúde no arquivo JSON diário
+ * @param {Object} health - Dados de saúde atual
+ * @param {string} health.timestamp - Timestamp ISO
+ * @param {number} health.agentCount - Contagem de agentes
+ * @param {number} health.totalTokens - Total de tokens
+ * @param {string} health.status - Status de saúde
+ * @param {string} [health.action] - Ação recomendada
+ */
 function saveReport(health) {
     const reportDir = ensureReportDir();
     const filename = `guardian-${new Date().toISOString().slice(0,10)}.json`;
@@ -141,6 +197,10 @@ function saveReport(health) {
     fs.writeFileSync(filepath, JSON.stringify(reports, null, 2));
 }
 
+/**
+ * Função principal - executa análise e exibe relatório
+ * @returns {void}
+ */
 function main() {
     const health = analyzeHealth();
     const history = loadHistory();
