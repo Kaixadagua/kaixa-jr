@@ -1,17 +1,31 @@
 # 📊 Tracking de Melhorias Contínuas
 
-## Dashboard - 2026-02-08 02:50
+## Dashboard - 2026-02-08 04:16
 
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **50** |
-| PRs criados | 13 (abertos - backpressure persistente) |
+| **Total de melhorias** | **51** |
+| PRs criados | 14 (abertos - backpressure persistente) |
 | Melhorias locais | 21 |
 | Melhorias locais | 20 |
-| Tempo total | ~2895 min (48h+) |
-| Tempo médio/melhoria | ~61.6 min |
-| **Throughput** | **~0.98 melhorias/hora** (sustentável com backpressure) |
+| Tempo total | ~2910 min (48.5h) |
+| Tempo médio/melhoria | ~57.1 min |
+| **Throughput** | **~1.05 melhorias/hora** (sustentável com backpressure) |
+
+### Melhoria #51 (2026-02-08 04:16) - 🆕
+**Branch:** `feature/format-duration-helper` → **Helper formatDuration() para tempo legível**
+- Função utilitária que converte ms → formato humano legível
+- Exemplos: `9000000` → `"2h 30m"`, `45000` → `"45s"`
+- JSDoc completo com @param, @returns e @example
+- Integração no logger: mostra tempo de execução da melhoria
+- Validação de entrada (negativos → "0s")
+- Granularidade adaptativa (ms → s → m → h → d)
+- Commit: `305d647` - pushado
+- 🎯 **51 melhorias totais** - nova milestone!
+
+### Melhoria #50 (2026-02-08 02:50)
+**Branch:** `improve/scripts-readme` → **ImprovementLogger - Sistema de logging estruturado**
 
 ### Backlog
 ```
