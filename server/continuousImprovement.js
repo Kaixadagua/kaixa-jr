@@ -402,6 +402,39 @@ function pushBranch(branch) {
 }
 
 /**
+ * Salva métricas da execução
+ * @param {Object} metrics - Métricas coletadas
+ * @param {Object} improvement - Melhoria executada
+ * @param {Object} result - Resultado da melhoria
+ */
+function saveMetrics(metrics, improvement, result) {
+  const metricsFile = 'memory/improvements/metrics.json';
+  
+  let data = { runs: [] };
+  if (fs.existsSync(metricsFile)) {
+    try {
+      data = JSON.parse(fs.readFileSync(metricsFile, 'utf8'));
+    } catch {}
+  }
+  
+  data.runs.push({
+    timestamp: new Date().toISOString(),
+    improvement: improvement.title,
+    type: improvement.type,
+    file: result.file,
+    ...metrics
+  });
+  
+  // Mantém apenas últimas 100 execuções
+  if (data.runs.length > 100) {
+    data.runs = data.runs.slice(-100);
+  }
+  
+  fs.writeFileSync(metricsFile, JSON.stringify(data, null, 2));
+  logger.debug('Métricas salvas', { file: metricsFile, runs: data.runs.length });
+}
+
+/**
  * Documenta melhoria local
  */
 function documentLocal(improvement, result) {
@@ -438,10 +471,72 @@ ${improvement.title}
 }
 
 /**
+ * Métricas de execução
+ * @namespace Metrics
+ */
+const Metrics = {
+  startTime: null,
+  endTime: null,
+  errors: [],
+  
+  start() {
+    this.startTime = Date.now();
+    this.errors = [];
+  },
+  
+  end() {
+    this.endTime = Date.now();
+  },
+  
+  duration() {
+    return this.endTime ? this.endTime - this.startTime : Date.now() - this.startTime;
+  },
+  
+  addError(error, context = '') {
+    this.errors.push({
+      timestamp: new Date().toISOString(),
+      message: error.message,
+      stack: error.stack,
+      context
+    });
+  },
+  
+  toJSON() {
+    return {
+      durationMs: this.duration(),
+      errorCount: this.errors.length,
+      errors: this.errors,
+      timestamp: new Date().toISOString()
+    };
+  }
+};
+
+/**
+ * Safe executor - executa função com tratamento de erro
+ * @param {Function} fn - Função a executar
+ * @param {string} context - Contexto para logs
+ * @returns {Object|null} Resultado ou null se falhou
+ */
+function safeExecute(fn, context) {
+  try {
+    return fn();
+  } catch (error) {
+    Metrics.addError(error, context);
+    ImprovementLogger.error(`❌ Erro em ${context}: ${error.message}`, {
+      stack: error.stack
+    });
+    return null;
+  }
+}
+
+/**
  * EXECUTA 1 MELHORIA
  */
 async function run() {
   const logger = ImprovementLogger;
+  
+  // Inicia métricas
+  Metrics.start();
   
   logger.info('🦊 KAIXA JR - MELHORIA CONTÍNUA iniciada', {
     timestamp: new Date().toISOString()
@@ -454,9 +549,16 @@ async function run() {
     reason: improvement.reason || 'fallback'
   });
   
-  // Executa
+  // Executa com tratamento de erro
   logger.info('🔨 Executando melhoria...');
-  const result = improvement.action();
+  const result = safeExecute(() => improvement.action(), 'improvement.action');
+  
+  if (!result) {
+    Metrics.end();
+    logger.error('❌ Falha ao executar melhoria', Metrics.toJSON());
+    throw new Error('Melhoria falhou - verifique logs');
+  }
+  
   logger.info(`✅ Melhoria aplicada em ${result.file}`, {
     linesAdded: result.lines,
     type: result.type
@@ -483,28 +585,45 @@ async function run() {
           execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
         } catch {}
         
+        Metrics.end();
+        const metrics = Metrics.toJSON();
+        
         logger.info('✅ MELHORIA COMPLETA!', { 
           success: true, 
           branch, 
-          file: result.file 
+          file: result.file,
+          durationMs: metrics.durationMs
         });
         
-        return { success: true, branch, file: result.file };
+        // Salva métricas
+        saveMetrics(metrics, improvement, result);
+        
+        return { success: true, branch, file: result.file, metrics };
       }
     }
   }
   
   // Se falhou, documenta local
-  logger.warn('Documentando melhoria localmente (backpressure ou erro)');
-  documentLocal(improvement, result);
+  Metrics.end();
+  const metrics = Metrics.toJSON();
+  
+  logger.warn('Documentando melhoria localmente (backpressure ou erro)', {
+    durationMs: metrics.durationMs,
+    errors: metrics.errorCount
+  });
+  
+  // Salva métricas mesmo em caso de falha
+  saveMetrics(metrics, improvement, result || { file: 'N/A', lines: 0 });
+  documentLocal(improvement, result || { file: 'N/A', lines: 0 });
   
   logger.info('✅ MELHORIA DOCUMENTADA (local)', { 
     success: true, 
     local: true, 
-    file: result.file 
+    file: result?.file || 'N/A',
+    durationMs: metrics.durationMs
   });
   
-  return { success: true, local: true, file: result.file };
+  return { success: true, local: true, file: result?.file || 'N/A', metrics };
 }
 
 // Executa
