@@ -13,6 +13,7 @@
 | `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
 | `system-cleanup.js` | Limpeza e manutenção | `node scripts/system-cleanup.js` |
 | `improvement-quickview.js` | QuickView de melhorias | `node scripts/improvement-quickview.js` |
+| `improvement-trends.js` | Análise de tendências | `node scripts/improvement-trends.js` |
 
 ### PowerShell
 | Script | Descrição | Uso |
@@ -43,6 +44,7 @@ node scripts/melhoria-status.js
 node scripts/health-check.js
 node scripts/submodule-manager.js
 node scripts/improvement-quickview.js  # Quick view das últimas 5
+node scripts/improvement-trends.js     # Análise de tendências
 ```
 
 ### Antes de commit
