@@ -241,5 +241,27 @@
       "count": 12,
       "status": "red"
     }
+  },
+  {
+    "timestamp": "2026-02-08T16:24:38.488Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:30:19.601Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
   }
 ]
