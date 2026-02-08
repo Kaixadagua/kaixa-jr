@@ -4,10 +4,26 @@
 
 ## 🚀 Scripts Principais (Enhanced 04:00)
 
+### 🦊 Kaixa CLI (Novo!)
+| Script | Descrição | Uso |
+|--------|-----------|-----|
+| `kaixa-cli.js` | **CLI unificada** - Acesso a todos os comandos | `node scripts/kaixa-cli.js <comando>` |
+
+**Comandos disponíveis:** `status`, `health`, `guardian`, `improve`, `backpressure`, `queue`, `quickview`, `cleanup`, `submodule`, `index`
+
+**Exemplos:**
+```bash
+node scripts/kaixa-cli.js status      # Status rápido
+node scripts/kaixa-cli.js improve     # Dashboard de melhorias
+node scripts/kaixa-cli.js bp --json   # Backpressure em JSON
+node scripts/kaixa-cli.js q --status  # Fila de PRs
+```
+
 ### Node.js
 | Script | Descrição | Uso |
 |--------|-----------|-----|
 | `kaixa-dashboard.js` | **Dashboard unificado** | `node scripts/kaixa-dashboard.js` |
+| `kaixa-cli.js` | **CLI unificada** | `node scripts/kaixa-cli.js <cmd>` |
 | `melhoria-status.js` | Dashboard de melhorias | `node scripts/melhoria-status.js` |
 | `health-check.js` | Saúde do ambiente | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
