@@ -10,6 +10,7 @@
 | `melhoria-status.js` | Dashboard de melhorias | `node scripts/melhoria-status.js` |
 | `health-check.js` | Saúde do ambiente | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
+| `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
 
 ### PowerShell
 | Script | Descrição | Uso |
@@ -38,6 +39,7 @@
 .\status.bat
 node scripts/melhoria-status.js
 node scripts/health-check.js
+node scripts/submodule-manager.js
 ```
 
 ### Antes de commit
@@ -52,5 +54,5 @@ node scripts/auto-commit.js
 ```
 
 ---
-*Índice gerado: 2026-02-02 04:48*
-*8 melhorias locais consecutivas em backpressure*
+*Índice gerado: 2026-02-08 02:28*
+*17 melhorias locais consecutivas em backpressure*

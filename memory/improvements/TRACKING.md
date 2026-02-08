@@ -1,12 +1,13 @@
 # 📊 Tracking de Melhorias Contínuas
 
-## Dashboard - 2026-02-08 02:24
+## Dashboard - 2026-02-08 02:28
 
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **48** |
-| PRs criados | 13 (abertos) |
+| **Total de melhorias** | **49** |
+| PRs criados | 13 (abertos - backpressure persistente) |
+| Melhorias locais | 21 |
 | Melhorias locais | 20 |
 | Tempo total | ~2895 min (48h+) |
 | Tempo médio/melhoria | ~61.6 min |
@@ -15,8 +16,17 @@
 ### Backlog
 ```
 █████████████████████ 13/9 PRs abertos
-Status: 🔴 BACKPRESSURE ATIVO (persistente há ~104h)
+Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
+
+### Melhoria #49 (2026-02-08 02:28) - 🆕
+**Local** → **Submódulo Manager - Gestão inteligente de submódulos**
+- Script `scripts/submodule-manager.js` para verificar e corrigir submódulos
+- Detecta estado dirty (aurahub na branch refactor/remove-duplicate-clamp)
+- Comandos: `--status` (JSON), `--fix` (auto-resolver)
+- Atualização do `scripts/INDEX.md` com novo script
+- Resolve problema real: submódulo aurahub com 1 arquivo modificado
+- 🎯 **21 melhorias locais consecutivas** durante backpressure persistente
 
 ### Melhoria #47 (2026-02-08 02:06)
 **Branch:** `improve/agentServer-jsdoc` → **PR #14**
