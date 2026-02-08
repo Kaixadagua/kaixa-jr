@@ -5,12 +5,12 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **37** |
+| **Total de melhorias** | **38** |
 | PRs criados | 12 (abertos) |
-| Melhorias locais | 16 |
-| Tempo total | ~1428 min (24h+) |
-| Tempo médio/melhoria | ~11.7 min |
-| **Throughput** | **~1.6 melhorias/hora** (sustentável com backpressure) |
+| Melhorias locais | 17 |
+| Tempo total | ~2868 min (48h+) |
+| Tempo médio/melhoria | ~75.5 min |
+| **Throughput** | **~0.8 melhorias/hora** (sustentável com backpressure) |
 
 ### Backlog
 ```
@@ -25,8 +25,16 @@ Status: 🔴 BACKPRESSURE ATIVO (persistente há ~40h)
 | Tokens | 296k/360k | ✅ |
 | Health | HEALTHY | ✅ |
 
-### Sessão Atual (04:00-16:03)
-**14 melhorias locais consecutivas** (backpressure ativo há ~38h):
+### Sessão Atual (2026-02-07 21:36)
+**17 melhorias totais** (backpressure ativo há ~103h):
+
+17. **21:36** - `kaixa-guardian.js` → **Fix bug falso positivo agentes**
+    - Agora filtra corretamente por `kind: 'subagent'`
+    - Não conta mais sessão main como agente
+    - Nova métrica: sessões de sistema ignoradas
+
+### Sessão Anterior (04:00-16:03)
+**16 melhorias locais consecutivas** (backpressure ativo há ~38h):
 1. 04:03 - `health-check.js` → backpressure + stats
 2. 04:08 - `melhoria-status.js` → dashboard com categorização  
 3. 04:13 - `status.bat` → layout + verificações
@@ -48,7 +56,7 @@ Status: 🔴 BACKPRESSURE ATIVO (persistente há ~40h)
 | Categoria | Quantidade | Barra |
 |-----------|------------|-------|
 | 📝 Docs | 15 | ███████████████ |
-| 💻 Código | 6 | ██████ |
+| 💻 Código | 7 | ███████ |
 | 📦 Outro | 6 | ██████ |
 | ⚙️ Config | 2 | ██ |
 | 🎓 Skill | 1 | █ |
@@ -125,18 +133,19 @@ Status: 🔴 BACKPRESSURE ATIVO (persistente há ~40h)
 
 ### Estado Atual
 - 🟢 Sistema operacional
-- 🔴 Backpressure ativo (12 PRs há 38 horas)
-- ✅ 36 melhorias registradas
-- ✅ 15 melhorias locais consecutivas
+- 🔴 Backpressure ativo (12 PRs há ~103 horas)
+- ✅ 38 melhorias registradas
+- ✅ 17 melhorias locais consecutivas
+- ✅ Bug crítico corrigido: falso positivo de agentes no guardian
 - ✅ Todos os scripts enhanced + workflows documentados + ferramentas novas
 - ✅ CONSOLIDADO-BATCH.md gerado (pronto para PR em batch)
 - ✅ cron-report.js para output elegante
 - ✅ scripts-index.js para descoberta de ferramentas
 - ✅ context-compactor.js para gestão de contexto
-- ✅ **73 arquivos commitados no repositório local**
+- ✅ **75 arquivos commitados no repositório local**
 - ✅ repo-init.js para futuras inicializações
 
 ---
 
 *Sistema de melhoria contínua: OPERACIONAL 🦊*
-*Atualizado: 2026-02-02 16:10*
+*Atualizado: 2026-02-07 21:40*
