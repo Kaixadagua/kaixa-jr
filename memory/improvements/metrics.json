@@ -1,11 +1,11 @@
 {
-  "totalRuns": 107,
-  "successfulRuns": 107,
+  "totalRuns": 108,
+  "successfulRuns": 108,
   "localImprovements": 23,
-  "prImprovements": 30,
+  "prImprovements": 31,
   "byType": {
     "docs": 15,
-    "code": 19,
+    "code": 20,
     "refactor": 8,
     "config": 3,
     "test": 2,
@@ -13,19 +13,19 @@
   },
   "history": [
     {
-      "timestamp": "2026-02-08T07:27:00.000Z",
+      "timestamp": "2026-02-08T10:41:00.000Z",
       "success": true,
       "type": "code",
-      "file": "server/continuousImprovement.js",
-      "lines": 45,
+      "file": "scripts/check-backpressure.js",
+      "lines": 193,
       "local": false,
-      "branch": "feature/metrics-persistent-51"
+      "branch": "feature/check-backpressure-js"
     }
   ],
-  "throughput24h": "0.99",
-  "lastUpdated": "2026-02-08T07:09:00.000Z",
+  "throughput24h": "1.02",
+  "lastUpdated": "2026-02-08T10:41:00.000Z",
   "backpressureDuration": 105,
-  "totalImprovements": 53,
+  "totalImprovements": 55,
   "milestones": [
     {"n": 10, "date": "2026-02-02", "note": "Primeira dezena"},
     {"n": 25, "date": "2026-02-02", "note": "Primeiro quartil"},

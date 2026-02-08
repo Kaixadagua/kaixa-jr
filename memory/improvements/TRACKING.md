@@ -5,10 +5,10 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **54** |
-| PRs criados | 14 (abertos - backpressure persistente) |
+| **Total de melhorias** | **55** |
+| PRs criados | 15 (abertos - backpressure persistente) |
 | Melhorias locais | 23 |
-| Melhorias PR | 30 |
+| Melhorias PR | 31 |
 | Tempo total | ~2901 min (48h+) |
 | Tempo médio/melhoria | ~53.7 min |
 | **Throughput** | **~1.12 melhorias/hora** (sustentável com backpressure) |
@@ -18,6 +18,18 @@
 ████████████████████ 12/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
+
+### Melhoria #55 (2026-02-08 07:41) - 🆕 PR #25
+**Branch:** `feature/check-backpressure-js` → **Check Backpressure Cross-Platform**
+- Script `check-backpressure.js` em Node.js puro (sem dependências shell)
+- Resolve problema real: PowerShell não suporta `||` e `wc` (comandos Unix)
+- Mesma API do script PowerShell: `--json` para modo estruturado
+- Output visual colorido com emojis (🟢 🟡 🔴)
+- Detecta PR mais antigo e calcula idade (formatDuration)
+- Atualização do `scripts/INDEX.md` com novo script
+- 193 linhas de código bem documentado com JSDoc
+- 🎯 **55 melhorias totais!** Cross-platform = mais robustez!
+🔗 https://github.com/Kaixadagua/kaixa-jr/pull/25
 
 ### Melhoria #54 (2026-02-08 07:09) - 🆕 LOCAL
 **Arquivo:** `memory/improvements/metrics.json` → **Consolidação de Métricas Históricas**
