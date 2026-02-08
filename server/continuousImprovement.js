@@ -11,6 +11,65 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * Logger estruturado para melhorias
+ * @namespace ImprovementLogger
+ */
+const ImprovementLogger = {
+  /**
+   * Níveis de log
+   * @readonly
+   * @enum {string}
+   */
+  LEVELS: {
+    DEBUG: 'DEBUG',
+    INFO: 'INFO',
+    WARN: 'WARN',
+    ERROR: 'ERROR'
+  },
+
+  /**
+   * Loga mensagem estruturada
+   * @param {string} level - Nível do log
+   * @param {string} message - Mensagem
+   * @param {Object} [meta] - Metadados opcionais
+   */
+  log(level, message, meta = {}) {
+    const timestamp = new Date().toISOString();
+    const entry = {
+      timestamp,
+      level,
+      message,
+      ...meta
+    };
+    
+    // Console output com cores
+    const colors = {
+      DEBUG: '\x1b[36m', // Cyan
+      INFO: '\x1b[32m',  // Green
+      WARN: '\x1b[33m',  // Yellow
+      ERROR: '\x1b[31m', // Red
+      RESET: '\x1b[0m'
+    };
+    
+    console.log(
+      `${colors[level] || ''}[${timestamp}] [${level}]${colors.RESET} ${message}`,
+      Object.keys(meta).length > 0 ? meta : ''
+    );
+    
+    return entry;
+  },
+
+  /** Log de debug */
+  debug: (msg, meta) => ImprovementLogger.log(ImprovementLogger.LEVELS.DEBUG, msg, meta),
+  /** Log de info */
+  info: (msg, meta) => ImprovementLogger.log(ImprovementLogger.LEVELS.INFO, msg, meta),
+  /** Log de warn */
+  warn: (msg, meta) => ImprovementLogger.log(ImprovementLogger.LEVELS.WARN, msg, meta),
+  /** Log de error */
+  error: (msg, meta) => ImprovementLogger.log(ImprovementLogger.LEVELS.ERROR, msg, meta)
+};
+
+/**
  * Detecta arquivos modificados no git
  * @returns {string[]} Lista de arquivos modificados
  */
@@ -382,24 +441,26 @@ ${improvement.title}
  * EXECUTA 1 MELHORIA
  */
 async function run() {
-  console.log('\n' + '='.repeat(60));
-  console.log(`🦊 KAIXA JR - MELHORIA CONTÍNUA`);
-  console.log(`⏰ ${new Date().toLocaleString()}`);
-  console.log('='.repeat(60));
+  const logger = ImprovementLogger;
+  
+  logger.info('🦊 KAIXA JR - MELHORIA CONTÍNUA iniciada', {
+    timestamp: new Date().toISOString()
+  });
   
   // Seleciona melhoria (inteligente: detecta estado do repo)
   const improvement = suggestImprovement();
-  console.log(`\n🎯 Melhoria: ${improvement.title}`);
-  console.log(`📂 Tipo: ${improvement.type}`);
-  if (improvement.reason) {
-    console.log(`💡 Razão: ${improvement.reason}`);
-  }
+  logger.info(`🎯 Melhoria selecionada: ${improvement.title}`, {
+    type: improvement.type,
+    reason: improvement.reason || 'fallback'
+  });
   
   // Executa
-  console.log('\n🔨 Executando...');
+  logger.info('🔨 Executando melhoria...');
   const result = improvement.action();
-  console.log(`✅ Arquivo: ${result.file}`);
-  console.log(`📊 Linhas: +${result.lines}`);
+  logger.info(`✅ Melhoria aplicada em ${result.file}`, {
+    linesAdded: result.lines,
+    type: result.type
+  });
   
   // Tenta criar branch e commit
   const timestamp = Date.now().toString(36);
@@ -412,8 +473,7 @@ async function run() {
       const pushed = pushBranch(branch);
       
       if (pushed) {
-        console.log(`\n🚀 Branch: ${branch}`);
-        console.log(`✅ Commit e push realizado!`);
+        logger.info('🚀 Push realizado com sucesso', { branch });
         
         // Documenta
         documentLocal(improvement, result);
@@ -423,9 +483,11 @@ async function run() {
           execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
         } catch {}
         
-        console.log('\n' + '='.repeat(60));
-        console.log('✅ MELHORIA COMPLETA!');
-        console.log('='.repeat(60) + '\n');
+        logger.info('✅ MELHORIA COMPLETA!', { 
+          success: true, 
+          branch, 
+          file: result.file 
+        });
         
         return { success: true, branch, file: result.file };
       }
@@ -433,12 +495,14 @@ async function run() {
   }
   
   // Se falhou, documenta local
-  console.log('\n📝 Documentando localmente...');
+  logger.warn('Documentando melhoria localmente (backpressure ou erro)');
   documentLocal(improvement, result);
   
-  console.log('\n' + '='.repeat(60));
-  console.log('✅ MELHORIA DOCUMENTADA (local)');
-  console.log('='.repeat(60) + '\n');
+  logger.info('✅ MELHORIA DOCUMENTADA (local)', { 
+    success: true, 
+    local: true, 
+    file: result.file 
+  });
   
   return { success: true, local: true, file: result.file };
 }
