@@ -12,6 +12,7 @@
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
 | `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
 | `system-cleanup.js` | Limpeza e manutenção | `node scripts/system-cleanup.js` |
+| `check-backpressure.js` | Backpressure cross-platform | `node scripts/check-backpressure.js` |
 
 ### PowerShell
 | Script | Descrição | Uso |
@@ -51,6 +52,11 @@ node scripts/auto-commit.js
 
 ### Verificar backpressure
 ```bash
+# Cross-platform (Node.js)
+node scripts/check-backpressure.js
+node scripts/check-backpressure.js --json
+
+# PowerShell (Windows)
 .\scripts\check-backpressure.ps1 -Json
 ```
 
