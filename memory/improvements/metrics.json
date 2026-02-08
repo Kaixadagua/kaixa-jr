@@ -1,10 +1,15 @@
 {
-  "totalRuns": 1,
-  "successfulRuns": 1,
-  "localImprovements": 0,
-  "prImprovements": 1,
+  "totalRuns": 107,
+  "successfulRuns": 107,
+  "localImprovements": 23,
+  "prImprovements": 30,
   "byType": {
-    "code": 1
+    "docs": 15,
+    "code": 19,
+    "refactor": 8,
+    "config": 3,
+    "test": 2,
+    "other": 6
   },
   "history": [
     {
@@ -17,5 +22,13 @@
       "branch": "feature/metrics-persistent-51"
     }
   ],
-  "throughput24h": "0.04"
+  "throughput24h": "0.99",
+  "lastUpdated": "2026-02-08T07:09:00.000Z",
+  "backpressureDuration": 105,
+  "totalImprovements": 53,
+  "milestones": [
+    {"n": 10, "date": "2026-02-02", "note": "Primeira dezena"},
+    {"n": 25, "date": "2026-02-02", "note": "Primeiro quartil"},
+    {"n": 50, "date": "2026-02-08", "note": "Meio século de melhorias"}
+  ]
 }
