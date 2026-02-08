@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // kaixa-guardian.js - Sistema de gestão saudável de agentes Kaixa
-// Última atualização: 2026-02-03
+// Última atualização: 2026-02-07
 // Uso: node scripts/kaixa-guardian.js [--silent|-s]
+// Fix: Agora filtra corretamente por kind: 'subagent' (não conta sessão main)
 
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -35,12 +36,20 @@ function analyzeHealth() {
     let totalTokens = 0;
     let agentCount = 0;
     let cronCount = 0;
+    let systemCount = 0;
     let warnings = [];
     
     status.sessions.forEach(s => {
         // Ignorar sessões de cron - são temporárias e esperadas
         if (isCronSession(s.key)) {
             cronCount++;
+            return;
+        }
+        
+        // Contar APENAS subagentes reais (kind: "subagent")
+        // Sessão principal (main) e outras de sistema não contam
+        if (s.kind !== 'subagent') {
+            systemCount++;
             return;
         }
         
@@ -55,6 +64,7 @@ function analyzeHealth() {
     const health = {
         agentCount,
         totalTokens,
+        systemCount,
         warnings,
         status: 'healthy',
         timestamp: new Date().toISOString()
@@ -148,6 +158,9 @@ function main() {
     console.log(`📊 Agentes: ${health.agentCount}/${CONFIG.maxAgents}`);
     console.log(`💾 Tokens: ${(health.totalTokens/1000).toFixed(0)}k/${(CONFIG.maxTokensPerAgent * CONFIG.maxAgents / 1000).toFixed(0)}k`);
     console.log(`📈 Status: ${health.status.toUpperCase()}`);
+    if (health.systemCount > 0) {
+        console.log(`   🖥️  Sessões sistema ignoradas: ${health.systemCount}`);
+    }
     
     // Mostrar tendências
     if (history.length > 0) {
