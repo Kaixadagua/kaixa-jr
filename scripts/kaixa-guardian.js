@@ -227,6 +227,56 @@ function saveReport(health) {
 }
 
 /**
+ * Exporta relatórios históricos para CSV
+ * @param {number} days - Quantidade de dias a exportar (padrão: 7)
+ * @returns {string} Caminho do arquivo CSV gerado
+ */
+function exportToCSV(days = 7) {
+    const reportDir = ensureReportDir();
+    const allData = [];
+    
+    // Coletar dados dos últimos N dias
+    for (let i = 0; i < days; i++) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const filename = `guardian-${date.toISOString().slice(0,10)}.json`;
+        const filepath = path.join(reportDir, filename);
+        
+        if (fs.existsSync(filepath)) {
+            try {
+                const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+                allData.push(...data);
+            } catch {}
+        }
+    }
+    
+    // Ordenar por timestamp
+    allData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
+    // Gerar CSV
+    const csvLines = [
+        'timestamp,agentCount,totalTokens,status,action,backpressureCount,backpressureStatus'
+    ];
+    
+    for (const entry of allData) {
+        csvLines.push([
+            entry.timestamp,
+            entry.agentCount,
+            entry.totalTokens,
+            entry.status,
+            entry.action || '',
+            entry.backpressure?.count ?? '',
+            entry.backpressure?.status ?? ''
+        ].join(','));
+    }
+    
+    const outputPath = path.join(reportDir, `guardian-export-${new Date().toISOString().slice(0,10)}.csv`);
+    fs.writeFileSync(outputPath, csvLines.join('\n'));
+    
+    return outputPath;
+}
+
+/**
  * Função principal - executa análise e exibe relatório
  * @returns {void}
  */

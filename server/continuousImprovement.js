@@ -438,6 +438,69 @@ ${improvement.title}
 }
 
 /**
+ * Salva métricas da execução para tracking persistente
+ * @param {Object} data - Dados da execução
+ * @param {boolean} data.success - Se foi bem-sucedido
+ * @param {string} data.type - Tipo da melhoria
+ * @param {string} data.file - Arquivo alterado
+ * @param {number} data.lines - Linhas adicionadas
+ * @param {boolean} data.local - Se foi melhoria local
+ */
+function saveMetrics(data) {
+  const metricsFile = 'memory/improvements/metrics.json';
+  
+  let metrics = {
+    totalRuns: 0,
+    successfulRuns: 0,
+    localImprovements: 0,
+    prImprovements: 0,
+    byType: {},
+    history: []
+  };
+  
+  if (fs.existsSync(metricsFile)) {
+    try {
+      metrics = JSON.parse(fs.readFileSync(metricsFile, 'utf8'));
+    } catch {}
+  }
+  
+  // Atualiza contadores
+  metrics.totalRuns++;
+  if (data.success) metrics.successfulRuns++;
+  if (data.local) metrics.localImprovements++;
+  else metrics.prImprovements++;
+  
+  // Por tipo
+  const type = data.type || 'unknown';
+  metrics.byType[type] = (metrics.byType[type] || 0) + 1;
+  
+  // Histórico (últimos 100)
+  metrics.history.push({
+    timestamp: new Date().toISOString(),
+    ...data
+  });
+  if (metrics.history.length > 100) {
+    metrics.history = metrics.history.slice(-100);
+  }
+  
+  // Calcula throughput (melhorias/hora nas últimas 24h)
+  const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+  const recentRuns = metrics.history.filter(h => 
+    new Date(h.timestamp).getTime() > oneDayAgo && h.success
+  );
+  metrics.throughput24h = (recentRuns.length / 24).toFixed(2);
+  
+  fs.writeFileSync(metricsFile, JSON.stringify(metrics, null, 2));
+  
+  ImprovementLogger.info('📊 Métricas salvas', {
+    totalRuns: metrics.totalRuns,
+    throughput24h: metrics.throughput24h + '/hora'
+  });
+  
+  return metrics;
+}
+
+/**
  * EXECUTA 1 MELHORIA
  */
 async function run() {
@@ -483,13 +546,24 @@ async function run() {
           execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
         } catch {}
         
+        // Salva métricas
+        const metrics = saveMetrics({
+          success: true,
+          type: improvement.type,
+          file: result.file,
+          lines: result.lines,
+          local: false,
+          branch
+        });
+        
         logger.info('✅ MELHORIA COMPLETA!', { 
           success: true, 
           branch, 
-          file: result.file 
+          file: result.file,
+          throughput: metrics.throughput24h + '/hora'
         });
         
-        return { success: true, branch, file: result.file };
+        return { success: true, branch, file: result.file, type: improvement.type };
       }
     }
   }
@@ -498,13 +572,23 @@ async function run() {
   logger.warn('Documentando melhoria localmente (backpressure ou erro)');
   documentLocal(improvement, result);
   
+  // Salva métricas mesmo quando local
+  const metrics = saveMetrics({
+    success: true,
+    type: improvement.type,
+    file: result.file,
+    lines: result.lines,
+    local: true
+  });
+  
   logger.info('✅ MELHORIA DOCUMENTADA (local)', { 
     success: true, 
     local: true, 
-    file: result.file 
+    file: result.file,
+    throughput: metrics.throughput24h + '/hora'
   });
   
-  return { success: true, local: true, file: result.file };
+  return { success: true, local: true, file: result.file, type: improvement.type };
 }
 
 // Executa
