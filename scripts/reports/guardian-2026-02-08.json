@@ -5,5 +5,47 @@
     "totalTokens": 187503,
     "status": "healthy",
     "action": null
+  },
+  {
+    "timestamp": "2026-02-08T00:06:41.890Z",
+    "agentCount": 2,
+    "totalTokens": 187503,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-08T00:11:55.264Z",
+    "agentCount": 2,
+    "totalTokens": 187503,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-08T00:17:08.153Z",
+    "agentCount": 2,
+    "totalTokens": 187503,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-08T00:22:20.173Z",
+    "agentCount": 2,
+    "totalTokens": 189052,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-08T00:27:37.384Z",
+    "agentCount": 2,
+    "totalTokens": 189052,
+    "status": "healthy",
+    "action": null
+  },
+  {
+    "timestamp": "2026-02-08T00:32:58.549Z",
+    "agentCount": 2,
+    "totalTokens": 190054,
+    "status": "healthy",
+    "action": null
   }
 ]
