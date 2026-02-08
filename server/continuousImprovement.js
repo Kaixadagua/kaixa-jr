@@ -11,6 +11,70 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * Detecta arquivos modificados no git
+ * @returns {string[]} Lista de arquivos modificados
+ */
+function detectModifiedFiles() {
+  try {
+    const output = execSync('git status --short', { cwd: process.cwd(), encoding: 'utf8' });
+    return output
+      .split('\n')
+      .filter(line => line.trim())
+      .map(line => line.slice(3).trim())
+      .filter(file => file);
+  } catch (e) {
+    return [];
+  }
+}
+
+/**
+ * Sugere melhoria baseada no estado do repo
+ * @returns {Object} Melhoria sugerida
+ */
+function suggestImprovement() {
+  const modified = detectModifiedFiles();
+  
+  if (modified.length > 0) {
+    // Prioriza documentar mudanças pendentes
+    return {
+      type: 'docs',
+      title: 'Documenta mudanças pendentes em TRACKING.md',
+      action: () => documentPendingChanges(modified),
+      reason: 'Arquivos modificados detectados'
+    };
+  }
+  
+  // Fallback: melhoria aleatória
+  return IMPROVEMENTS[Math.floor(Math.random() * IMPROVEMENTS.length)];
+}
+
+/**
+ * Documenta mudanças pendentes
+ * @param {string[]} files - Arquivos modificados
+ */
+function documentPendingChanges(files) {
+  const timestamp = getTimestamp();
+  const trackingFile = 'memory/improvements/TRACKING.md';
+  
+  let tracking = '';
+  if (fs.existsSync(trackingFile)) {
+    tracking = fs.readFileSync(trackingFile, 'utf8');
+  }
+  
+  const entry = `\n### ${timestamp}\n**Auto-detected changes:**\n${files.map(f => `- ${f}`).join('\n')}\n\n`;
+  
+  // Insere após o header
+  const newTracking = tracking.replace(
+    '## Dashboard',
+    `## Dashboard${entry}`
+  );
+  
+  fs.writeFileSync(trackingFile, newTracking);
+  
+  return { file: trackingFile, type: 'docs', lines: files.length + 3 };
+}
+
+/**
  * Lista de melhorias possíveis
  */
 const IMPROVEMENTS = [
@@ -323,10 +387,13 @@ async function run() {
   console.log(`⏰ ${new Date().toLocaleString()}`);
   console.log('='.repeat(60));
   
-  // Seleciona melhoria
-  const improvement = IMPROVEMENTS[Math.floor(Math.random() * IMPROVEMENTS.length)];
+  // Seleciona melhoria (inteligente: detecta estado do repo)
+  const improvement = suggestImprovement();
   console.log(`\n🎯 Melhoria: ${improvement.title}`);
   console.log(`📂 Tipo: ${improvement.type}`);
+  if (improvement.reason) {
+    console.log(`💡 Razão: ${improvement.reason}`);
+  }
   
   // Executa
   console.log('\n🔨 Executando...');
