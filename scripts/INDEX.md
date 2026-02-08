@@ -8,6 +8,7 @@
 | Script | Descrição | Uso |
 |--------|-----------|-----|
 | `melhoria-status.js` | Dashboard de melhorias | `node scripts/melhoria-status.js` |
+| `kaixa-metrics.js` | **Metrics em tempo real** | `node scripts/kaixa-metrics.js --mini` |
 | `health-check.js` | Saúde do ambiente | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
 | `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
@@ -54,8 +55,9 @@ node scripts/auto-commit.js
 ### Verificar backpressure
 ```bash
 .\scripts\check-backpressure.ps1 -Json
+node scripts/kaixa-metrics.js --mini  # 1 linha
 ```
 
 ---
-*Índice atualizado: 2026-02-08 14:15*
-*Melhoria #57 - QuickView de Melhorias adicionado*
+*Índice atualizado: 2026-02-08 18:45*
+*Melhoria #60 - Kaixa Metrics adicionado*
