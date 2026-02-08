@@ -1,10 +1,10 @@
 {
-  "totalRuns": 108,
-  "successfulRuns": 108,
-  "localImprovements": 23,
+  "totalRuns": 109,
+  "successfulRuns": 109,
+  "localImprovements": 24,
   "prImprovements": 31,
   "byType": {
-    "docs": 15,
+    "docs": 16,
     "code": 20,
     "refactor": 8,
     "config": 3,
@@ -13,19 +13,18 @@
   },
   "history": [
     {
-      "timestamp": "2026-02-08T10:41:00.000Z",
+      "timestamp": "2026-02-08T11:52:00.000Z",
       "success": true,
-      "type": "code",
-      "file": "scripts/check-backpressure.js",
-      "lines": 193,
-      "local": false,
-      "branch": "feature/check-backpressure-js"
+      "type": "docs",
+      "file": "memory/improvements/TRACKING.md",
+      "lines": 7,
+      "local": true
     }
   ],
-  "throughput24h": "1.02",
-  "lastUpdated": "2026-02-08T10:41:00.000Z",
+  "throughput24h": "1.05",
+  "lastUpdated": "2026-02-08T11:52:00.000Z",
   "backpressureDuration": 105,
-  "totalImprovements": 55,
+  "totalImprovements": 56,
   "milestones": [
     {"n": 10, "date": "2026-02-02", "note": "Primeira dezena"},
     {"n": 25, "date": "2026-02-02", "note": "Primeiro quartil"},
