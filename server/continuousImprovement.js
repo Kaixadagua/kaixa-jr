@@ -128,6 +128,77 @@ function getTimestamp() {
 }
 
 /**
+ * Salva métricas de execução persistentemente
+ * @param {Object} metrics - Métricas da execução atual
+ * @param {string} metrics.improvementType - Tipo da melhoria (docs, code, test, etc)
+ * @param {string} metrics.file - Arquivo modificado
+ * @param {number} metrics.linesAdded - Linhas adicionadas
+ * @param {boolean} metrics.success - Se a melhoria foi bem-sucedida
+ * @param {string} metrics.branch - Nome da branch criada
+ * @returns {Object} Métricas salvas com timestamp
+ */
+function saveMetrics(metrics) {
+  const metricsDir = path.join(process.cwd(), 'memory', 'improvements');
+  const metricsFile = path.join(metricsDir, 'metrics.json');
+  
+  // Garante diretório existe
+  if (!fs.existsSync(metricsDir)) {
+    fs.mkdirSync(metricsDir, { recursive: true });
+  }
+  
+  // Carrega métricas existentes
+  let data = { runs: [], totalImprovements: 0 };
+  if (fs.existsSync(metricsFile)) {
+    try {
+      data = JSON.parse(fs.readFileSync(metricsFile, 'utf8'));
+    } catch (e) {
+      console.log('⚠️ Erro ao carregar métricas, criando novo');
+    }
+  }
+  
+  // Adiciona nova execução
+  const entry = {
+    timestamp: new Date().toISOString(),
+    ...metrics,
+    sessionId: process.env.OPENCLAW_SESSION_ID || 'unknown'
+  };
+  
+  data.runs.push(entry);
+  data.totalImprovements = (data.totalImprovements || 0) + 1;
+  data.lastRun = entry.timestamp;
+  
+  // Calcula estatísticas
+  const recentRuns = data.runs.slice(-10); // últimas 10
+  data.stats = {
+    successRate: (recentRuns.filter(r => r.success).length / recentRuns.length * 100).toFixed(1),
+    avgLinesPerRun: (recentRuns.reduce((acc, r) => acc + (r.linesAdded || 0), 0) / recentRuns.length).toFixed(1),
+    mostCommonType: getMostCommonType(recentRuns)
+  };
+  
+  // Salva
+  fs.writeFileSync(metricsFile, JSON.stringify(data, null, 2));
+  
+  console.log(`📊 Métricas salvas: ${metricsFile}`);
+  console.log(`   Total: ${data.totalImprovements} melhorias`);
+  console.log(`   Taxa de sucesso: ${data.stats.successRate}%`);
+  
+  return entry;
+}
+
+/**
+ * Retorna o tipo mais comum entre as runs
+ * @private
+ */
+function getMostCommonType(runs) {
+  const types = {};
+  runs.forEach(r => {
+    types[r.improvementType] = (types[r.improvementType] || 0) + 1;
+  });
+  return Object.entries(types)
+    .sort((a, b) => b[1] - a[1])[0]?.[0] || 'unknown';
+}
+
+/**
  * Adiciona JSDoc
  */
 function addJSDoc() {
@@ -418,6 +489,15 @@ async function run() {
         // Documenta
         documentLocal(improvement, result);
         
+        // Salva métricas
+        saveMetrics({
+          improvementType: improvement.type,
+          file: result.file,
+          linesAdded: result.lines,
+          success: true,
+          branch
+        });
+        
         // Volta para branch principal
         try {
           execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
@@ -435,6 +515,16 @@ async function run() {
   // Se falhou, documenta local
   console.log('\n📝 Documentando localmente...');
   documentLocal(improvement, result);
+  
+  // Salva métricas mesmo quando local
+  saveMetrics({
+    improvementType: improvement.type,
+    file: result.file,
+    linesAdded: result.lines,
+    success: true,
+    branch: 'local-only',
+    local: true
+  });
   
   console.log('\n' + '='.repeat(60));
   console.log('✅ MELHORIA DOCUMENTADA (local)');
