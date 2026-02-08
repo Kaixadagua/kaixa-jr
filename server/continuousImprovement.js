@@ -379,6 +379,41 @@ ${improvement.title}
 }
 
 /**
+ * Salva métricas da execução
+ * @param {Object} result - Resultado da melhoria
+ */
+function saveMetrics(result) {
+  const metricsFile = 'memory/improvements/metrics.json';
+  let metrics = { runs: [], totalImprovements: 0 };
+  
+  if (fs.existsSync(metricsFile)) {
+    try {
+      metrics = JSON.parse(fs.readFileSync(metricsFile, 'utf8'));
+    } catch {}
+  }
+  
+  metrics.runs.push({
+    timestamp: new Date().toISOString(),
+    file: result.file,
+    success: result.success,
+    branch: result.branch || null,
+    local: result.local || false
+  });
+  
+  metrics.totalImprovements = metrics.runs.length;
+  metrics.lastRun = new Date().toISOString();
+  
+  // Calcula média de melhorias por dia
+  const firstRun = new Date(metrics.runs[0]?.timestamp || Date.now());
+  const daysRunning = Math.max(1, (Date.now() - firstRun) / (1000 * 60 * 60 * 24));
+  metrics.avgPerDay = (metrics.totalImprovements / daysRunning).toFixed(2);
+  
+  fs.writeFileSync(metricsFile, JSON.stringify(metrics, null, 2));
+  console.log(`📊 Métricas salvas: ${metrics.totalImprovements} melhorias total`);
+  console.log(`📈 Média: ${metrics.avgPerDay}/dia`);
+}
+
+/**
  * EXECUTA 1 MELHORIA
  */
 async function run() {
@@ -427,7 +462,9 @@ async function run() {
         console.log('✅ MELHORIA COMPLETA!');
         console.log('='.repeat(60) + '\n');
         
-        return { success: true, branch, file: result.file };
+        const result = { success: true, branch, file: result.file };
+        saveMetrics(result);
+        return result;
       }
     }
   }
@@ -440,7 +477,9 @@ async function run() {
   console.log('✅ MELHORIA DOCUMENTADA (local)');
   console.log('='.repeat(60) + '\n');
   
-  return { success: true, local: true, file: result.file };
+  const localResult = { success: true, local: true, file: result.file };
+  saveMetrics(localResult);
+  return localResult;
 }
 
 // Executa
