@@ -31,6 +31,7 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 | `repo-init.js` | Inicialização e organização do repositório | `node scripts/repo-init.js` |
 | `agent-guardian.js` | Guardian de agentes (legado) | `node scripts/agent-guardian.js` |
 | `setup-agentcorp.js` | Setup inicial do AgentCorp | `node scripts/setup-agentcorp.js` |
+| `consolidate-reports.js` | Consolida reports pendentes em arquivo semanal | `node scripts/consolidate-reports.js` |
 
 ### PowerShell
 
@@ -82,6 +83,15 @@ node scripts/improvement-health.js
 2. Implementar melhoria local (docs, scripts, config)
 3. Registrar: `memory/improvements/YYYY-MM-DD-HHMM-melhoria.md`
 4. Preparar commit: `node scripts/auto-commit.js`
+
+### Consolidar reports acumulados
+```bash
+# Quando há múltiplos reports pendentes em memory/reports/
+node scripts/consolidate-reports.js
+```
+- Consolida todos os reports `.txt` em um arquivo markdown semanal
+- Remove arquivos individuais após consolidação
+- Gera estatísticas de melhorias por período
 
 ### Quando backpressure liberar
 ```bash
