@@ -128,6 +128,24 @@ function getTimestamp() {
 }
 
 /**
+ * Formata duração em milissegundos para formato legível
+ * @param {number} ms - Duração em milissegundos
+ * @returns {string} Duração formatada (ex: "2m 30s", "1h 15m")
+ */
+function formatDuration(ms) {
+  if (ms < 1000) return `${ms}ms`;
+  if (ms < 60000) return `${Math.floor(ms / 1000)}s`;
+  if (ms < 3600000) {
+    const mins = Math.floor(ms / 60000);
+    const secs = Math.floor((ms % 60000) / 1000);
+    return secs > 0 ? `${mins}m ${secs}s` : `${mins}m`;
+  }
+  const hours = Math.floor(ms / 3600000);
+  const mins = Math.floor((ms % 3600000) / 60000);
+  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+}
+
+/**
  * Adiciona JSDoc
  */
 function addJSDoc() {
@@ -382,6 +400,7 @@ ${improvement.title}
  * EXECUTA 1 MELHORIA
  */
 async function run() {
+  const startTime = Date.now();
   console.log('\n' + '='.repeat(60));
   console.log(`🦊 KAIXA JR - MELHORIA CONTÍNUA`);
   console.log(`⏰ ${new Date().toLocaleString()}`);
@@ -423,11 +442,13 @@ async function run() {
           execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
         } catch {}
         
+        const duration = Date.now() - startTime;
         console.log('\n' + '='.repeat(60));
         console.log('✅ MELHORIA COMPLETA!');
+        console.log(`⏱️ Duração: ${formatDuration(duration)}`);
         console.log('='.repeat(60) + '\n');
         
-        return { success: true, branch, file: result.file };
+        return { success: true, branch, file: result.file, duration };
       }
     }
   }
@@ -436,11 +457,13 @@ async function run() {
   console.log('\n📝 Documentando localmente...');
   documentLocal(improvement, result);
   
+  const duration = Date.now() - startTime;
   console.log('\n' + '='.repeat(60));
   console.log('✅ MELHORIA DOCUMENTADA (local)');
+  console.log(`⏱️ Duração: ${formatDuration(duration)}`);
   console.log('='.repeat(60) + '\n');
   
-  return { success: true, local: true, file: result.file };
+  return { success: true, local: true, file: result.file, duration };
 }
 
 // Executa
