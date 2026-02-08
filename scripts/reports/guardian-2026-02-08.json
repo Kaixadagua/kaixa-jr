@@ -131,5 +131,27 @@
     "totalTokens": 0,
     "status": "healthy",
     "action": null
+  },
+  {
+    "timestamp": "2026-02-08T05:19:34.180Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-08T05:24:48.430Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
   }
 ]
