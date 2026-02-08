@@ -8,6 +8,12 @@
  *   logger.warn('Aviso');
  *   logger.error('Erro', err);
  *   logger.debug('Debug', { detalhe: 123 });
+ *   logger.section('Título');
+ *   logger.metric('Nome', valor);
+ *   logger.time('operação');
+ *   logger.timeEnd('operação'); // → ⏱️ operação: 150ms
+ * 
+ * Última atualização: 2026-02-08 - Adicionado time/timeEnd para performance
  */
 
 const fs = require('fs');
@@ -115,6 +121,25 @@ class Logger {
     } else {
       this.error(message);
     }
+  }
+
+  // Timer para performance tracking
+  time(label) {
+    this._timers = this._timers || {};
+    this._timers[label] = Date.now();
+    this.debug(`Timer iniciado: ${label}`);
+    return label;
+  }
+
+  timeEnd(label) {
+    if (!this._timers || !this._timers[label]) {
+      this.warn(`Timer não encontrado: ${label}`);
+      return null;
+    }
+    const duration = Date.now() - this._timers[label];
+    delete this._timers[label];
+    this.metric(`⏱️ ${label}`, `${duration}ms`);
+    return duration;
   }
 }
 
