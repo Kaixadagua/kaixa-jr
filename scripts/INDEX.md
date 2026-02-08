@@ -11,6 +11,7 @@
 | `health-check.js` | Saúde do ambiente | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
 | `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
+| `system-cleanup.js` | Limpeza e manutenção | `node scripts/system-cleanup.js` |
 
 ### PowerShell
 | Script | Descrição | Uso |
