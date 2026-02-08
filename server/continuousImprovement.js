@@ -11,6 +11,27 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * Garante que um arquivo existe, criando diretórios se necessário
+ * @param {string} filePath - Caminho do arquivo
+ * @param {string} [defaultContent=''] - Conteúdo padrão se arquivo não existir
+ * @returns {boolean} True se arquivo existe ou foi criado
+ */
+function ensureFileExists(filePath, defaultContent = '') {
+  const dir = path.dirname(filePath);
+  
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, defaultContent);
+    return true; // Arquivo foi criado
+  }
+  
+  return false; // Arquivo já existia
+}
+
+/**
  * Logger estruturado para melhorias
  * @namespace ImprovementLogger
  */
@@ -191,6 +212,17 @@ function getTimestamp() {
  */
 function addJSDoc() {
   const file = 'src/core/utils.js';
+  const defaultContent = `/**
+ * Core Utilities
+ * @module src/core/utils
+ */
+
+module.exports = {};
+`;
+  
+  // Garante que o arquivo existe antes de modificar
+  const wasCreated = ensureFileExists(file, defaultContent);
+  
   const content = `/**
  * Função utilitária adicionada em ${new Date().toISOString()}
  * @param {string} input - Input string
@@ -200,11 +232,11 @@ function processInput(input) {
   return input.trim().toLowerCase();
 }
 
-module.exports = { processInput };
+module.exports.processInput = processInput;
 `;
   
   fs.appendFileSync(file, '\n' + content);
-  return { file, type: 'docs', lines: 10 };
+  return { file, type: 'docs', lines: 10, created: wasCreated };
 }
 
 /**
@@ -212,6 +244,16 @@ module.exports = { processInput };
  */
 function addTest() {
   const file = 'tests/core/config.test.js';
+  const defaultContent = `const Config = require('../../src/core/config');
+
+describe('Config', () => {
+  // Tests will be added here
+});
+`;
+  
+  // Garante que o arquivo existe antes de modificar
+  const wasCreated = ensureFileExists(file, defaultContent);
+  
   const test = `
   it('should handle edge case: empty config', () => {
     const config = new Config();
@@ -225,21 +267,30 @@ function addTest() {
   const newContent = content.replace('});', test + '});');
   fs.writeFileSync(file, newContent);
   
-  return { file, type: 'test', lines: 5 };
+  return { file, type: 'test', lines: 5, created: wasCreated };
 }
 
 /**
  * Refatora variável
  */
 function refactorVariable() {
-  // Cria arquivo com melhoria de exemplo
   const file = 'src/utils/stringUtils.js';
-  const content = `/**
+  const defaultContent = `/**
  * String Utilities
- * Melhoria: usar nomes descritivos
+ * @module src/utils/stringUtils
  */
 
-const StringUtils = {
+const StringUtils = {};
+
+module.exports = StringUtils;
+`;
+  
+  // Garante que o arquivo existe antes de modificar
+  const wasCreated = ensureFileExists(file, defaultContent);
+  
+  // Adiciona função melhorada ao arquivo existente
+  const content = fs.readFileSync(file, 'utf8');
+  const improvedMethod = `
   /**
    * Converte para camelCase (antes: toCC)
    * @param {string} str - String input
@@ -247,14 +298,17 @@ const StringUtils = {
    */
   toCamelCase: (str) => {
     return str.replace(/[-_](.)/g, (_, char) => char.toUpperCase());
-  }
-};
-
-module.exports = StringUtils;
+  },
 `;
   
-  fs.writeFileSync(file, content);
-  return { file, type: 'refactor', lines: 15 };
+  // Insere antes do fechamento do objeto
+  const newContent = content.replace(
+    'const StringUtils = {}',
+    'const StringUtils = {' + improvedMethod + '}'
+  );
+  
+  fs.writeFileSync(file, newContent);
+  return { file, type: 'refactor', lines: 8, created: wasCreated };
 }
 
 /**
@@ -262,6 +316,27 @@ module.exports = StringUtils;
  */
 function addComment() {
   const file = 'src/core/config.js';
+  const defaultContent = `/**
+ * Configuration Module
+ * @module src/core/config
+ */
+
+class Config {
+  constructor() {
+    this.values = {};
+  }
+  
+  get(key) {
+    return this.values[key] || null;
+  }
+}
+
+module.exports = { Config };
+`;
+  
+  // Garante que o arquivo existe antes de modificar
+  const wasCreated = ensureFileExists(file, defaultContent);
+  
   const comment = `// NOTE: Configuração carregada em ${new Date().toLocaleString()}
 // Esta classe gerencia todas as configurações do sistema
 `;
@@ -269,7 +344,7 @@ function addComment() {
   const content = fs.readFileSync(file, 'utf8');
   fs.writeFileSync(file, comment + content);
   
-  return { file, type: 'docs', lines: 2 };
+  return { file, type: 'docs', lines: 2, created: wasCreated };
 }
 
 /**
@@ -291,6 +366,10 @@ function updatePackageScripts() {
  */
 function createExample() {
   const file = 'examples/basic-usage.js';
+  
+  // Garante diretório e arquivo existem
+  ensureFileExists(file, '');
+  
   const content = `/**
  * Exemplo básico de uso do Kaixa Jr
  * Gerado automaticamente em ${new Date().toISOString()}
@@ -307,12 +386,8 @@ const validation = config.validate();
 console.log('Valid:', validation.valid);
 `;
   
-  if (!fs.existsSync('examples')) {
-    fs.mkdirSync('examples', { recursive: true });
-  }
-  
   fs.writeFileSync(file, content);
-  return { file, type: 'docs', lines: 15 };
+  return { file, type: 'docs', lines: 15, created: false };
 }
 
 /**
@@ -320,6 +395,27 @@ console.log('Valid:', validation.valid);
  */
 function addValidation() {
   const file = 'src/core/logger.js';
+  const defaultContent = `/**
+ * Logger Module
+ * @module src/core/logger
+ */
+
+class Logger {
+  constructor(level = 'INFO') {
+    this.level = level;
+  }
+  
+  log(message) {
+    console.log(\`[\${this.level}] \${message}\`);
+  }
+}
+
+module.exports = { Logger };
+`;
+  
+  // Garante que o arquivo existe antes de modificar
+  const wasCreated = ensureFileExists(file, defaultContent);
+  
   const validation = `
   /**
    * Valida nível de log
@@ -337,7 +433,7 @@ function addValidation() {
   const content = fs.readFileSync(file, 'utf8');
   fs.writeFileSync(file, content + validation);
   
-  return { file, type: 'code', lines: 10 };
+  return { file, type: 'code', lines: 10, created: wasCreated };
 }
 
 /**
@@ -345,6 +441,18 @@ function addValidation() {
  */
 function updateChangelog() {
   const file = 'CHANGELOG.md';
+  const defaultContent = `# Changelog
+
+## [Unreleased]
+
+### Added
+- Initial release
+
+`;
+  
+  // Garante que o arquivo existe
+  const wasCreated = ensureFileExists(file, defaultContent);
+  
   const entry = `\n## [1.0.3] - ${new Date().toISOString().slice(0, 10)}
 
 ### Melhorias Automáticas
@@ -357,7 +465,7 @@ function updateChangelog() {
   const content = fs.readFileSync(file, 'utf8');
   fs.writeFileSync(file, content.replace('## [Unreleased]', '## [Unreleased]' + entry));
   
-  return { file, type: 'docs', lines: 5 };
+  return { file, type: 'docs', lines: 5, created: wasCreated };
 }
 
 /**
