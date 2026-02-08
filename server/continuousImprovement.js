@@ -375,30 +375,92 @@ function createBranch(timestamp) {
 }
 
 /**
- * Faz commit
+ * Sleep síncrono (blocking) para uso em scripts CLI
+ * @param {number} ms - Milissegundos para esperar
+ * @private
  */
-function commitChanges(message) {
-  try {
-    execSync('git add .', { cwd: process.cwd() });
-    execSync(`git commit -m "[kaixa-auto] ${message}"`, { cwd: process.cwd() });
-    return true;
-  } catch (e) {
-    console.log('⚠️ Erro no commit:', e.message);
-    return false;
+function sleepSync(ms) {
+  const start = Date.now();
+  while (Date.now() - start < ms) {
+    // Busy wait - aceitável para scripts CLI simples
   }
 }
 
 /**
- * Faz push
+ * Faz commit com retry e backoff exponencial
+ * @param {string} message - Mensagem do commit
+ * @param {number} [maxRetries=3] - Máximo de tentativas
+ * @returns {boolean} Sucesso do commit
  */
-function pushBranch(branch) {
-  try {
-    execSync(`git push -u origin ${branch}`, { cwd: process.cwd() });
-    return true;
-  } catch (e) {
-    console.log('⚠️ Erro no push:', e.message);
-    return false;
+function commitChanges(message, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      execSync('git add .', { cwd: process.cwd() });
+      execSync(`git commit -m "[kaixa-auto] ${message}"`, { cwd: process.cwd() });
+      ImprovementLogger.info(`Commit realizado na tentativa ${attempt}`);
+      return true;
+    } catch (e) {
+      const isLastAttempt = attempt === maxRetries;
+      
+      if (isLastAttempt) {
+        ImprovementLogger.error('Commit falhou após todas as tentativas', {
+          attempts: maxRetries,
+          error: e.message
+        });
+        return false;
+      }
+      
+      const delayMs = Math.pow(2, attempt - 1) * 1000;
+      ImprovementLogger.warn(`Commit falhou, tentando novamente em ${delayMs}ms`, {
+        attempt,
+        maxRetries,
+        nextDelayMs: delayMs
+      });
+      
+      sleepSync(delayMs);
+    }
   }
+  
+  return false;
+}
+
+/**
+ * Faz push com retry e backoff exponencial
+ * @param {string} branch - Nome da branch
+ * @param {number} [maxRetries=3] - Máximo de tentativas
+ * @returns {boolean} Sucesso do push
+ */
+function pushBranch(branch, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      execSync(`git push -u origin ${branch}`, { cwd: process.cwd() });
+      ImprovementLogger.info(`Push realizado na tentativa ${attempt}`, { branch });
+      return true;
+    } catch (e) {
+      const isLastAttempt = attempt === maxRetries;
+      
+      if (isLastAttempt) {
+        ImprovementLogger.error('Push falhou após todas as tentativas', {
+          branch,
+          attempts: maxRetries,
+          error: e.message
+        });
+        return false;
+      }
+      
+      // Backoff exponencial: 1s, 2s, 4s...
+      const delayMs = Math.pow(2, attempt - 1) * 1000;
+      ImprovementLogger.warn(`Push falhou, tentando novamente em ${delayMs}ms`, {
+        attempt,
+        maxRetries,
+        nextDelayMs: delayMs
+      });
+      
+      sleepSync(delayMs);
+    }
+  }
+  
+  return false;
 }
 
 /**
