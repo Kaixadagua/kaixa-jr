@@ -3,7 +3,7 @@
  * @fileoverview Kaixa Guardian - Sistema de gestão saudável de agentes
  * @description Monitora sessões do OpenClaw, tokens e saúde do sistema
  * @author Kaixa Jr 🦊
- * @version 1.2.0
+ * @version 1.3.0
  * @usage node scripts/kaixa-guardian.js [--silent|-s]
  */
 
@@ -44,6 +44,31 @@ function getSessionStatus() {
 }
 
 /**
+ * Verifica backpressure de PRs no repositório aurahub
+ * @returns {Object} Status de backpressure { count: number, status: string }
+ * @property {number} count - Quantidade de PRs abertos
+ * @property {string} status - 'green'|'yellow'|'red' baseado nos thresholds
+ */
+function checkBackpressure() {
+    try {
+        const output = execSync('gh pr list --repo aura-io-saas/aurahub --state open --json number', { 
+            encoding: 'utf8',
+            timeout: 10000 
+        });
+        const prs = JSON.parse(output);
+        const count = prs.length;
+        
+        let status = 'green';
+        if (count >= 9) status = 'red';
+        else if (count >= 6) status = 'yellow';
+        
+        return { count, status };
+    } catch {
+        return { count: -1, status: 'unknown' };
+    }
+}
+
+/**
  * Verifica se uma chave de sessão pertence a um cron job
  * @param {string} sessionKey - Chave da sessão
  * @returns {boolean} True se for sessão de cron
@@ -62,9 +87,11 @@ function isCronSession(sessionKey) {
  * @property {string} status - Estado: 'healthy'|'warning'|'critical'
  * @property {string} [action] - Ação recomendada se necessário
  * @property {string} timestamp - ISO timestamp da análise
+ * @property {Object} backpressure - Status de PRs { count, status }
  */
 function analyzeHealth() {
     const status = getSessionStatus();
+    const backpressure = checkBackpressure();
     
     let totalTokens = 0;
     let agentCount = 0;
@@ -99,6 +126,7 @@ function analyzeHealth() {
         totalTokens,
         systemCount,
         warnings,
+        backpressure,
         status: 'healthy',
         timestamp: new Date().toISOString()
     };
@@ -188,7 +216,8 @@ function saveReport(health) {
         agentCount: health.agentCount,
         totalTokens: health.totalTokens,
         status: health.status,
-        action: health.action || null
+        action: health.action || null,
+        backpressure: health.backpressure
     });
     
     // Manter apenas últimos 50 registros
@@ -218,6 +247,12 @@ function main() {
     console.log(`📊 Agentes: ${health.agentCount}/${CONFIG.maxAgents}`);
     console.log(`💾 Tokens: ${(health.totalTokens/1000).toFixed(0)}k/${(CONFIG.maxTokensPerAgent * CONFIG.maxAgents / 1000).toFixed(0)}k`);
     console.log(`📈 Status: ${health.status.toUpperCase()}`);
+    
+    // Exibir backpressure
+    const bpIcon = { green: '🟢', yellow: '🟡', red: '🔴', unknown: '⚪' };
+    const bpLabel = health.backpressure.count >= 0 ? `${health.backpressure.count} PRs` : 'N/A';
+    console.log(`   ${bpIcon[health.backpressure.status]} Backpressure: ${bpLabel}`);
+    
     if (health.systemCount > 0) {
         console.log(`   🖥️  Sessões sistema ignoradas: ${health.systemCount}`);
     }
