@@ -1,0 +1,305 @@
+{
+  "timestamp": "2026-02-08T19:48:26.643Z",
+  "repo": "Kaixadagua/kaixa-jr",
+  "totalPRs": 46,
+  "status": "red",
+  "analysis": {
+    "total": 46,
+    "byType": {
+      "📄 docs": 25,
+      "✨ feat": 3,
+      "💻 code": 17,
+      "🧪 test": 1
+    },
+    "byAge": {
+      "fresh": 0,
+      "aging": 0,
+      "stale": 46
+    },
+    "oldest": null,
+    "newest": null
+  },
+  "actions": [
+    "check_reviewer",
+    "local_only",
+    "auto_merge_candidates"
+  ],
+  "prs": [
+    {
+      "number": 46,
+      "title": "docs: Atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 45,
+      "title": "docs: atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 44,
+      "title": "docs: documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 43,
+      "title": "feat: Auto-Processador de Melhorias Pendentes (#58)",
+      "age": null,
+      "type": "✨ feat"
+    },
+    {
+      "number": 42,
+      "title": "[kaixa-auto] Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 41,
+      "title": "docs: Atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 40,
+      "title": "docs: Atualiza TRACKING.md com melhorias pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 39,
+      "title": "docs: atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 38,
+      "title": "#57 logMetrics() - Exibição elegante de métricas no console",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 37,
+      "title": "[AUTO] Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 36,
+      "title": "docs: Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 35,
+      "title": "docs: atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 34,
+      "title": "retryAsync() - Retry com backoff exponencial #57",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 33,
+      "title": "[kaixa-auto] Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 32,
+      "title": "docs: Atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 31,
+      "title": "feat: workspace-validator para consistência do projeto",
+      "age": null,
+      "type": "✨ feat"
+    },
+    {
+      "number": 30,
+      "title": "PR #26 - ensureFileExists: Robusteza para arquivos inexistentes",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 29,
+      "title": "docs: atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 28,
+      "title": "docs: Atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 27,
+      "title": "[kaixa-auto] Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 26,
+      "title": "feat(health-check): integridade + timestamp",
+      "age": null,
+      "type": "✨ feat"
+    },
+    {
+      "number": 25,
+      "title": "Check Backpressure JS - Cross-platform",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 24,
+      "title": "Melhoria #56 - Consolida documentação pendente",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 23,
+      "title": "#54: Retry com backoff exponencial para operações git",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 22,
+      "title": "[kaixa-auto] improvement-metrics.js - Análise de métricas",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 21,
+      "title": "docs: atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 20,
+      "title": "[AUTO] Melhoria #52 - Documenta mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 19,
+      "title": "Melhoria #51: Sistema de métricas persistentes",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 18,
+      "title": "[kaixa-auto] Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 17,
+      "title": "[kaixa-auto] Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 16,
+      "title": "docs: atualiza TRACKING.md com mudanças pendentes",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 15,
+      "title": "[kaixa-auto] Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 14,
+      "title": "[AUTO] JSDoc completo no agentServer.js",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 13,
+      "title": "[kaixa-auto] Implementa saveMetrics() para tracking persistente",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 12,
+      "title": "[kaixa-auto] Sistema de métricas automáticas",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 11,
+      "title": "[kaixa-auto] Documenta mudanças pendentes em TRACKING.md",
+      "age": null,
+      "type": "📄 docs"
+    },
+    {
+      "number": 10,
+      "title": "[AUTO] Atualiza package.json scripts",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 9,
+      "title": "Atualiza README com exemplos",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 8,
+      "title": "Atualiza README com exemplos",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 7,
+      "title": "Refatora função complexa",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 6,
+      "title": "Atualiza README com exemplos",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 5,
+      "title": "Adiciona validação de entrada",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 4,
+      "title": "Atualiza README com exemplos",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 3,
+      "title": "[kaixa-auto] Adiciona exemplos práticos de uso dos scripts",
+      "age": null,
+      "type": "💻 code"
+    },
+    {
+      "number": 2,
+      "title": "Adiciona testes para edge cases",
+      "age": null,
+      "type": "🧪 test"
+    },
+    {
+      "number": 1,
+      "title": "docs(guardian): adiciona README para sistema de relatórios",
+      "age": null,
+      "type": "📄 docs"
+    }
+  ]
+}
