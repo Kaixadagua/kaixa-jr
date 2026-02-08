@@ -5,9 +5,9 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **38** |
+| **Total de melhorias** | **39** |
 | PRs criados | 12 (abertos) |
-| Melhorias locais | 17 |
+| Melhorias locais | 18 |
 | Tempo total | ~2868 min (48h+) |
 | Tempo médio/melhoria | ~75.5 min |
 | **Throughput** | **~0.8 melhorias/hora** (sustentável com backpressure) |
@@ -25,8 +25,13 @@ Status: 🔴 BACKPRESSURE ATIVO (persistente há ~40h)
 | Tokens | 296k/360k | ✅ |
 | Health | HEALTHY | ✅ |
 
-### Sessão Atual (2026-02-07 21:36)
-**17 melhorias totais** (backpressure ativo há ~103h):
+### Sessão Atual (2026-02-07 23:11)
+**18 melhorias totais** (backpressure ativo há ~103h):
+
+18. **23:11** - `continuousImprovement.js` → **Detecção inteligente de mudanças**
+    - `detectModifiedFiles()` → lista arquivos modificados
+    - `suggestImprovement()` → prioriza docs se há mudanças pendentes
+    - `documentPendingChanges()` → auto-registra no TRACKING.md
 
 17. **21:36** - `kaixa-guardian.js` → **Fix bug falso positivo agentes**
     - Agora filtra corretamente por `kind: 'subagent'`
