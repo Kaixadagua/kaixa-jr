@@ -5,13 +5,34 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **59** |
+| **Total de melhorias** | **61** |
 | PRs criados | 16 (abertos - backpressure persistente) |
-| Melhorias locais | 24 |
+| Melhorias locais | 25 |
 | Melhorias PR | 32 |
-| Tempo total | ~2916 min (48h+) |
-| Tempo médio/melhoria | ~52.1 min |
-| **Throughput** | **~1.15 melhorias/hora** (sustentável com backpressure) |
+| Tempo total | ~2917 min (48h+) |
+| Tempo médio/melhoria | ~51.9 min |
+| **Throughput** | **~1.16 melhorias/hora** (sustentável com backpressure) |
+
+### Melhoria #61 (2026-02-08 18:02) - 🆕 LOCAL
+**Arquivo:** `server/continuousImprovement.js` → **CLI Arguments - Controle fino do sistema de melhorias**
+- Nova função `parseArgs()` para parse de argumentos de linha de comando
+- Flag `--dry-run, -d`: Simula melhoria sem alterar arquivos
+- Flag `--local, -l`: Força documentação local (ignora branch/PR)
+- Flag `--type=<tipo>`: Força tipo específico de melhoria (docs|test|refactor|config|code)
+- Flag `--verbose, -v`: Output detalhado para debugging
+- Documentação atualizada no header com `@usage` e exemplos
+- Integração com lógica existente: respeita dry-run em todas as operações
+- 🎯 **61 melhorias totais!** Controle total do sistema de melhorias!
+
+### Melhoria #60 (2026-02-08 17:52) - 🆕 LOCAL
+**Arquivo:** `scripts/kaixa-cli.js` → **Kaixa CLI - Interface unificada de comandos**
+- CLI centralizada com 10 comandos: status, health, guardian, improve, backpressure, queue, quickview, cleanup, submodule, index
+- Sistema de aliases curtos: `s`→status, `i`→improve, `bp`→backpressure, `q`→queue
+- JSDoc completo com @typedef para estrutura de comandos
+- Auto-detecção de scripts (.js/.bat) e execução apropriada
+- Help integrado com lista formatada de comandos
+- Atualização do `scripts/INDEX.md` com nova seção dedicada
+- 🎯 **60 melhorias totais!** CLI unificada = DX maximizada!
 
 ### Melhoria #59 (2026-02-08 17:18) - 🆕 LOCAL
 **Arquivo:** `scripts/lib/logger.js` → **Logger: time/timeEnd para tracking de performance**
