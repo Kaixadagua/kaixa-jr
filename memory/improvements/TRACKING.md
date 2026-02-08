@@ -1,11 +1,11 @@
 # 📊 Tracking de Melhorias Contínuas
 
-## Dashboard - 2026-02-08 02:28
+## Dashboard - 2026-02-08 02:50
 
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **49** |
+| **Total de melhorias** | **50** |
 | PRs criados | 13 (abertos - backpressure persistente) |
 | Melhorias locais | 21 |
 | Melhorias locais | 20 |
@@ -18,6 +18,16 @@
 █████████████████████ 13/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
+
+### Melhoria #50 (2026-02-08 02:50) - 🆕
+**Branch:** `improve/scripts-readme` → **ImprovementLogger - Sistema de logging estruturado**
+- Namespace `ImprovementLogger` com 4 níveis de log
+- Métodos: `debug()`, `info()`, `warn()`, `error()`
+- Saída colorida no console (DX melhorado)
+- Metadados estruturados em cada log
+- Substitui console.log por logs semânticos na função `run()`
+- Commit: `9390b37` - pushado para branch existente
+- 🎯 **50 melhorias totais** - milestone alcançada!
 
 ### Melhoria #49 (2026-02-08 02:28) - 🆕
 **Local** → **Submódulo Manager - Gestão inteligente de submódulos**
