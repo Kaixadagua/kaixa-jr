@@ -25,7 +25,8 @@
     "worker": "node server/agentCorpWorker.js",
     "server": "node server/agentServer.js",
     "sync": "node scripts/sync/git-sync.js",
-    "deploy": "./scripts/deploy.sh"
+    "deploy": "./scripts/deploy.sh",
+    "ci": "npm run lint && npm run test"
   },
   "keywords": [
     "ai",
@@ -49,8 +50,12 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "setupFiles": ["<rootDir>/tests/setup.js"],
-    "testMatch": ["**/tests/**/*.test.js"],
+    "setupFiles": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/**/index.js"
