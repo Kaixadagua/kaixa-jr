@@ -1,3 +1,5 @@
+// NOTE: Configuração carregada em 07/02/2026, 22:50:24
+// Esta classe gerencia todas as configurações do sistema
 /**
  * Kaixa Jr Configuration Loader
  * Loads configuration from environment variables
