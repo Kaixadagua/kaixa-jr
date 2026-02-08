@@ -7,6 +7,7 @@
 ### Node.js
 | Script | Descrição | Uso |
 |--------|-----------|-----|
+| `kaixa-dashboard.js` | **Dashboard unificado** | `node scripts/kaixa-dashboard.js` |
 | `melhoria-status.js` | Dashboard de melhorias | `node scripts/melhoria-status.js` |
 | `health-check.js` | Saúde do ambiente | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
