@@ -21,7 +21,7 @@ Navegação rápida pelos arquivos de memória do Kaixa Jr.
 
 ---
 
-## 🔧 Melhorias Contínuas
+## 🔧 Melhorias Contínuas (Fev/02)
 
 | # | Arquivo | Tipo | Descrição |
 |---|---------|------|-----------|
@@ -42,6 +42,22 @@ Navegação rápida pelos arquivos de memória do Kaixa Jr.
 | 27 | [2026-02-02-0233-melhoria.md](2026-02-02-0233-melhoria.md) | Local | Atualização RESUMO-MELHORIAS.md |
 | 28 | [2026-02-02-0238-melhoria.md](2026-02-02-0238-melhoria.md) | Local | scripts/README.md |
 | 29 | [2026-02-02-0323-melhoria.md](2026-02-02-0323-melhoria.md) | Local | OPERATION-LOG.md |
+| 30-57 | *(ver TRACKING.md)* | Mix | Melhorias contínuas Fev/08 |
+
+## 🔧 Melhorias Contínuas (Fev/08) - Resumo
+
+| # | Tipo | Descrição Destaque |
+|---|------|-------------------|
+| 30 | PR | Submodule sync helper |
+| 31 | PR | Metrics persistence system |
+| 32-44 | Local | Reports, scripts index, cleanup |
+| 45-51 | Mix | Logging, JSDoc, metrics tracker |
+| 52 | Local | System cleanup script |
+| 53 | Local | Documentação principal (docs/) |
+| 54 | Local | Métricas históricas consolidadas |
+| 55 | PR | Check backpressure cross-platform |
+| 56 | PR | ensureFileExists() robustness |
+| 57 | Local | Improvement quickview script |
 
 ---
 
@@ -57,13 +73,13 @@ Navegação rápida pelos arquivos de memória do Kaixa Jr.
 
 ## 📈 Estatísticas
 
-- **Total de arquivos:** 25
+- **Total de arquivos:** 30+
 - **Diários:** 1
 - **Flush:** 2
-- **Melhorias:** 17
+- **Melhorias:** 57 (ver [TRACKING.md](TRACKING.md))
 - **Dashboards:** 3
 - **Logs:** 1
 
 ---
 
-*Índice gerado automaticamente - Kaixa Jr 🦊*
+*Índice atualizado em 2026-02-08 - Kaixa Jr 🦊*
