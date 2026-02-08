@@ -3,8 +3,8 @@
  * @fileoverview Kaixa Guardian - Sistema de gestão saudável de agentes
  * @description Monitora sessões do OpenClaw, tokens e saúde do sistema
  * @author Kaixa Jr 🦊
- * @version 1.3.0
- * @usage node scripts/kaixa-guardian.js [--silent|-s]
+ * @version 1.4.0
+ * @usage node scripts/kaixa-guardian.js [--silent|-s] [--report|-r]
  */
 
 const { execSync } = require('child_process');
@@ -27,7 +27,8 @@ const CONFIG = {
     warningTokens: 150000,
     checkInterval: 300000,
     reportDir: 'scripts/reports',
-    silentMode: process.argv.includes('--silent') || process.argv.includes('-s')
+    silentMode: process.argv.includes('--silent') || process.argv.includes('-s'),
+    reportMode: process.argv.includes('--report') || process.argv.includes('-r')
 };
 
 /**
@@ -227,6 +228,61 @@ function saveReport(health) {
 }
 
 /**
+ * Gera relatório em formato Markdown para Kaua
+ * @param {Object} health - Dados de saúde atual
+ * @returns {string} Relatório formatado em Markdown
+ */
+function generateMarkdownReport(health) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const dateStr = now.toLocaleDateString('pt-BR');
+    
+    const statusEmoji = { healthy: '🟢', warning: '🟡', critical: '🔴' };
+    const bpEmoji = { green: '🟢', yellow: '🟡', red: '🔴', unknown: '⚪' };
+    
+    let report = `# 🦊 Kaixa Guardian Report
+
+**${dateStr} às ${timeStr}**
+
+## 📊 Status do Sistema
+
+| Métrica | Valor | Limite |
+|---------|-------|--------|
+| Agentes | ${health.agentCount}/${CONFIG.maxAgents} | ${health.agentCount > CONFIG.maxAgents ? '🔴 Excedido' : '✅ OK'} |
+| Tokens | ${(health.totalTokens/1000).toFixed(1)}k | ${(CONFIG.maxTokensPerAgent * CONFIG.maxAgents / 1000).toFixed(0)}k |
+| Saúde | ${statusEmoji[health.status]} ${health.status.toUpperCase()} | — |
+
+## 📈 Backpressure
+
+${bpEmoji[health.backpressure.status]} **${health.backpressure.count} PRs abertos** no aurahub
+
+`;
+
+    if (health.backpressure.status === 'red') {
+        report += `> ⚠️ Backpressure ativo. Modo local de melhorias em vigor.\n`;
+    } else if (health.backpressure.status === 'yellow') {
+        report += `> ⚡ Atenção: backlog crescendo.\n`;
+    } else {
+        report += `> ✅ Backlog saudável. Liberado para novos PRs.\n`;
+    }
+
+    if (health.warnings.length > 0) {
+        report += `\n## ⚠️ Alertas\n\n`;
+        health.warnings.forEach(w => {
+            report += `- ${w}\n`;
+        });
+    }
+
+    if (health.action) {
+        report += `\n## 💡 Ação Recomendada\n\n**${health.action}**\n`;
+    }
+
+    report += `\n---\n*Gerado automaticamente por Kaixa Guardian* 🦊\n`;
+    
+    return report;
+}
+
+/**
  * Função principal - executa análise e exibe relatório
  * @returns {void}
  */
@@ -234,6 +290,16 @@ function main() {
     const health = analyzeHealth();
     const history = loadHistory();
     const trend = calculateTrend(history, health);
+    
+    // Modo report - gera markdown e salva em arquivo
+    if (CONFIG.reportMode) {
+        const report = generateMarkdownReport(health);
+        const reportPath = path.join(CONFIG.reportDir, `report-${new Date().toISOString().slice(0,10)}.md`);
+        fs.writeFileSync(reportPath, report);
+        console.log(report);
+        saveReport(health);
+        return;
+    }
     
     // Modo silencioso para cron - só sai se houver problema
     if (CONFIG.silentMode && health.status === 'healthy') {
