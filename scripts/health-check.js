@@ -1,46 +1,58 @@
 #!/usr/bin/env node
-// health-check.js - Verificação rápida de saúde do ambiente
-// Última atualização: 2026-02-02 - Backpressure + Sessões
+/**
+ * health-check.js - Verificação rápida de saúde do ambiente
+ * 
+ * Uso: node scripts/health-check.js
+ * Última atualização: 2026-02-08 - Refatorado com logger centralizado
+ */
 
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const logger = require('./lib/logger');
 
 const WORKSPACE = 'C:\\Users\\joaov\\.openclaw\\workspace';
 const REPO = 'aura-io-saas/aurahub';
 
-console.log('🦊 Kaixa Jr - Health Check\n');
+logger.section('🦊 Kaixa Jr - Health Check');
 
 // Verificar git
-console.log('📁 Git:');
+logger.info('Verificando estado do git...');
 try {
     const branch = execSync('git branch --show-current', { encoding: 'utf8', cwd: WORKSPACE }).trim();
-    console.log(`  Branch: ${branch}`);
-    
     const status = execSync('git status --short', { encoding: 'utf8', cwd: WORKSPACE }).trim();
-    console.log(`  Changes: ${status ? `${status.split('\n').length} pendentes` : 'Limpo'}`);
-} catch {
-    console.log('  ⚠️  Não é um repo git');
+    const changesCount = status ? status.split('\n').length : 0;
+    
+    logger.metric('Branch', branch);
+    logger.metric('Changes pendentes', changesCount || 'Limpo');
+} catch (err) {
+    logger.warn('Não é um repositório git ou git não disponível', err.message);
 }
 
 // Backpressure
-console.log('\n📊 Backpressure:');
+logger.section('📊 Backpressure');
 try {
     const prList = execSync(`gh pr list --repo ${REPO} --state open`, { encoding: 'utf8' }).trim();
     const prCount = prList ? prList.split('\n').length : 0;
     
     let status = '🟢';
-    if (prCount >= 9) status = '🔴';
-    else if (prCount >= 6) status = '🟡';
+    let level = 'success';
+    if (prCount >= 9) {
+        status = '🔴';
+        level = 'error';
+    } else if (prCount >= 6) {
+        status = '🟡';
+        level = 'warn';
+    }
     
-    console.log(`  ${status} PRs abertos: ${prCount}`);
-    console.log(`  Threshold: ${prCount >= 9 ? 'BACKPRESSURE ATIVO' : 'Fluxo normal'}`);
-} catch {
-    console.log('  ⚠️  Não foi possível verificar PRs');
+    logger.metric('PRs abertos', `${status} ${prCount}`);
+    logger.result(prCount < 9, prCount >= 9 ? 'BACKPRESSURE ATIVO' : 'Fluxo normal');
+} catch (err) {
+    logger.warn('Não foi possível verificar PRs', err.message);
 }
 
 // Verificar memória
-console.log('\n🧠 Memória:');
+logger.section('🧠 Memória');
 const memDir = path.join(WORKSPACE, 'memory');
 if (fs.existsSync(memDir)) {
     const files = fs.readdirSync(memDir).filter(f => f.endsWith('.md'));
@@ -49,26 +61,33 @@ if (fs.existsSync(memDir)) {
         ? fs.readdirSync(impDir).filter(f => f.endsWith('.md')) 
         : [];
     
-    console.log(`  Arquivos memória: ${files.length}`);
-    console.log(`  Melhorias: ${impFiles.length}`);
+    logger.metric('Arquivos memória', files.length);
+    logger.metric('Melhorias registradas', impFiles.length);
+} else {
+    logger.warn('Diretório de memória não encontrado');
 }
 
-// Verificar sessões (se tool disponível)
-console.log('\n💓 Sessões:');
-console.log('  Status: Verificar via openclaw status');
+// Verificar sessões
+logger.section('💓 Sessões');
+logger.info('Verificar status via: openclaw status');
 
 // Quick stats
-console.log('\n⚡ Quick Stats:');
+logger.section('⚡ Quick Stats');
 const scriptsDir = path.join(WORKSPACE, 'scripts');
+const libDir = path.join(scriptsDir, 'lib');
 if (fs.existsSync(scriptsDir)) {
     const scripts = fs.readdirSync(scriptsDir).filter(f => f.endsWith('.js') || f.endsWith('.ps1'));
-    console.log(`  Scripts: ${scripts.length}`);
+    logger.metric('Scripts', scripts.length);
+}
+if (fs.existsSync(libDir)) {
+    const libs = fs.readdirSync(libDir).filter(f => f.endsWith('.js'));
+    logger.metric('Bibliotecas', libs.length);
 }
 
 const skillsDir = path.join(WORKSPACE, 'skills');
 if (fs.existsSync(skillsDir)) {
     const skills = fs.readdirSync(skillsDir).filter(f => fs.statSync(path.join(skillsDir, f)).isDirectory());
-    console.log(`  Skills: ${skills.length}`);
+    logger.metric('Skills', skills.length);
 }
 
-console.log('\n✅ Health check completo');
+logger.success('Health check completo');
