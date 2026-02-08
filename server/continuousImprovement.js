@@ -438,6 +438,53 @@ ${improvement.title}
 }
 
 /**
+ * Executa função com retry e backoff exponencial
+ * @param {Function} fn - Função a executar
+ * @param {Object} [options] - Opções de retry
+ * @param {number} [options.maxRetries=3] - Máximo de tentativas
+ * @param {number} [options.baseDelay=1000] - Delay base em ms
+ * @param {number} [options.maxDelay=30000] - Delay máximo em ms
+ * @returns {Promise<*>} Resultado da função
+ * @throws {Error} Se todas as tentativas falharem
+ * 
+ * @example
+ * const result = await retryAsync(() => gitPush(branch), { maxRetries: 5 });
+ */
+async function retryAsync(fn, options = {}) {
+  const { maxRetries = 3, baseDelay = 1000, maxDelay = 30000 } = options;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await fn();
+      ImprovementLogger.info(`✅ Sucesso na tentativa ${attempt}/${maxRetries}`);
+      return result;
+    } catch (error) {
+      const isLastAttempt = attempt === maxRetries;
+      
+      if (isLastAttempt) {
+        ImprovementLogger.error(`❌ Falhou após ${maxRetries} tentativas`, {
+          error: error.message
+        });
+        throw error;
+      }
+      
+      // Backoff exponencial com jitter
+      const delay = Math.min(
+        baseDelay * Math.pow(2, attempt - 1) + Math.random() * 1000,
+        maxDelay
+      );
+      
+      ImprovementLogger.warn(`⚠️ Tentativa ${attempt} falhou, retry em ${Math.round(delay)}ms`, {
+        error: error.message,
+        nextAttempt: attempt + 1
+      });
+      
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+
+/**
  * EXECUTA 1 MELHORIA
  */
 async function run() {
