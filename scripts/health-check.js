@@ -71,4 +71,38 @@ if (fs.existsSync(skillsDir)) {
     console.log(`  Skills: ${skills.length}`);
 }
 
+// Validação de integridade
+console.log('\n🔍 Integridade:');
+const expectedScripts = [
+    'health-check.js',
+    'check-backpressure.ps1',
+    'status.bat',
+    'melhoria-consolidator.js',
+    'auto-commit.js'
+];
+const missing = expectedScripts.filter(s => !fs.existsSync(path.join(scriptsDir, s)));
+if (missing.length > 0) {
+    console.log(`  ⚠️  Scripts ausentes: ${missing.join(', ')}`);
+} else {
+    console.log('  ✅ Todos os scripts essenciais presentes');
+}
+
+// Timestamp da última melhoria
+const impDir = path.join(WORKSPACE, 'memory', 'improvements');
+if (fs.existsSync(impDir)) {
+    const impFiles = fs.readdirSync(impDir)
+        .filter(f => f.endsWith('.md') && f !== 'CONSOLIDADO-BATCH.md' && f !== 'README.md')
+        .map(f => ({
+            name: f,
+            time: fs.statSync(path.join(impDir, f)).mtime
+        }))
+        .sort((a, b) => b.time - a.time);
+    
+    if (impFiles.length > 0) {
+        const last = impFiles[0];
+        const minsAgo = Math.floor((Date.now() - last.time.getTime()) / 60000);
+        console.log(`  🕐 Última melhoria: ${minsAgo} min atrás`);
+    }
+}
+
 console.log('\n✅ Health check completo');
