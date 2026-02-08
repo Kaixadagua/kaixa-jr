@@ -10,6 +10,7 @@
 | `melhoria-status.js` | Dashboard de melhorias | `node scripts/melhoria-status.js` |
 | `health-check.js` | Saúde do ambiente | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
+| `auto-process-pending.js` | Processa melhorias pendentes | `node scripts/auto-process-pending.js` |
 | `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
 | `system-cleanup.js` | Limpeza e manutenção | `node scripts/system-cleanup.js` |
 | `improvement-quickview.js` | QuickView de melhorias | `node scripts/improvement-quickview.js` |
