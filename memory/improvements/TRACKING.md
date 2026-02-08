@@ -1,13 +1,13 @@
 # 📊 Tracking de Melhorias Contínuas
 
-## Dashboard - 2026-02-08 09:54
+## Dashboard - 2026-02-08 14:15
 
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **56** |
+| **Total de melhorias** | **57** |
 | PRs criados | 16 (abertos - backpressure persistente) |
-| Melhorias locais | 23 |
+| Melhorias locais | 24 |
 | Melhorias PR | 32 |
 | Tempo total | ~2916 min (48h+) |
 | Tempo médio/melhoria | ~52.1 min |
@@ -18,6 +18,17 @@
 ████████████████████ 13/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
+
+### Melhoria #57 (2026-02-08 14:15) - 🆕 LOCAL
+**Arquivo:** `scripts/improvement-quickview.js` → **QuickView de Melhorias - Visualização rápida**
+- Script utilitário para visualização rápida das últimas melhorias
+- Detecção automática de tipo: local 📝, pr 🔗, refactor ♻️, docs 📄, code 💻
+- Interface compacta com emojis para heartbeats rápidos
+- Modo JSON (`--json`) para integração com outros scripts
+- Extração inteligente de títulos de arquivos markdown
+- Atualização do `scripts/INDEX.md` com novo script
+- Pushado para branch `improve/scripts-readme` (backpressure ativo)
+- 🎯 **57 melhorias totais!** Ferramenta de DX para acompanhamento!
 
 ### Melhoria #56 (2026-02-08 09:54) - 🆕 PR #30
 **Branch:** `feature/ensure-file-exists-56` → **ensureFileExists() - Robusteza para arquivos inexistentes**
