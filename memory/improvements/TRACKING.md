@@ -1,6 +1,29 @@
 # 📊 Tracking de Melhorias Contínuas
 
-## Dashboard - 2026-02-08 18:47
+## Dashboard - 2026-02-08 19:43
+
+### Melhoria #71 (2026-02-08 19:43) - 🆕 LOCAL
+**Arquivo:** `memory/improvements/` → **Consolidação de mudanças pendentes - métricas e tracking**
+- Atualização de métricas: 70 → 71 melhorias totais
+- Local improvements: 35 → 36 (backpressure persistente)
+- Docs count: 18 → 19 na categorização
+- Nova entrada no guardian report (melhoria #71 documentada)
+- Sincronização de TRACKING.md com estado atual
+- Backpressure: 20 PRs abertos (⚠️ aumentou)
+- Sistema estável: 0 agentes, modo cron eficiente
+- 🎯 **71 melhorias totais!** Consistência de dados mantida!
+
+### Melhoria #70 (2026-02-08 19:31) - 🆕 PUSHED
+**Arquivo:** `scripts/quick-status.js` → **Quick Status - Verificação ultrarrápida para heartbeats**
+- Script utilitário para status do sistema em formato minimalista (1 linha)
+- Modo compacto: `🦊 69 | 23m | 🔴 30PR | 💾 9Δ`
+- Modo emoji (`--emoji`): Formatado para plataformas com bom suporte
+- Modo JSON (`--json`): Para integração com automação
+- Mostra: melhorias totais, tempo desde última, backpressure, mudanças pendentes
+- Substitui múltiplas chamadas de script por uma só
+- 157 linhas com JSDoc completo
+- Branch: `feat/consolidate-reports` | Commit: `cd3de1d`
+- 🎯 **70 melhorias totais!** Heartbeats otimizados!
 
 ### Melhoria #61 (2026-02-08 18:47) - 🆕 LOCAL
 **Arquivo:** `scripts/reports/guardian-2026-02-08.json` → **Consolidação de Métricas do Guardian**
@@ -13,10 +36,10 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **61** |
-| PRs criados | 16 (abertos - backpressure persistente) |
-| Melhorias locais | 25 |
-| Melhorias PR | 32 |
+| **Total de melhorias** | **71** |
+| PRs criados | 20 (abertos - backpressure persistente) |
+| Melhorias locais | 36 |
+| Melhorias PR | 35 |
 | Tempo total | ~2917 min (48h+) |
 | Tempo médio/melhoria | ~52.0 min |
 | **Throughput** | **~1.15 melhorias/hora** (sustentável com backpressure) |
