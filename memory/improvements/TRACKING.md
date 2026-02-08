@@ -5,13 +5,13 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **50** |
-| PRs criados | 13 (abertos - backpressure persistente) |
+| **Total de melhorias** | **51** |
+| PRs criados | 14 (abertos - backpressure persistente) |
 | Melhorias locais | 21 |
 | Melhorias locais | 20 |
-| Tempo total | ~2895 min (48h+) |
-| Tempo médio/melhoria | ~61.6 min |
-| **Throughput** | **~0.98 melhorias/hora** (sustentável com backpressure) |
+| Tempo total | ~2900 min (48h+) |
+| Tempo médio/melhoria | ~61.2 min |
+| **Throughput** | **~0.99 melhorias/hora** (sustentável com backpressure) |
 
 ### Backlog
 ```
@@ -19,7 +19,19 @@
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
 
-### Melhoria #50 (2026-02-08 02:50) - 🆕
+### Melhoria #51 (2026-02-08 04:27) - 🆕
+**Branch:** `feature/metrics-persistent-51` → **PR #19 - Sistema de métricas persistentes**
+- Função `saveMetrics()` para tracking de execuções
+- Contadores: totalRuns, successfulRuns, local/prImprovements
+- Tracking por tipo de melhoria (docs, test, refactor, code, config)
+- Histórico das últimas 100 execuções
+- Throughput calculado automaticamente (melhorias/hora nas últimas 24h)
+- Métricas persistidas em `memory/improvements/metrics.json`
+- Permite análise de eficiência ao longo do tempo
+- 🎯 **51 melhorias totais**!
+🔗 https://github.com/Kaixadagua/kaixa-jr/pull/19
+
+### Melhoria #50 (2026-02-08 02:50)
 **Branch:** `improve/scripts-readme` → **ImprovementLogger - Sistema de logging estruturado**
 - Namespace `ImprovementLogger` com 4 níveis de log
 - Métodos: `debug()`, `info()`, `warn()`, `error()`
