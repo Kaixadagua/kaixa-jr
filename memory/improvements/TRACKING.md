@@ -1,6 +1,13 @@
 # 📊 Tracking de Melhorias Contínuas
 
 ## Dashboard
+### 2026-02-08T16-23-26
+**Auto-detected changes:**
+- scripts/quickview.js
+- memory/improvements/2026-02-08-1623-quickview.md
+
+ - 2026-02-08 16:23
+
 ### 2026-02-08T19-12-51
 **Auto-detected changes:**
 - aurahub
@@ -13,17 +20,27 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **57** |
+| **Total de melhorias** | **58** |
 | PRs criados | 16 (abertos - backpressure persistente) |
-| Melhorias locais | 24 |
+| Melhorias locais | 25 |
 | Melhorias PR | 32 |
-| Tempo total | ~2916 min (48h+) |
-| Tempo médio/melhoria | ~52.1 min |
+| Tempo total | ~2917 min (48h+) |
+| Tempo médio/melhoria | ~52.0 min |
 | **Throughput** | **~1.15 melhorias/hora** (sustentável com backpressure) |
+
+### Melhoria #58 (2026-02-08 16:23) - 🆕 LOCAL
+**Arquivo:** `scripts/quickview.js` → **Kaixa QuickView - Dashboard compacto de saúde**
+- Dashboard visual em caixa ASCII com todas as métricas críticas
+- Exibe: status do sistema, agentes ativos, tokens, backpressure, melhorias do dia
+- Modo `--json` para integração com automação/heartbeat
+- Integração nativa com relatórios do Guardian
+- Cálculo automático de status (healthy/warning/critical)
+- Pushado para branch `feature/auto-improvement-mle4eq8h` (backpressure ativo)
+- 🎯 **58 melhorias totais!** Observabilidade em uma linha!
 
 ### Backlog
 ```
-████████████████████ 13/9 PRs abertos
+████████████████████ ~30 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~105h)
 ```
 
