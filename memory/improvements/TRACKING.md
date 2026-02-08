@@ -5,18 +5,27 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **46** |
-| PRs criados | 12 (abertos) |
+| **Total de melhorias** | **47** |
+| PRs criados | 13 (abertos) |
 | Melhorias locais | 20 |
-| Tempo total | ~2890 min (48h+) |
-| Tempo médio/melhoria | ~67.2 min |
-| **Throughput** | **~0.89 melhorias/hora** (sustentável com backpressure) |
+| Tempo total | ~2895 min (48h+) |
+| Tempo médio/melhoria | ~61.6 min |
+| **Throughput** | **~0.98 melhorias/hora** (sustentável com backpressure) |
 
 ### Backlog
 ```
-████████████████████ 12/9 PRs abertos
+█████████████████████ 13/9 PRs abertos
 Status: 🔴 BACKPRESSURE ATIVO (persistente há ~104h)
 ```
+
+### Melhoria #47 (2026-02-08 02:06)
+**Branch:** `improve/agentServer-jsdoc` → **PR #14**
+- JSDoc completo no `server/agentServer.js`
+- @typedef AgentStatus com documentação de propriedades
+- JSDoc em completeTask(), createServer(), getStatus()
+- @namespace nas exportações
+- Melhora DX e autocomplete em IDEs
+🔗 https://github.com/Kaixadagua/kaixa-jr/pull/14
 
 ### Melhoria #46 (2026-02-08 01:31)
 **Branch:** `improve/scripts-readme` → **JSDoc no kaixa-guardian.js**
