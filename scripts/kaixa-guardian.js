@@ -3,8 +3,20 @@
  * @fileoverview Kaixa Guardian - Sistema de gestão saudável de agentes
  * @description Monitora sessões do OpenClaw, tokens e saúde do sistema
  * @author Kaixa Jr 🦊
- * @version 1.3.0
- * @usage node scripts/kaixa-guardian.js [--silent|-s]
+ * @version 1.4.0
+ * @usage node scripts/kaixa-guardian.js [options]
+ * 
+ * Opções:
+ *   -s, --silent    Modo silencioso para cron
+ *   -e, --export    Exporta métricas para CSV
+ *   -d, --days N    Dias para exportar (padrão: 7)
+ *   -c, --compact   Compacta métricas antigas
+ *   -h, --help      Mostra ajuda
+ * 
+ * Exemplos:
+ *   node scripts/kaixa-guardian.js
+ *   node scripts/kaixa-guardian.js --export --days 30
+ *   node scripts/kaixa-guardian.js --compact
  */
 
 const { execSync } = require('child_process');
@@ -26,8 +38,7 @@ const CONFIG = {
     maxTokensPerAgent: 180000,
     warningTokens: 150000,
     checkInterval: 300000,
-    reportDir: 'scripts/reports',
-    silentMode: process.argv.includes('--silent') || process.argv.includes('-s')
+    reportDir: 'scripts/reports'
 };
 
 /**
@@ -191,6 +202,112 @@ function calculateTrend(history, current) {
 }
 
 /**
+ * Configuração de retenção de métricas
+ * @constant {Object}
+ */
+const RETENTION = {
+    maxDailyEntries: 50,      // Máximo de entradas por arquivo diário
+    maxArchiveDays: 7,        // Dias para arquivar
+    compressionThreshold: 30  // Compactar após 30 dias
+};
+
+/**
+ * Compacta arquivos de métricas antigos (mantém resumo)
+ * @returns {Object} Resultado da compactação
+ */
+function compactOldMetrics() {
+    const reportDir = ensureReportDir();
+    const files = fs.readdirSync(reportDir)
+        .filter(f => f.startsWith('guardian-') && f.endsWith('.json'));
+    
+    const today = new Date().toISOString().slice(0, 10);
+    const compacted = [];
+    
+    files.forEach(file => {
+        const fileDate = file.slice(9, 19);
+        const daysDiff = Math.floor(
+            (new Date(today) - new Date(fileDate)) / (1000 * 60 * 60 * 24)
+        );
+        
+        // Compactar arquivos com mais de 7 dias
+        if (daysDiff > RETENTION.maxArchiveDays) {
+            const filepath = path.join(reportDir, file);
+            try {
+                const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+                
+                // Criar resumo em vez de manter todos os dados
+                const summary = {
+                    date: fileDate,
+                    totalEntries: data.length,
+                    avgTokens: data.reduce((a, b) => a + (b.totalTokens || 0), 0) / data.length,
+                    maxTokens: Math.max(...data.map(d => d.totalTokens || 0)),
+                    statusChanges: data.filter((d, i, arr) => 
+                        i > 0 && d.status !== arr[i-1].status
+                    ).length,
+                    _compact: true,
+                    _compactedAt: new Date().toISOString()
+                };
+                
+                // Salvar como .summary.json
+                const summaryFile = file.replace('.json', '.summary.json');
+                fs.writeFileSync(
+                    path.join(reportDir, summaryFile),
+                    JSON.stringify(summary, null, 2)
+                );
+                
+                // Remover arquivo original
+                fs.unlinkSync(filepath);
+                compacted.push({ file: summaryFile, entries: data.length });
+            } catch (e) {
+                console.error(`Erro ao compactar ${file}:`, e.message);
+            }
+        }
+    });
+    
+    return { compacted, count: compacted.length };
+}
+
+/**
+ * Exporta métricas para CSV (últimos N dias)
+ * @param {number} [days=7] - Quantidade de dias para exportar
+ * @returns {string} Caminho do arquivo CSV gerado
+ */
+function exportToCSV(days = 7) {
+    const reportDir = ensureReportDir();
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+    
+    let allRecords = [];
+    
+    const files = fs.readdirSync(reportDir)
+        .filter(f => f.startsWith('guardian-') && f.endsWith('.json') && !f.includes('.summary'));
+    
+    files.forEach(file => {
+        const fileDate = file.slice(9, 19);
+        if (new Date(fileDate) >= cutoff) {
+            try {
+                const data = JSON.parse(fs.readFileSync(path.join(reportDir, file), 'utf8'));
+                allRecords = allRecords.concat(data);
+            } catch {}
+        }
+    });
+    
+    // Ordenar por timestamp
+    allRecords.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
+    // Gerar CSV
+    const headers = 'timestamp,agentCount,totalTokens,status,backpressure_count,backpressure_status\n';
+    const rows = allRecords.map(r => 
+        `${r.timestamp},${r.agentCount},${r.totalTokens},${r.status},${r.backpressure?.count || 0},${r.backpressure?.status || 'unknown'}`
+    ).join('\n');
+    
+    const csvPath = path.join(reportDir, `guardian-export-${new Date().toISOString().slice(0,10)}.csv`);
+    fs.writeFileSync(csvPath, headers + rows);
+    
+    return csvPath;
+}
+
+/**
  * Salva relatório de saúde no arquivo JSON diário
  * @param {Object} health - Dados de saúde atual
  * @param {string} health.timestamp - Timestamp ISO
@@ -220,10 +337,58 @@ function saveReport(health) {
         backpressure: health.backpressure
     });
     
-    // Manter apenas últimos 50 registros
-    if (reports.length > 50) reports = reports.slice(-50);
+    // Manter apenas últimos N registros
+    if (reports.length > RETENTION.maxDailyEntries) {
+        reports = reports.slice(-RETENTION.maxDailyEntries);
+    }
     
     fs.writeFileSync(filepath, JSON.stringify(reports, null, 2));
+    
+    // Compactar métricas antigas periodicamente (1x por dia, no primeiro registro)
+    if (reports.length === 1) {
+        compactOldMetrics();
+    }
+}
+
+/**
+ * Parseia argumentos da CLI
+ * @returns {Object} Argumentos parseados
+ */
+function parseArgs() {
+    const args = process.argv.slice(2);
+    return {
+        export: args.includes('--export') || args.includes('-e'),
+        exportDays: parseInt(args.find((a, i) => 
+            args[i - 1] === '--days' || args[i - 1] === '-d'
+        )) || 7,
+        compact: args.includes('--compact') || args.includes('-c'),
+        silent: args.includes('--silent') || args.includes('-s'),
+        help: args.includes('--help') || args.includes('-h')
+    };
+}
+
+/**
+ * Exibe ajuda
+ */
+function showHelp() {
+    console.log(`
+🦊 Kaixa Guardian - Uso
+
+Comandos:
+  node scripts/kaixa-guardian.js [opções]
+
+Opções:
+  -s, --silent       Modo silencioso (apenas para cron)
+  -e, --export       Exporta métricas para CSV
+  -d, --days N       Dias para exportar (padrão: 7)
+  -c, --compact      Compacta métricas antigas
+  -h, --help         Mostra esta ajuda
+
+Exemplos:
+  node scripts/kaixa-guardian.js
+  node scripts/kaixa-guardian.js --export --days 30
+  node scripts/kaixa-guardian.js --silent
+`);
 }
 
 /**
@@ -231,12 +396,36 @@ function saveReport(health) {
  * @returns {void}
  */
 function main() {
+    const args = parseArgs();
+    
+    if (args.help) {
+        showHelp();
+        return;
+    }
+    
+    // Exportar CSV se solicitado
+    if (args.export) {
+        const csvPath = exportToCSV(args.exportDays);
+        console.log(`📊 Métricas exportadas: ${csvPath}`);
+        return;
+    }
+    
+    // Compactar se solicitado
+    if (args.compact) {
+        const result = compactOldMetrics();
+        console.log(`🗜️  Compactação: ${result.count} arquivos processados`);
+        result.compacted.forEach(c => {
+            console.log(`   ✓ ${c.file} (${c.entries} entradas)`);
+        });
+        return;
+    }
+    
     const health = analyzeHealth();
     const history = loadHistory();
     const trend = calculateTrend(history, health);
     
     // Modo silencioso para cron - só sai se houver problema
-    if (CONFIG.silentMode && health.status === 'healthy') {
+    if ((CONFIG.silentMode || args.silent) && health.status === 'healthy') {
         saveReport(health);
         process.exit(0);
     }
