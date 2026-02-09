@@ -58,6 +58,12 @@ node scripts/auto-commit.js
 node scripts/kaixa-metrics.js --mini  # 1 linha
 ```
 
+## 📚 Bibliotecas (lib/)
+
+| Módulo | Funções | Descrição |
+|--------|---------|-----------|
+| `lib/formatters.js` | `formatBytes()`, `formatDuration()`, `truncate()` | Formatadores utilitários |
+
 ---
-*Índice atualizado: 2026-02-08 18:45*
-*Melhoria #60 - Kaixa Metrics adicionado*
+*Índice atualizado: 2026-02-09 15:24*
+*Melhoria #72 - Formatters utilitários adicionados*
