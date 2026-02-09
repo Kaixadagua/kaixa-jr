@@ -7,13 +7,14 @@
 ### Node.js
 | Script | Descrição | Uso |
 |--------|-----------|-----|
-| `melhoria-status.js` | Dashboard de melhorias | `node scripts/melhoria-status.js` |
+| `kaixa-guardian.js` | **Gestão saudável de agentes** | `node scripts/kaixa-guardian.js` |
 | `kaixa-metrics.js` | **Metrics em tempo real** | `node scripts/kaixa-metrics.js --mini` |
+| `improvement-quickview.js` | QuickView de melhorias | `node scripts/improvement-quickview.js` |
 | `health-check.js` | Saúde do ambiente | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits | `node scripts/auto-commit.js` |
 | `submodule-manager.js` | Gestão de submódulos | `node scripts/submodule-manager.js` |
 | `system-cleanup.js` | Limpeza e manutenção | `node scripts/system-cleanup.js` |
-| `improvement-quickview.js` | QuickView de melhorias | `node scripts/improvement-quickview.js` |
+| `cron-improvement.js` | Executa melhoria contínua | `node scripts/cron-improvement.js` |
 
 ### PowerShell
 | Script | Descrição | Uso |
@@ -40,7 +41,8 @@
 ### Verificar estado
 ```bash
 .\status.bat
-node scripts/melhoria-status.js
+node scripts/kaixa-guardian.js         # Status de agentes
+node scripts/kaixa-metrics.js --mini   # Métricas 1 linha
 node scripts/health-check.js
 node scripts/submodule-manager.js
 node scripts/improvement-quickview.js  # Quick view das últimas 5
@@ -59,5 +61,5 @@ node scripts/kaixa-metrics.js --mini  # 1 linha
 ```
 
 ---
-*Índice atualizado: 2026-02-08 18:45*
-*Melhoria #60 - Kaixa Metrics adicionado*
+*Índice atualizado: 2026-02-09 04:38*
+*Melhoria #61 - Atualizado: removido melhoria-status.js (obsoleto), adicionado kaixa-guardian.js e cron-improvement.js*
