@@ -1,7 +1,7 @@
 {
-  "totalRuns": 110,
-  "successfulRuns": 110,
-  "localImprovements": 35,
+  "totalRuns": 118,
+  "successfulRuns": 118,
+  "localImprovements": 36,
   "prImprovements": 34,
   "byType": {
     "docs": 18,
@@ -29,10 +29,10 @@
       "local": true
     }
   ],
-  "throughput24h": "1.12",
-  "lastUpdated": "2026-02-08T14:23:00.000Z",
-  "backpressureDuration": 105,
-  "totalImprovements": 69,
+  "throughput24h": "1.18",
+  "lastUpdated": "2026-02-09T06:28:00.000Z",
+  "backpressureDuration": 107,
+  "totalImprovements": 72,
   "lastImprovement": {
     "timestamp": "2026-02-08T14:23:00.000Z",
     "type": "refactor",
