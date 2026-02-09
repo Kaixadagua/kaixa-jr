@@ -23,6 +23,7 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 | `git-safe.js` | Wrapper seguro para operações git (retry, logging) | `node scripts/git-safe.js status` |
 | `kaixa-guardian.js` | Guardian principal - verifica saúde do sistema | `node scripts/kaixa-guardian.js` |
 | `kaixa-report-35min.js` | Report periódico de status (35min) | `node scripts/kaixa-report-35min.js` |
+| `improvement-dashboard.js` | Dashboard CLI visual de métricas | `node scripts/improvement-dashboard.js` |
 | `improvement-health.js` | Health check específico de melhorias | `node scripts/improvement-health.js` |
 | `health-check.js` | Saúde geral do ambiente (git, backpressure, stats) | `node scripts/health-check.js` |
 | `auto-commit.js` | Auxilia commits com mensagens sugeridas | `node scripts/auto-commit.js` |
@@ -123,6 +124,15 @@ node scripts/kaixa-snapshot.js --json
 # Snapshots são salvos em memory/snapshots/
 ```
 
+### Dashboard de Melhorias
+```bash
+# Dashboard visual completo
+node scripts/improvement-dashboard.js
+
+# Modo compacto (stats apenas)
+node scripts/improvement-dashboard.js --compact
+```
+
 ---
 
 ## 🎯 Convenções
@@ -148,6 +158,7 @@ Indicadores de maturidade e manutenção:
 | `status.bat` | ✅ Estável | Status rápido diário |
 | `kaixa-report-35min.js` | 📝 Beta | Reports periódicos, em validação |
 | `improvement-health.js` | 📝 Beta | Health específico de melhorias |
+| `improvement-dashboard.js` | 🆕 Novo | Dashboard CLI visual de métricas, recém criado |
 | `context-compactor.js` | 🆕 Novo | Recém criado, em testes |
 | `smart-merge.ps1` | 🆕 Novo | Merge inteligente, em testes |
 | `git-safe.js` | 🆕 Novo | Wrapper seguro para git, validação em andamento |
