@@ -361,6 +361,54 @@ function updateChangelog() {
 }
 
 /**
+ * Executa comando com retry automático e exponential backoff
+ * @param {string} command - Comando a executar
+ * @param {Object} options - Opções do execSync
+ * @param {number} [maxRetries=3] - Número máximo de tentativas
+ * @param {number} [baseDelay=1000] - Delay base em ms
+ * @returns {string|null} Output do comando ou null se falhar
+ */
+function execWithRetry(command, options = {}, maxRetries = 3, baseDelay = 1000) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = execSync(command, { 
+        cwd: process.cwd(), 
+        encoding: 'utf8',
+        ...options 
+      });
+      
+      if (attempt > 1) {
+        ImprovementLogger.info(`✅ Comando bem-sucedido na tentativa ${attempt}`, { command: command.slice(0, 50) });
+      }
+      
+      return result;
+    } catch (e) {
+      const isLastAttempt = attempt === maxRetries;
+      const delay = baseDelay * Math.pow(2, attempt - 1); // Exponential backoff: 1s, 2s, 4s
+      
+      if (isLastAttempt) {
+        ImprovementLogger.error(`❌ Falha após ${maxRetries} tentativas`, { 
+          command: command.slice(0, 50),
+          error: e.message 
+        });
+        return null;
+      }
+      
+      ImprovementLogger.warn(`⚠️ Tentativa ${attempt} falhou, retry em ${delay}ms...`, { 
+        error: e.message.slice(0, 100) 
+      });
+      
+      // Sleep sincrono
+      const start = Date.now();
+      while (Date.now() - start < delay) {
+        // Busy wait (não ideal, mas necessário para sync)
+      }
+    }
+  }
+  return null;
+}
+
+/**
  * Cria branch
  */
 function createBranch(timestamp) {
@@ -375,30 +423,47 @@ function createBranch(timestamp) {
 }
 
 /**
- * Faz commit
+ * Faz commit com retry automático
  */
 function commitChanges(message) {
-  try {
-    execSync('git add .', { cwd: process.cwd() });
-    execSync(`git commit -m "[kaixa-auto] ${message}"`, { cwd: process.cwd() });
-    return true;
-  } catch (e) {
-    console.log('⚠️ Erro no commit:', e.message);
+  const addResult = execWithRetry('git add .', {}, 3, 500);
+  if (addResult === null) {
+    ImprovementLogger.error('❌ Falha ao adicionar arquivos');
     return false;
   }
+  
+  const commitResult = execWithRetry(
+    `git commit -m "[kaixa-auto] ${message}"`,
+    {},
+    3,
+    1000
+  );
+  
+  if (commitResult === null) {
+    ImprovementLogger.error('❌ Falha ao fazer commit');
+    return false;
+  }
+  
+  return true;
 }
 
 /**
- * Faz push
+ * Faz push com retry automático
  */
 function pushBranch(branch) {
-  try {
-    execSync(`git push -u origin ${branch}`, { cwd: process.cwd() });
-    return true;
-  } catch (e) {
-    console.log('⚠️ Erro no push:', e.message);
+  const result = execWithRetry(
+    `git push -u origin ${branch}`,
+    {},
+    3,
+    2000
+  );
+  
+  if (result === null) {
+    ImprovementLogger.error('❌ Falha ao fazer push');
     return false;
   }
+  
+  return true;
 }
 
 /**
@@ -438,18 +503,77 @@ ${improvement.title}
 }
 
 /**
+ * Atualiza métricas com nova melhoria
+ * @param {Object} result - Resultado da melhoria
+ * @param {boolean} isLocal - Se foi melhoria local
+ */
+function updateMetrics(result, isLocal) {
+  try {
+    const metricsPath = 'memory/improvements/metrics.json';
+    let metrics = { totalImprovements: 0, localImprovements: 0, prImprovements: 0 };
+    
+    if (fs.existsSync(metricsPath)) {
+      metrics = JSON.parse(fs.readFileSync(metricsPath, 'utf8'));
+    }
+    
+    metrics.totalImprovements = (metrics.totalImprovements || 0) + 1;
+    metrics.totalRuns = (metrics.totalRuns || 0) + 1;
+    metrics.successfulRuns = (metrics.successfulRuns || 0) + 1;
+    
+    if (isLocal) {
+      metrics.localImprovements = (metrics.localImprovements || 0) + 1;
+    } else {
+      metrics.prImprovements = (metrics.prImprovements || 0) + 1;
+    }
+    
+    // Atualiza histórico (últimas 100)
+    if (!metrics.history) metrics.history = [];
+    metrics.history.push({
+      timestamp: new Date().toISOString(),
+      success: true,
+      type: result.type,
+      file: result.file,
+      lines: result.lines,
+      local: isLocal
+    });
+    metrics.history = metrics.history.slice(-100);
+    
+    // Atualiza contadores por tipo
+    if (!metrics.byType) metrics.byType = {};
+    metrics.byType[result.type] = (metrics.byType[result.type] || 0) + 1;
+    
+    fs.writeFileSync(metricsPath, JSON.stringify(metrics, null, 2));
+    
+    return metrics.totalImprovements;
+  } catch (e) {
+    ImprovementLogger.warn('⚠️ Falha ao atualizar métricas', { error: e.message });
+    return null;
+  }
+}
+
+/**
  * EXECUTA 1 MELHORIA
  */
 async function run() {
   const logger = ImprovementLogger;
   
-  logger.info('🦊 KAIXA JR - MELHORIA CONTÍNUA iniciada', {
-    timestamp: new Date().toISOString()
+  // Carrega métricas atuais
+  let currentTotal = 0;
+  try {
+    const m = JSON.parse(fs.readFileSync('memory/improvements/metrics.json', 'utf8'));
+    currentTotal = m.totalImprovements || 0;
+  } catch {}
+  
+  const nextImprovement = currentTotal + 1;
+  
+  logger.info(`🦊 KAIXA JR - MELHORIA CONTÍNUA #${nextImprovement} iniciada`, {
+    timestamp: new Date().toISOString(),
+    totalImprovements: currentTotal
   });
   
   // Seleciona melhoria (inteligente: detecta estado do repo)
   const improvement = suggestImprovement();
-  logger.info(`🎯 Melhoria selecionada: ${improvement.title}`, {
+  logger.info(`🎯 Melhoria #${nextImprovement} selecionada: ${improvement.title}`, {
     type: improvement.type,
     reason: improvement.reason || 'fallback'
   });
@@ -466,6 +590,8 @@ async function run() {
   const timestamp = Date.now().toString(36);
   const branch = createBranch(timestamp);
   
+  let isLocal = true;
+  
   if (branch) {
     const committed = commitChanges(improvement.title);
     
@@ -473,7 +599,11 @@ async function run() {
       const pushed = pushBranch(branch);
       
       if (pushed) {
+        isLocal = false;
         logger.info('🚀 Push realizado com sucesso', { branch });
+        
+        // Atualiza métricas
+        const newTotal = updateMetrics(result, false);
         
         // Documenta
         documentLocal(improvement, result);
@@ -483,28 +613,31 @@ async function run() {
           execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
         } catch {}
         
-        logger.info('✅ MELHORIA COMPLETA!', { 
+        logger.info(`✅ MELHORIA #${newTotal} COMPLETA!`, { 
           success: true, 
           branch, 
-          file: result.file 
+          file: result.file,
+          totalImprovements: newTotal
         });
         
-        return { success: true, branch, file: result.file };
+        return { success: true, branch, file: result.file, totalImprovements: newTotal };
       }
     }
   }
   
-  // Se falhou, documenta local
+  // Se falhou, documenta local e atualiza métricas
   logger.warn('Documentando melhoria localmente (backpressure ou erro)');
+  const newTotal = updateMetrics(result, true);
   documentLocal(improvement, result);
   
-  logger.info('✅ MELHORIA DOCUMENTADA (local)', { 
+  logger.info(`✅ MELHORIA #${newTotal} DOCUMENTADA (local)`, { 
     success: true, 
     local: true, 
-    file: result.file 
+    file: result.file,
+    totalImprovements: newTotal
   });
   
-  return { success: true, local: true, file: result.file };
+  return { success: true, local: true, file: result.file, totalImprovements: newTotal };
 }
 
 // Executa

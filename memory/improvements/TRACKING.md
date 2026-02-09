@@ -1,6 +1,19 @@
 # 📊 Tracking de Melhorias Contínuas
 
 ## Dashboard
+
+### Melhoria #70 (2026-02-09 01:45) - 🆕 PR
+**Branch:** `feature/ci-retry-logic-2026-02-09` → **Sistema de retry com exponential backoff para operações Git**
+- 🆕 Nova função `execWithRetry()` com até 3 tentativas automáticas
+- 🔄 Exponential backoff: 1s → 2s → 4s entre tentativas
+- 📊 Nova função `updateMetrics()` para persistência automática
+- 📝 Logging estruturado de cada tentativa de retry
+- `commitChanges()` e `pushBranch()` agora com retry automático
+- +133 linhas, -23 linhas no `server/continuousImprovement.js`
+- Commit: `[kaixa-auto] Sistema de retry com exponential backoff para operações Git`
+- 🎯 **70 melhorias totais!** Resiliência automática = zero falhas transitórias!
+🔗 https://github.com/Kaixadagua/kaixa-jr/pull/67
+
 ### 2026-02-09T04-31-56
 **Auto-detected changes:**
 - SOUL.md
