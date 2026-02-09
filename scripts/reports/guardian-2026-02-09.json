@@ -21,5 +21,27 @@
       "status": "red",
       "duration": "112+ horas"
     }
+  },
+  {
+    "timestamp": "2026-02-09T18:37:08.494Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-09T18:42:22.503Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
   }
 ]
