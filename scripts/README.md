@@ -30,6 +30,7 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 | `repo-init.js` | Inicialização e organização do repositório | `node scripts/repo-init.js` |
 | `agent-guardian.js` | Guardian de agentes (legado) | `node scripts/agent-guardian.js` |
 | `setup-agentcorp.js` | Setup inicial do AgentCorp | `node scripts/setup-agentcorp.js` |
+| `kaixa-snapshot.js` | Captura snapshot do estado do sistema | `node scripts/kaixa-snapshot.js` |
 
 ### PowerShell
 
@@ -91,6 +92,17 @@ node scripts/health-check.js
 node scripts/auto-commit.js
 ```
 
+### Snapshot do sistema
+```bash
+# Snapshot completo com saída visual
+node scripts/kaixa-snapshot.js
+
+# Snapshot em JSON (para automação)
+node scripts/kaixa-snapshot.js --json
+
+# Snapshots são salvos em memory/snapshots/
+```
+
 ---
 
 ## 🎯 Convenções
@@ -118,6 +130,7 @@ Indicadores de maturidade e manutenção:
 | `improvement-health.js` | 📝 Beta | Health específico de melhorias |
 | `context-compactor.js` | 🆕 Novo | Recém criado, em testes |
 | `smart-merge.ps1` | 🆕 Novo | Merge inteligente, em testes |
+| `kaixa-snapshot.js` | 🆕 Novo | Snapshot de estado do sistema, em testes |
 | `kaixa-watchdog.ps1` | ⚠️ Legado | Funcional mas será substituído |
 | `agent-guardian.js` | ⚠️ Legado | Versão anterior do guardian |
 
@@ -129,4 +142,4 @@ Indicadores de maturidade e manutenção:
 
 ---
 
-*Atualizado: 2026-02-08 - Kaixa Jr 🦊*
+*Atualizado: 2026-02-09 - Kaixa Jr 🦊*
