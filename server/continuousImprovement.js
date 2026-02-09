@@ -193,9 +193,17 @@ function getTimestamp() {
 
 /**
  * Adiciona JSDoc
+ * @returns {Object} Resultado da operação
  */
 function addJSDoc() {
   const file = 'src/core/utils.js';
+  
+  // Verifica se diretório existe, cria se necessário
+  const dir = path.dirname(file);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  
   const content = `/**
  * Função utilitária adicionada em ${new Date().toISOString()}
  * @param {string} input - Input string
@@ -214,9 +222,17 @@ module.exports = { processInput };
 
 /**
  * Adiciona teste
+ * @returns {Object} Resultado da operação
  */
 function addTest() {
   const file = 'tests/core/config.test.js';
+  
+  // Cria estrutura se não existir
+  const dir = path.dirname(file);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  
   const test = `
   it('should handle edge case: empty config', () => {
     const config = new Config();
@@ -224,6 +240,11 @@ function addTest() {
     expect(config.get('missing')).toBeNull();
   });
 `;
+  
+  // Cria arquivo base se não existir
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, `const Config = require('../../src/core/config');\n\ndescribe('Config', () => {\n});\n`);
+  }
   
   // Adiciona antes do último fechamento
   const content = fs.readFileSync(file, 'utf8');
@@ -235,10 +256,18 @@ function addTest() {
 
 /**
  * Refatora variável
+ * @returns {Object} Resultado da operação
  */
 function refactorVariable() {
   // Cria arquivo com melhoria de exemplo
   const file = 'src/utils/stringUtils.js';
+  
+  // Cria diretório se não existir
+  const dir = path.dirname(file);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  
   const content = `/**
  * String Utilities
  * Melhoria: usar nomes descritivos
@@ -264,12 +293,24 @@ module.exports = StringUtils;
 
 /**
  * Adiciona comentário
+ * @returns {Object} Resultado da operação
  */
 function addComment() {
   const file = 'src/core/config.js';
   const comment = `// NOTE: Configuração carregada em ${new Date().toLocaleString()}
 // Esta classe gerencia todas as configurações do sistema
 `;
+  
+  // Cria diretório se não existir
+  const dir = path.dirname(file);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  
+  // Cria arquivo base se não existir
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, 'class Config {\n}\n\nmodule.exports = { Config };\n');
+  }
   
   const content = fs.readFileSync(file, 'utf8');
   fs.writeFileSync(file, comment + content);
@@ -322,6 +363,7 @@ console.log('Valid:', validation.valid);
 
 /**
  * Adiciona validação
+ * @returns {Object} Resultado da operação
  */
 function addValidation() {
   const file = 'src/core/logger.js';
@@ -339,6 +381,17 @@ function addValidation() {
   }
 `;
   
+  // Cria diretório se não existir
+  const dir = path.dirname(file);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  
+  // Cria arquivo base se não existir
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, 'class Logger {\n}\n\nmodule.exports = { Logger };\n');
+  }
+  
   const content = fs.readFileSync(file, 'utf8');
   fs.writeFileSync(file, content + validation);
   
@@ -347,6 +400,7 @@ function addValidation() {
 
 /**
  * Atualiza CHANGELOG
+ * @returns {Object} Resultado da operação
  */
 function updateChangelog() {
   const file = 'CHANGELOG.md';
@@ -358,6 +412,11 @@ function updateChangelog() {
 - Testes adicionados
 
 `;
+  
+  // Cria CHANGELOG se não existir
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, '# Changelog\n\n## [Unreleased]\n\n');
+  }
   
   const content = fs.readFileSync(file, 'utf8');
   fs.writeFileSync(file, content.replace('## [Unreleased]', '## [Unreleased]' + entry));
