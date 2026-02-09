@@ -70,6 +70,120 @@ const ImprovementLogger = {
 };
 
 /**
+ * Circuit Breaker Pattern para resiliência do CI
+ * Estados: CLOSED (normal), OPEN (falha), HALF_OPEN (testando recuperação)
+ * @class CircuitBreaker
+ */
+class CircuitBreaker {
+  /**
+   * Estados do circuit breaker
+   * @readonly
+   * @enum {string}
+   */
+  static STATES = {
+    CLOSED: 'CLOSED',
+    OPEN: 'OPEN',
+    HALF_OPEN: 'HALF_OPEN'
+  };
+
+  static STATE_FILE = 'memory/improvements/circuit-breaker.json';
+  static FAILURE_THRESHOLD = 3;
+  static SUCCESS_THRESHOLD = 2;
+  static BASE_TIMEOUT_MS = 5000;
+  static MAX_TIMEOUT_MS = 300000;
+  static BACKOFF_MULTIPLIER = 2;
+
+  static load() {
+    try {
+      const data = fs.readFileSync(this.STATE_FILE, 'utf8');
+      return JSON.parse(data);
+    } catch {
+      return {
+        state: this.STATES.CLOSED,
+        failures: 0,
+        successes: 0,
+        lastFailureTime: null,
+        lastSuccessTime: null,
+        currentTimeout: this.BASE_TIMEOUT_MS,
+        totalTrips: 0,
+        createdAt: new Date().toISOString()
+      };
+    }
+  }
+
+  static save(state) {
+    if (!fs.existsSync(path.dirname(this.STATE_FILE))) {
+      fs.mkdirSync(path.dirname(this.STATE_FILE), { recursive: true });
+    }
+    fs.writeFileSync(this.STATE_FILE, JSON.stringify(state, null, 2));
+  }
+
+  static canExecute() {
+    const state = this.load();
+    const now = Date.now();
+
+    if (state.state === this.STATES.CLOSED) {
+      return { canExecute: true, reason: 'Circuit closed', waitTimeMs: 0 };
+    }
+
+    if (state.state === this.STATES.OPEN) {
+      const elapsed = state.lastFailureTime ? now - new Date(state.lastFailureTime).getTime() : 0;
+      if (elapsed >= state.currentTimeout) {
+        state.state = this.STATES.HALF_OPEN;
+        state.successes = 0;
+        this.save(state);
+        ImprovementLogger.info('Circuit HALF_OPEN - testing recovery');
+        return { canExecute: true, reason: 'Testing recovery', waitTimeMs: 0 };
+      }
+      return { canExecute: false, reason: 'Circuit OPEN', waitTimeMs: state.currentTimeout - elapsed };
+    }
+
+    return { canExecute: true, reason: 'Testing recovery', waitTimeMs: 0 };
+  }
+
+  static recordSuccess() {
+    const state = this.load();
+    state.lastSuccessTime = new Date().toISOString();
+    state.failures = 0;
+
+    if (state.state === this.STATES.HALF_OPEN) {
+      state.successes++;
+      if (state.successes >= this.SUCCESS_THRESHOLD) {
+        state.state = this.STATES.CLOSED;
+        state.currentTimeout = this.BASE_TIMEOUT_MS;
+        state.successes = 0;
+        ImprovementLogger.info('Circuit CLOSED - recovered');
+      }
+    }
+    this.save(state);
+  }
+
+  static recordFailure(error) {
+    const state = this.load();
+    state.failures++;
+    state.lastFailureTime = new Date().toISOString();
+
+    if (state.state === this.STATES.HALF_OPEN) {
+      state.state = this.STATES.OPEN;
+      state.currentTimeout = Math.min(state.currentTimeout * this.BACKOFF_MULTIPLIER, this.MAX_TIMEOUT_MS);
+      state.successes = 0;
+      state.totalTrips++;
+      ImprovementLogger.warn('Circuit OPEN - backoff increased', { timeoutMs: state.currentTimeout });
+    } else if (state.state === this.STATES.CLOSED && state.failures >= this.FAILURE_THRESHOLD) {
+      state.state = this.STATES.OPEN;
+      state.totalTrips++;
+      ImprovementLogger.error('Circuit OPEN - too many failures', { failures: state.failures });
+    }
+    this.save(state);
+  }
+
+  static getStatus() {
+    const state = this.load();
+    return { state: state.state, failures: state.failures, totalTrips: state.totalTrips, canExecute: this.canExecute().canExecute };
+  }
+}
+
+/**
  * Detecta arquivos modificados no git
  * @returns {string[]} Lista de arquivos modificados
  */
@@ -438,7 +552,7 @@ ${improvement.title}
 }
 
 /**
- * EXECUTA 1 MELHORIA
+ * EXECUTA 1 MELHORIA (com Circuit Breaker)
  */
 async function run() {
   const logger = ImprovementLogger;
@@ -446,63 +560,75 @@ async function run() {
   logger.info('🦊 KAIXA JR - MELHORIA CONTÍNUA iniciada', {
     timestamp: new Date().toISOString()
   });
+
+  // Verifica Circuit Breaker
+  const circuitStatus = CircuitBreaker.canExecute();
+  logger.info(`🔒 Circuit Breaker: ${circuitStatus.reason}`, CircuitBreaker.getStatus());
   
-  // Seleciona melhoria (inteligente: detecta estado do repo)
-  const improvement = suggestImprovement();
-  logger.info(`🎯 Melhoria selecionada: ${improvement.title}`, {
-    type: improvement.type,
-    reason: improvement.reason || 'fallback'
-  });
-  
-  // Executa
-  logger.info('🔨 Executando melhoria...');
-  const result = improvement.action();
-  logger.info(`✅ Melhoria aplicada em ${result.file}`, {
-    linesAdded: result.lines,
-    type: result.type
-  });
-  
-  // Tenta criar branch e commit
-  const timestamp = Date.now().toString(36);
-  const branch = createBranch(timestamp);
-  
-  if (branch) {
-    const committed = commitChanges(improvement.title);
-    
-    if (committed) {
-      const pushed = pushBranch(branch);
-      
-      if (pushed) {
-        logger.info('🚀 Push realizado com sucesso', { branch });
-        
-        // Documenta
-        documentLocal(improvement, result);
-        
-        // Volta para branch principal
-        try {
-          execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
-        } catch {}
-        
-        logger.info('✅ MELHORIA COMPLETA!', { 
-          success: true, 
-          branch, 
-          file: result.file 
-        });
-        
-        return { success: true, branch, file: result.file };
-      }
-    }
+  if (!circuitStatus.canExecute) {
+    logger.warn('⏸️ Execução bloqueada pelo Circuit Breaker', {
+      waitTimeMs: circuitStatus.waitTimeMs
+    });
+    return { success: false, reason: 'circuit_open', waitTimeMs: circuitStatus.waitTimeMs };
   }
   
-  // Se falhou, documenta local
-  logger.warn('Documentando melhoria localmente (backpressure ou erro)');
-  documentLocal(improvement, result);
-  
-  logger.info('✅ MELHORIA DOCUMENTADA (local)', { 
-    success: true, 
-    local: true, 
-    file: result.file 
-  });
+  try {
+    // Seleciona melhoria
+    const improvement = suggestImprovement();
+    logger.info(`🎯 Melhoria selecionada: ${improvement.title}`, {
+      type: improvement.type,
+      reason: improvement.reason || 'fallback'
+    });
+    
+    // Executa
+    logger.info('🔨 Executando melhoria...');
+    const result = improvement.action();
+    logger.info(`✅ Melhoria aplicada em ${result.file}`, {
+      linesAdded: result.lines,
+      type: result.type
+    });
+    
+    // Tenta criar branch e commit
+    const timestamp = Date.now().toString(36);
+    const branch = createBranch(timestamp);
+    
+    if (branch) {
+      const committed = commitChanges(improvement.title);
+      
+      if (committed) {
+        const pushed = pushBranch(branch);
+        
+        if (pushed) {
+          logger.info('🚀 Push realizado com sucesso', { branch });
+          documentLocal(improvement, result);
+          
+          try {
+            execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
+          } catch {}
+          
+          // Registra sucesso no Circuit Breaker
+          CircuitBreaker.recordSuccess();
+          
+          logger.info('✅ MELHORIA COMPLETA!', { success: true, branch, file: result.file });
+          return { success: true, branch, file: result.file };
+        }
+      }
+    }
+    
+    // Backpressure ou erro no git
+    logger.warn('Documentando melhoria localmente (backpressure ou erro)');
+    documentLocal(improvement, result);
+    CircuitBreaker.recordSuccess(); // Ainda considera sucesso (melhoria foi feita)
+    
+    logger.info('✅ MELHORIA DOCUMENTADA (local)', { success: true, local: true, file: result.file });
+    return { success: true, local: true, file: result.file };
+    
+  } catch (error) {
+    // Registra falha no Circuit Breaker
+    CircuitBreaker.recordFailure(error);
+    logger.error('❌ Erro durante execução', { error: error.message });
+    throw error;
+  }
   
   return { success: true, local: true, file: result.file };
 }
