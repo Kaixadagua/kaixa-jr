@@ -1,7 +1,7 @@
 {
-  "totalRuns": 111,
-  "successfulRuns": 111,
-  "localImprovements": 37,
+  "totalRuns": 112,
+  "successfulRuns": 112,
+  "localImprovements": 38,
   "prImprovements": 34,
   "byType": {
     "docs": 20,
@@ -19,16 +19,26 @@
       "file": "memory/improvements/metrics.json",
       "lines": 45,
       "local": true
+    },
+    {
+      "timestamp": "2026-02-09T20:28:52.000Z",
+      "success": true,
+      "type": "docs",
+      "file": "memory/improvements/metrics.json",
+      "lines": 8,
+      "local": true,
+      "backpressure": true,
+      "note": "Atualização pós-guardian: run #112"
     }
   ],
-  "throughput24h": "0.95",
-  "lastUpdated": "2026-02-09T11:41:00.000Z",
-  "backpressureDuration": 106,
-  "totalImprovements": 71,
+  "throughput24h": "0.96",
+  "lastUpdated": "2026-02-09T20:28:52.000Z",
+  "backpressureDuration": 107,
+  "totalImprovements": 72,
   "lastImprovement": {
-    "timestamp": "2026-02-09T11:41:00.000Z",
+    "timestamp": "2026-02-09T20:28:52.000Z",
     "type": "docs",
-    "title": "Melhoria #67 - Consolidação de métricas do guardian",
+    "title": "Melhoria #72 - Atualização métricas guardian run #112",
     "local": true,
     "backpressure": true
   },
