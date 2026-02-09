@@ -310,6 +310,61 @@ class GitOperations {
     return { success: false, error: result.error };
   }
 
+  /**
+   * Verifica se há commits locais não enviados
+   */
+  hasLocalCommits(branch) {
+    const result = this.executor.execute(`git log origin/${branch}..${branch} --oneline`, { ignoreError: true });
+    if (result.success) {
+      const commits = result.output.split('\n').filter(Boolean);
+      return { success: true, hasCommits: commits.length > 0, count: commits.length };
+    }
+    return { success: false, hasCommits: false, error: result.error };
+  }
+
+  /**
+   * Sincronização completa: fetch + pull + push (se necessário)
+   */
+  sync(branch = null) {
+    const current = branch || this.currentBranch().branch;
+    if (!current) {
+      return { success: false, error: 'Cannot determine current branch' };
+    }
+
+    this.logger.info('SYNC_START', { branch: current });
+
+    // 1. Fetch
+    const fetch = this.fetch();
+    if (!fetch.success) {
+      this.logger.error('SYNC', { step: 'fetch', error: fetch.error });
+      return { success: false, step: 'fetch', error: fetch.error };
+    }
+
+    // 2. Pull
+    const pull = this.pull(current);
+    if (!pull.success) {
+      this.logger.error('SYNC', { step: 'pull', error: pull.error });
+      return { success: false, step: 'pull', error: pull.error };
+    }
+
+    // 3. Verificar se há commits locais para push
+    const local = this.hasLocalCommits(current);
+    let pushed = false;
+    
+    if (local.success && local.hasCommits) {
+      this.logger.info('SYNC_PUSH', { commits: local.count });
+      const push = this.push(current, { setUpstream: false });
+      if (!push.success) {
+        this.logger.error('SYNC', { step: 'push', error: push.error });
+        return { success: false, step: 'push', error: push.error };
+      }
+      pushed = true;
+    }
+
+    this.logger.success('SYNC_COMPLETE', { branch: current, pulled: true, pushed });
+    return { success: true, branch: current, pulled: true, pushed, localCommits: local.count || 0 };
+  }
+
   // ---------------------------------------------------------------------------
   // Stash
   // ---------------------------------------------------------------------------
@@ -454,6 +509,7 @@ Comandos:
   push [branch]             Push para origin
   pull [branch]             Pull da origin
   fetch                     Fetch de todos os remotes
+  sync [branch]             Sincronização completa (fetch + pull + push)
   stash [mensagem]          Criar stash
   stash-pop                 Aplicar último stash
   stash-list                Listar stashes
@@ -466,6 +522,7 @@ Exemplos:
   node scripts/git-safe.js create-branch feature/nova-func
   node scripts/git-safe.js commit "Minha mensagem"
   node scripts/git-safe.js feature feature/x "feat: nova funcionalidade"
+  node scripts/git-safe.js sync                    # Sincroniza branch atual
 `);
 }
 
@@ -545,6 +602,13 @@ function main() {
     case 'fetch':
       result = git.fetch();
       console.log(result.success ? '✅ Fetched' : `❌ ${result.error}`);
+      break;
+
+    case 'sync':
+      result = git.sync(args[1]);
+      console.log(result.success 
+        ? `✅ Sync complete: pulled${result.pushed ? ' + pushed ' + result.localCommits + ' commits' : ''}` 
+        : `❌ Sync failed at ${result.step}: ${result.error}`);
       break;
 
     case 'stash':

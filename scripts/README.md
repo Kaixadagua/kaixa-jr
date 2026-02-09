@@ -20,7 +20,7 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 
 | Script | Descrição | Uso |
 |--------|-----------|-----|
-| `git-safe.js` | Wrapper seguro para operações git (retry, logging) | `node scripts/git-safe.js status` |
+| `git-safe.js` | Wrapper seguro para operações git (retry, logging, sync) | `node scripts/git-safe.js sync` |
 | `kaixa-guardian.js` | Guardian principal - verifica saúde do sistema | `node scripts/kaixa-guardian.js` |
 | `kaixa-report-35min.js` | Report periódico de status (35min) | `node scripts/kaixa-report-35min.js` |
 | `improvement-health.js` | Health check específico de melhorias | `node scripts/improvement-health.js` |
@@ -98,6 +98,9 @@ node scripts/auto-commit.js
 # Status do repositório
 node scripts/git-safe.js status
 
+# Sincronização completa (fetch + pull + push se necessário)
+node scripts/git-safe.js sync
+
 # Criar branch e commit
 node scripts/git-safe.js feature nome-branch "mensagem do commit"
 
@@ -149,7 +152,7 @@ Indicadores de maturidade e manutenção:
 | `improvement-health.js` | 📝 Beta | Health específico de melhorias |
 | `context-compactor.js` | 🆕 Novo | Recém criado, em testes |
 | `smart-merge.ps1` | 🆕 Novo | Merge inteligente, em testes |
-| `git-safe.js` | 🆕 Novo | Wrapper seguro para git, validação em andamento |
+| `git-safe.js` | 📝 Beta | Wrapper seguro para git, comando sync adicionado |
 | `kaixa-snapshot.js` | 🆕 Novo | Snapshot de estado do sistema, em testes |
 | `kaixa-watchdog.ps1` | ⚠️ Legado | Funcional mas será substituído |
 | `agent-guardian.js` | ⚠️ Legado | Versão anterior do guardian |
