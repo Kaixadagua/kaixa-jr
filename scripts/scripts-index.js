@@ -16,6 +16,13 @@ const SCRIPTS = [
         cmd: 'node scripts/melhoria-status.js'
     },
     {
+        file: 'melhoria-viewer.js',
+        type: 'node',
+        category: 'dashboard',
+        desc: 'Visualiza melhorias interativamente',
+        cmd: 'node scripts/melhoria-viewer.js [--stats] [filtro]'
+    },
+    {
         file: 'cron-report.js',
         type: 'node',
         category: 'report',

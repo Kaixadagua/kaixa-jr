@@ -20,6 +20,7 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 
 | Script | Descrição | Uso |
 |--------|-----------|-----|
+| `melhoria-viewer.js` | Visualização interativa de melhorias com filtros e stats | `node scripts/melhoria-viewer.js [--stats] [filtro]` |
 | `git-safe.js` | Wrapper seguro para operações git (retry, logging) | `node scripts/git-safe.js status` |
 | `kaixa-guardian.js` | Guardian principal - verifica saúde do sistema | `node scripts/kaixa-guardian.js` |
 | `kaixa-report-35min.js` | Report periódico de status (35min) | `node scripts/kaixa-report-35min.js` |
@@ -142,6 +143,7 @@ Indicadores de maturidade e manutenção:
 |--------|--------|-----------|
 | `kaixa-guardian.js` | ✅ Estável | Core do sistema, testado em produção |
 | `health-check.js` | ✅ Estável | Health check completo com métricas |
+| `melhoria-viewer.js` | ✅ Estável | Visualização interativa de melhorias |
 | `auto-commit.js` | ✅ Estável | Auxiliar de commits com análise |
 | `scripts-index.js` | ✅ Estável | Índice interativo funcional |
 | `check-backpressure.ps1` | ✅ Estável | Backpressure detection funcional |
