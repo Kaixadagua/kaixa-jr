@@ -138,6 +138,11 @@ function documentPendingChanges(files) {
  */
 const IMPROVEMENTS = [
   {
+    type: 'cleanup',
+    title: 'Limpa métricas antigas do guardian (mantém últimas 50)',
+    action: () => cleanOldMetrics()
+  },
+  {
     type: 'docs',
     title: 'Adiciona JSDoc em função sem documentação',
     action: () => addJSDoc()
@@ -399,6 +404,40 @@ function pushBranch(branch) {
     console.log('⚠️ Erro no push:', e.message);
     return false;
   }
+}
+
+/**
+ * Limpa métricas antigas do guardian (mantém últimas 50 entradas)
+ * @returns {Object} Resultado da limpeza
+ */
+function cleanOldMetrics() {
+  const reportFile = 'scripts/reports/guardian-2026-02-09.json';
+  
+  if (!fs.existsSync(reportFile)) {
+    return { file: reportFile, type: 'cleanup', lines: 0, action: 'skipped' };
+  }
+  
+  const metrics = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
+  const originalCount = metrics.length;
+  
+  // Mantém apenas as últimas 50 entradas (evita arquivo gigante)
+  const cleaned = metrics.slice(-50);
+  
+  // Remove duplicatas consecutivas (mesmo timestamp)
+  const unique = cleaned.filter((entry, index, arr) => {
+    if (index === 0) return true;
+    return entry.timestamp !== arr[index - 1].timestamp;
+  });
+  
+  fs.writeFileSync(reportFile, JSON.stringify(unique, null, 2));
+  
+  return { 
+    file: reportFile, 
+    type: 'cleanup', 
+    lines: originalCount - unique.length,
+    action: 'cleaned',
+    removed: originalCount - unique.length
+  };
 }
 
 /**

@@ -1,6 +1,18 @@
 # 📊 Tracking de Melhorias Contínuas
 
-## Dashboard - 2026-02-08 20:15
+## Dashboard - 2026-02-09 05:26
+
+### Melhoria #64 (2026-02-09 05:26) - 🆕 LOCAL
+**Arquivo:** `server/continuousImprovement.js` → **Função cleanOldMetrics() - Limpeza automática de métricas**
+- Nova função `cleanOldMetrics()` para manter arquivo de métricas enxuto
+- Mantém apenas últimas 50 entradas do guardian (evita crescimento descontrolado)
+- Remove duplicatas consecutivas (mesmo timestamp)
+- JSDoc completo com @returns documentado
+- Adicionada à lista IMPROVEMENTS com tipo 'cleanup'
+- +33 linhas de código, retorna estatísticas da limpeza
+- **64 melhorias totais!** Manutenção preventiva = saúde do sistema!
+
+### Melhoria #63 (2026-02-08 20:15) - 🆕 PR
 
 ### Melhoria #63 (2026-02-08 20:15) - 🆕 PR
 **Branch:** `feature/ci-error-handling-2026-02-08` → **Tratamento de erro robusto + métricas no CI**
