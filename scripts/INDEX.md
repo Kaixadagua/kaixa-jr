@@ -19,6 +19,7 @@
 | Módulo | Descrição | Uso |
 |--------|-----------|-----|
 | `cacheManager.js` | **Cache com TTL** | `require('./scripts/lib/cacheManager')` |
+| `kaixaNotify.js` | **Sistema de notificações** | `require('./scripts/lib/kaixaNotify')` |
 | `logger.js` | Logger estruturado | `require('./scripts/lib/logger')` |
 
 ### PowerShell
@@ -64,6 +65,13 @@ node scripts/auto-commit.js
 node scripts/kaixa-metrics.js --mini  # 1 linha
 ```
 
+### Notificações
+```bash
+node scripts/lib/kaixaNotify.js check     # Verifica status do sistema
+node scripts/lib/kaixaNotify.js report    # Gera relatório de notificações
+node scripts/lib/kaixaNotify.js cleanup 7 # Limpa notificações antigas
+```
+
 ---
-*Índice atualizado: 2026-02-09 02:07*
-*Melhoria #72 - Cache Manager com TTL adicionado*
+*Índice atualizado: 2026-02-09 03:23*
+*Melhoria #79 - Sistema de notificações Kaixa Notify adicionado*
