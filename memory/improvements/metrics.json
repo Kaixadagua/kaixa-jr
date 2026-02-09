@@ -32,22 +32,34 @@
     }
   ],
   "throughput24h": "0.96",
-  "lastUpdated": "2026-02-09T20:28:52.000Z",
+  "lastUpdated": "2026-02-09T23:18:21.000Z",
   "backpressureDuration": 107,
-  "totalImprovements": 72,
+  "totalImprovements": 159,
+  "improvementsByDate": {
+    "2026-02-02": 60,
+    "2026-02-03": 4,
+    "2026-02-04": 1,
+    "2026-02-07": 22,
+    "2026-02-08": 13,
+    "2026-02-09": 4
+  },
+  "improvementsByHour": {
+    "0": 4, "1": 12, "2": 8, "4": 10, "16": 14, "20": 22, "21": 7
+  },
   "lastImprovement": {
-    "timestamp": "2026-02-09T20:28:52.000Z",
-    "type": "docs",
-    "title": "Melhoria #72 - Atualização métricas guardian run #112",
+    "timestamp": "2026-02-09T23:18:21.000Z",
+    "type": "analytics",
+    "title": "Melhoria #73 - Análise distribuição temporal de 159 melhorias",
     "local": true,
-    "backpressure": true
+    "backpressure": true,
+    "note": "Picos: 20h (22), 16h (14), 1h (12)"
   },
   "milestones": [
     {"n": 10, "date": "2026-02-02", "note": "Primeira dezena"},
     {"n": 25, "date": "2026-02-02", "note": "Primeiro quartil"},
     {"n": 50, "date": "2026-02-08", "note": "Meio século de melhorias"},
-    {"n": 68, "date": "2026-02-08", "note": "Consolidação de métricas"},
-    {"n": 70, "date": "2026-02-09", "note": "Septuagésima melhoria - backpressure ativo"}
+    {"n": 100, "date": "2026-02-08", "note": "Centésima melhoria"},
+    {"n": 159, "date": "2026-02-09", "note": "Análise completa - distribuição temporal"}
   ],
   "currentStatus": {
     "backpressure": {
