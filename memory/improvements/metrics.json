@@ -1,10 +1,10 @@
 {
-  "totalRuns": 110,
-  "successfulRuns": 110,
-  "localImprovements": 35,
+  "totalRuns": 111,
+  "successfulRuns": 111,
+  "localImprovements": 36,
   "prImprovements": 34,
   "byType": {
-    "docs": 18,
+    "docs": 19,
     "code": 23,
     "refactor": 10,
     "config": 3,
@@ -13,30 +13,22 @@
   },
   "history": [
     {
-      "timestamp": "2026-02-08T14:23:00.000Z",
-      "success": true,
-      "type": "refactor",
-      "file": "scripts/lib/logger.js",
-      "lines": 109,
-      "local": true
-    },
-    {
-      "timestamp": "2026-02-08T14:13:00.000Z",
+      "timestamp": "2026-02-09T09:22:27.000Z",
       "success": true,
       "type": "docs",
       "file": "memory/improvements/metrics.json",
-      "lines": 30,
+      "lines": 45,
       "local": true
     }
   ],
-  "throughput24h": "1.12",
-  "lastUpdated": "2026-02-08T14:23:00.000Z",
-  "backpressureDuration": 105,
-  "totalImprovements": 69,
+  "throughput24h": "0.95",
+  "lastUpdated": "2026-02-09T09:22:27.000Z",
+  "backpressureDuration": 106,
+  "totalImprovements": 70,
   "lastImprovement": {
-    "timestamp": "2026-02-08T14:23:00.000Z",
-    "type": "refactor",
-    "title": "Sistema de logger centralizado",
+    "timestamp": "2026-02-09T09:22:27.000Z",
+    "type": "docs",
+    "title": "Atualização de métricas do sistema - Ciclo #111",
     "local": true,
     "backpressure": true
   },
@@ -44,6 +36,19 @@
     {"n": 10, "date": "2026-02-02", "note": "Primeira dezena"},
     {"n": 25, "date": "2026-02-02", "note": "Primeiro quartil"},
     {"n": 50, "date": "2026-02-08", "note": "Meio século de melhorias"},
-    {"n": 68, "date": "2026-02-08", "note": "Consolidação de métricas"}
-  ]
+    {"n": 68, "date": "2026-02-08", "note": "Consolidação de métricas"},
+    {"n": 70, "date": "2026-02-09", "note": "Septuagésima melhoria - backpressure ativo"}
+  ],
+  "currentStatus": {
+    "backpressure": {
+      "active": true,
+      "prCount": 12,
+      "threshold": 9,
+      "since": "2026-02-02"
+    },
+    "aurahub": {
+      "pendingChanges": ["js/utils.js"],
+      "jsDocComplete": true
+    }
+  }
 }
