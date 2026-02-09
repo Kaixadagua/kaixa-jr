@@ -1,6 +1,18 @@
 # 📊 Tracking de Melhorias Contínuas
 
 ## Dashboard
+### 2026-02-09T03-23-30
+**Melhoria #79:**
+- `scripts/lib/kaixaNotify.js` → **Sistema de notificações inteligente (354 linhas)**
+  - 4 níveis: INFO, WARNING, ERROR, CRITICAL
+  - Console colorido + persistência JSONL
+  - `checkSystemStatus()` automático
+  - Thresholds configuráveis para backpressure
+- `tests/kaixaNotify.test.js` → **9 testes automatizados (194 linhas)**
+- `scripts/INDEX.md` → Documentação do novo módulo
+- Branch: `feature/auto-notification-system-2026-02-09`
+- PR: #72 → https://github.com/Kaixadagua/kaixa-jr/pull/72
+
 ### 2026-02-09T06-13-13
 **Auto-detected changes:**
 - aurahub
