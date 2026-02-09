@@ -3,7 +3,7 @@
  * @fileoverview Kaixa Guardian - Sistema de gestão saudável de agentes
  * @description Monitora sessões do OpenClaw, tokens e saúde do sistema
  * @author Kaixa Jr 🦊
- * @version 1.3.0
+ * @version 1.4.0
  * @usage node scripts/kaixa-guardian.js [--silent|-s]
  */
 
@@ -78,6 +78,42 @@ function isCronSession(sessionKey) {
 }
 
 /**
+ * Verifica arquivos pendentes no git (não rastreados ou não commitados)
+ * @returns {Object} Status de arquivos pendentes
+ * @property {string[]} untracked - Arquivos não rastreados
+ * @property {string[]} modified - Arquivos modificados
+ * @property {boolean} hasPending - True se há arquivos pendentes
+ */
+function checkPendingChanges() {
+    try {
+        const statusOutput = execSync('git status --short', { encoding: 'utf8', cwd: process.cwd() });
+        const lines = statusOutput.trim().split('\n').filter(l => l.trim());
+        
+        const untracked = [];
+        const modified = [];
+        
+        lines.forEach(line => {
+            const status = line.slice(0, 2).trim();
+            const file = line.slice(3).trim();
+            
+            if (status === '??') {
+                untracked.push(file);
+            } else if (status === 'M' || status === 'A' || status === 'D' || status.includes('M')) {
+                modified.push(file);
+            }
+        });
+        
+        return {
+            untracked,
+            modified,
+            hasPending: untracked.length > 0 || modified.length > 0
+        };
+    } catch {
+        return { untracked: [], modified: [], hasPending: false };
+    }
+}
+
+/**
  * Analisa saúde do sistema baseado nas sessões ativas
  * @returns {Object} Status de saúde com agentes, tokens e alertas
  * @property {number} agentCount - Quantidade de subagentes
@@ -88,10 +124,12 @@ function isCronSession(sessionKey) {
  * @property {string} [action] - Ação recomendada se necessário
  * @property {string} timestamp - ISO timestamp da análise
  * @property {Object} backpressure - Status de PRs { count, status }
+ * @property {Object} pending - Arquivos pendentes no git
  */
 function analyzeHealth() {
     const status = getSessionStatus();
     const backpressure = checkBackpressure();
+    const pending = checkPendingChanges();
     
     let totalTokens = 0;
     let agentCount = 0;
@@ -127,6 +165,7 @@ function analyzeHealth() {
         systemCount,
         warnings,
         backpressure,
+        pending,
         status: 'healthy',
         timestamp: new Date().toISOString()
     };
@@ -217,7 +256,8 @@ function saveReport(health) {
         totalTokens: health.totalTokens,
         status: health.status,
         action: health.action || null,
-        backpressure: health.backpressure
+        backpressure: health.backpressure,
+        pending: health.pending
     });
     
     // Manter apenas últimos 50 registros
@@ -253,6 +293,18 @@ function main() {
     const bpLabel = health.backpressure.count >= 0 ? `${health.backpressure.count} PRs` : 'N/A';
     console.log(`   ${bpIcon[health.backpressure.status]} Backpressure: ${bpLabel}`);
     
+    // Exibir arquivos pendentes
+    if (health.pending.hasPending) {
+        const totalPending = health.pending.untracked.length + health.pending.modified.length;
+        console.log(`   📁 Arquivos pendentes: ${totalPending}`);
+        if (health.pending.untracked.length > 0) {
+            console.log(`      → ${health.pending.untracked.length} não rastreados`);
+        }
+        if (health.pending.modified.length > 0) {
+            console.log(`      → ${health.pending.modified.length} modificados`);
+        }
+    }
+    
     if (health.systemCount > 0) {
         console.log(`   🖥️  Sessões sistema ignoradas: ${health.systemCount}`);
     }
@@ -270,6 +322,12 @@ function main() {
     if (health.warnings.length > 0) {
         console.log('\n⚠️  Alertas:');
         health.warnings.forEach(w => console.log(`   ${w}`));
+    }
+    
+    if (health.pending.hasPending) {
+        console.log('\n📋 Arquivos pendentes de commit:');
+        health.pending.untracked.forEach(f => console.log(`   ?? ${f}`));
+        health.pending.modified.forEach(f => console.log(`   M  ${f}`));
     }
     
     if (health.action) {
