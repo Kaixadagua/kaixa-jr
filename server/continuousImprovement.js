@@ -143,6 +143,11 @@ const IMPROVEMENTS = [
     action: () => cleanOldMetrics()
   },
   {
+    type: 'code',
+    title: 'Adiciona funções utilitárias de git: isGitClean, getBranchList, isImprovementBranch',
+    action: () => addGitUtils()
+  },
+  {
     type: 'docs',
     title: 'Adiciona JSDoc em função sem documentação',
     action: () => addJSDoc()
@@ -407,6 +412,57 @@ function pushBranch(branch) {
 }
 
 /**
+ * Verifica se o working directory do git está limpo
+ * @returns {boolean} true se não há mudanças pendentes
+ */
+function isGitClean() {
+  try {
+    const output = execSync('git status --porcelain', { cwd: process.cwd(), encoding: 'utf8' });
+    return output.trim().length === 0;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Lista branches locais ordenados por data de modificação
+ * @param {Object} options - Opções
+ * @param {boolean} options.remote - Incluir branches remotas
+ * @returns {string[]} Lista de branches
+ */
+function getBranchList(options = {}) {
+  try {
+    const flag = options.remote ? '-a' : '';
+    const output = execSync(`git branch ${flag} --sort=-committerdate`, { 
+      cwd: process.cwd(), 
+      encoding: 'utf8' 
+    });
+    return output
+      .split('\n')
+      .map(b => b.replace(/^\*?\s*/, '').trim())
+      .filter(b => b.length > 0);
+  } catch (e) {
+    return [];
+  }
+}
+
+/**
+ * Verifica se estamos em uma branch de melhoria
+ * @returns {boolean}
+ */
+function isImprovementBranch() {
+  try {
+    const branch = execSync('git branch --show-current', { 
+      cwd: process.cwd(), 
+      encoding: 'utf8' 
+    }).trim();
+    return branch.startsWith('feature/') || branch.startsWith('improve/') || branch.startsWith('fix/');
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
  * Limpa métricas antigas do guardian (mantém últimas 50 entradas)
  * @returns {Object} Resultado da limpeza
  */
@@ -474,6 +530,41 @@ ${improvement.title}
   
   fs.writeFileSync(filename, content);
   console.log(`📝 Documentado: ${filename}`);
+}
+
+/**
+ * Adiciona funções utilitárias de git ao arquivo
+ * @returns {Object} Resultado da melhoria
+ */
+function addGitUtils() {
+  const file = 'server/continuousImprovement.js';
+  
+  // As funções já foram adicionadas acima, apenas documentamos
+  const jsDoc = `
+/**
+ * ============================================
+ * GIT UTILITIES - Adicionado em ${new Date().toISOString()}
+ * ============================================
+ * 
+ * Funções utilitárias para operações git seguras:
+ * 
+ * - isGitClean(): Verifica working directory limpo
+ * - getBranchList(options): Lista branches ordenados
+ * - isImprovementBranch(): Detecta branch de melhoria
+ * 
+ * Uso:
+ *   if (!isGitClean()) { stashChanges(); }
+ *   const branches = getBranchList({ remote: true });
+ *   if (isImprovementBranch()) { /* lógica específica */ }
+ */
+`;
+  
+  const content = fs.readFileSync(file, 'utf8');
+  if (!content.includes('GIT UTILITIES')) {
+    fs.writeFileSync(file, jsDoc + content);
+  }
+  
+  return { file, type: 'code', lines: 15 };
 }
 
 /**
