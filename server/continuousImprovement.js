@@ -402,6 +402,76 @@ function pushBranch(branch) {
 }
 
 /**
+ * Conta melhorias locais recentes
+ * @param {number} [days=7] - Dias para considerar
+ * @returns {Object} Estatísticas de melhorias locais
+ */
+function countLocalImprovements(days = 7) {
+  try {
+    const improvementsDir = 'memory/improvements';
+    if (!fs.existsSync(improvementsDir)) {
+      return { count: 0, files: [], byType: {} };
+    }
+    
+    const files = fs.readdirSync(improvementsDir);
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    
+    const recentFiles = [];
+    const byType = {};
+    
+    for (const file of files) {
+      if (!file.endsWith('-melhoria.md')) continue;
+      
+      const filePath = path.join(improvementsDir, file);
+      const stats = fs.statSync(filePath);
+      
+      if (stats.mtime >= cutoffDate) {
+        recentFiles.push(file);
+        
+        // Detecta tipo pela primeira linha
+        const content = fs.readFileSync(filePath, 'utf8');
+        const typeMatch = content.match(/## Categoria\s*\n([^\n]+)/);
+        if (typeMatch) {
+          const type = typeMatch[1].trim();
+          byType[type] = (byType[type] || 0) + 1;
+        }
+      }
+    }
+    
+    return {
+      count: recentFiles.length,
+      files: recentFiles,
+      byType,
+      days
+    };
+  } catch (e) {
+    return { count: 0, files: [], byType: {}, error: e.message };
+  }
+}
+
+/**
+ * Verifica se deve alertar sobre batch PR
+ * @returns {Object|null} Alerta ou null
+ */
+function checkBatchAlert() {
+  const stats = countLocalImprovements(7);
+  const THRESHOLD = 10; // Alerta quando 10+ melhorias locais
+  
+  if (stats.count >= THRESHOLD) {
+    return {
+      alert: true,
+      message: `⚠️ BATCH PR ALERT: ${stats.count} melhorias locais acumuladas nos últimos ${stats.days} dias`,
+      stats,
+      suggestion: 'Considere criar um batch PR quando backpressure liberar',
+      command: 'node scripts/pr-auto-queue.js --status'
+    };
+  }
+  
+  return null;
+}
+
+/**
  * Documenta melhoria local
  */
 function documentLocal(improvement, result) {
@@ -478,6 +548,13 @@ async function run() {
         // Documenta
         documentLocal(improvement, result);
         
+        // Verifica alerta de batch PR (mesmo em sucesso, para awareness)
+        const batchAlert = checkBatchAlert();
+        if (batchAlert) {
+          logger.warn(batchAlert.message, batchAlert.stats);
+          logger.info(`💡 ${batchAlert.suggestion}`);
+        }
+        
         // Volta para branch principal
         try {
           execSync('git checkout improve/scripts-readme', { cwd: process.cwd() });
@@ -486,10 +563,11 @@ async function run() {
         logger.info('✅ MELHORIA COMPLETA!', { 
           success: true, 
           branch, 
-          file: result.file 
+          file: result.file,
+          batchAlert: batchAlert ? batchAlert.stats.count : 0
         });
         
-        return { success: true, branch, file: result.file };
+        return { success: true, branch, file: result.file, batchAlert };
       }
     }
   }
@@ -498,13 +576,22 @@ async function run() {
   logger.warn('Documentando melhoria localmente (backpressure ou erro)');
   documentLocal(improvement, result);
   
+  // Verifica alerta de batch PR
+  const batchAlert = checkBatchAlert();
+  if (batchAlert) {
+    logger.warn(batchAlert.message, batchAlert.stats);
+    logger.info(`💡 ${batchAlert.suggestion}`);
+    logger.info(`🛠️  Comando: ${batchAlert.command}`);
+  }
+  
   logger.info('✅ MELHORIA DOCUMENTADA (local)', { 
     success: true, 
     local: true, 
-    file: result.file 
+    file: result.file,
+    batchAlert: batchAlert ? batchAlert.stats.count : 0
   });
   
-  return { success: true, local: true, file: result.file };
+  return { success: true, local: true, file: result.file, batchAlert };
 }
 
 // Executa
