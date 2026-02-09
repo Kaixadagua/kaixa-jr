@@ -441,6 +441,64 @@ function cleanOldMetrics() {
 }
 
 /**
+ * Gera estatísticas das melhorias
+ * @returns {Object} Estatísticas do pipeline
+ */
+function generateStats() {
+  const improvementsDir = 'memory/improvements';
+  
+  if (!fs.existsSync(improvementsDir)) {
+    return { total: 0, byType: {}, recent: [] };
+  }
+  
+  const files = fs.readdirSync(improvementsDir)
+    .filter(f => f.endsWith('.md'))
+    .map(f => {
+      const content = fs.readFileSync(path.join(improvementsDir, f), 'utf8');
+      const typeMatch = content.match(/## Categoria\n([\s\S]*?)\n##/);
+      const dateMatch = f.match(/(\d{4}-\d{2}-\d{2})/);
+      return {
+        file: f,
+        type: typeMatch ? typeMatch[1].trim() : 'unknown',
+        date: dateMatch ? dateMatch[1] : 'unknown'
+      };
+    });
+  
+  // Contagem por tipo
+  const byType = files.reduce((acc, f) => {
+    const type = f.type.includes('Docs') ? 'docs' :
+                 f.type.includes('Test') ? 'test' :
+                 f.type.includes('Refactor') ? 'refactor' :
+                 f.type.includes('Config') ? 'config' : 'code';
+    acc[type] = (acc[type] || 0) + 1;
+    return acc;
+  }, {});
+  
+  // Últimas 5 melhorias
+  const recent = files
+    .sort((a, b) => b.file.localeCompare(a.file))
+    .slice(0, 5)
+    .map(f => f.file);
+  
+  return {
+    total: files.length,
+    byType,
+    recent,
+    lastUpdate: new Date().toISOString()
+  };
+}
+
+/**
+ * Salva estatísticas em JSON
+ */
+function saveStats() {
+  const stats = generateStats();
+  const statsFile = 'memory/improvements/STATS.json';
+  fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
+  return { file: statsFile, stats };
+}
+
+/**
  * Documenta melhoria local
  */
 function documentLocal(improvement, result) {
@@ -528,7 +586,11 @@ async function run() {
           file: result.file 
         });
         
-        return { success: true, branch, file: result.file };
+        // Atualiza estatísticas
+        const statsResult = saveStats();
+        logger.info('📊 Estatísticas atualizadas', statsResult.stats);
+        
+        return { success: true, branch, file: result.file, stats: statsResult.stats };
       }
     }
   }
