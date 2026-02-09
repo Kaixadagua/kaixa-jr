@@ -389,16 +389,45 @@ function commitChanges(message) {
 }
 
 /**
- * Faz push
+ * Executa operação com retry e backoff exponencial
+ * @param {Function} operation - Função a executar
+ * @param {number} [maxRetries=3] - Máximo de tentativas
+ * @param {number} [baseDelay=1000] - Delay base em ms
+ * @returns {Promise<boolean>} Sucesso da operação
+ */
+async function retryWithBackoff(operation, maxRetries = 3, baseDelay = 1000) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await operation();
+      if (attempt > 1) {
+        ImprovementLogger.info(`✅ Operação bem-sucedida na tentativa ${attempt}`);
+      }
+      return result;
+    } catch (error) {
+      if (attempt === maxRetries) {
+        ImprovementLogger.error(`❌ Falha após ${maxRetries} tentativas`, { error: error.message });
+        return false;
+      }
+      
+      const delay = baseDelay * Math.pow(2, attempt - 1);
+      ImprovementLogger.warn(`⚠️ Tentativa ${attempt} falhou, retry em ${delay}ms...`, { 
+        error: error.message 
+      });
+      
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  return false;
+}
+
+/**
+ * Faz push com retry automático
  */
 function pushBranch(branch) {
-  try {
+  return retryWithBackoff(async () => {
     execSync(`git push -u origin ${branch}`, { cwd: process.cwd() });
     return true;
-  } catch (e) {
-    console.log('⚠️ Erro no push:', e.message);
-    return false;
-  }
+  }, 3, 1000);
 }
 
 /**
@@ -470,7 +499,7 @@ async function run() {
     const committed = commitChanges(improvement.title);
     
     if (committed) {
-      const pushed = pushBranch(branch);
+      const pushed = await pushBranch(branch);
       
       if (pushed) {
         logger.info('🚀 Push realizado com sucesso', { branch });
