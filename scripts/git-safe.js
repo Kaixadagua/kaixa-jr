@@ -271,6 +271,83 @@ class GitOperations {
   }
 
   // ---------------------------------------------------------------------------
+  // Pull Requests (via GitHub CLI)
+  // ---------------------------------------------------------------------------
+
+  createPR(options = {}) {
+    const { 
+      title, 
+      body = '', 
+      base = 'main',
+      draft = false,
+      autoMerge = false
+    } = options;
+
+    // Verifica se gh CLI está disponível
+    const ghCheck = this.executor.execute('gh --version', { ignoreError: true });
+    if (!ghCheck.success) {
+      return { 
+        success: false, 
+        error: 'GitHub CLI (gh) não instalado. Instale: https://cli.github.com' 
+      };
+    }
+
+    let cmd = `gh pr create --title "${title.replace(/"/g, '\\"')}"`;
+    
+    if (body) {
+      cmd += ` --body "${body.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`;
+    } else {
+      cmd += ' --fill'; // Usa mensagem do commit como body
+    }
+    
+    cmd += ` --base ${base}`;
+    if (draft) cmd += ' --draft';
+    if (autoMerge) cmd += ' --auto'; // Auto-merge após checks
+
+    const result = this.executor.execute(cmd, { timeout: 60000 });
+    
+    if (result.success) {
+      // Extrai URL do PR da saída
+      const prUrl = result.output.match(/https:\/\/github\.com\/[^\s]+/)?.[0];
+      this.logger.success('PR_CREATE', { title, base, draft, url: prUrl });
+      return { success: true, title, url: prUrl, output: result.output };
+    }
+    
+    return { success: false, error: result.error };
+  }
+
+  listPRs(options = {}) {
+    const { state = 'open', limit = 10 } = options;
+    const result = this.executor.execute(
+      `gh pr list --state ${state} --limit ${limit} --json number,title,author,headRefName,url`,
+      { ignoreError: true }
+    );
+    
+    if (result.success) {
+      const prs = JSON.parse(result.output);
+      this.logger.success('PR_LIST', { count: prs.length, state });
+      return { success: true, prs };
+    }
+    
+    return { success: false, error: result.error };
+  }
+
+  viewPR(branch) {
+    const result = this.executor.execute(
+      `gh pr view ${branch} --json number,title,url,state,mergeStateStatus`,
+      { ignoreError: true }
+    );
+    
+    if (result.success) {
+      const pr = JSON.parse(result.output);
+      this.logger.success('PR_VIEW', { number: pr.number, state: pr.state });
+      return { success: true, pr };
+    }
+    
+    return { success: false, error: result.error };
+  }
+
+  // ---------------------------------------------------------------------------
   // Remote
   // ---------------------------------------------------------------------------
 
@@ -431,6 +508,53 @@ class GitWorkflows {
     this.git.executor.execute('git clean -fd', { ignoreError: true });
     return { success: true, target };
   }
+
+  /**
+   * Workflow: Feature completo com PR
+   * Cria branch, commit, push E abre PR em um comando
+   */
+  featureComplete(branchName, commitMessage, options = {}) {
+    const { 
+      files = '.',
+      prTitle = commitMessage,
+      prBody = '',
+      base = 'main',
+      draft = false
+    } = options;
+
+    // 1. Feature commit (branch + commit + push)
+    const feature = this.featureCommit(branchName, commitMessage, files);
+    if (!feature.success) {
+      return { success: false, error: feature.error, stage: 'feature-commit' };
+    }
+
+    // 2. Criar PR
+    const pr = this.git.createPR({
+      title: prTitle,
+      body: prBody || `Changes made:\n- ${commitMessage}`,
+      base,
+      draft
+    });
+
+    if (!pr.success) {
+      return { 
+        success: false, 
+        error: pr.error, 
+        stage: 'pr-create',
+        feature 
+      };
+    }
+
+    return {
+      success: true,
+      branch: branchName,
+      commit: commitMessage,
+      pr: {
+        title: prTitle,
+        url: pr.url
+      }
+    };
+  }
 }
 
 // =============================================================================
@@ -461,11 +585,19 @@ Comandos:
   safe-pull                 Pull com stash automático
   hard-reset [target]       Reset hard para target (padrão: HEAD)
   
+Pull Requests (requer GitHub CLI):
+  pr <titulo> [body]        Criar PR
+  pr-draft <titulo> [body]  Criar PR em draft
+  pr-list [state] [limit]   Listar PRs (state: open/closed/merged)
+  pr-view [branch]          Ver PR da branch atual
+  feature-pr <b> <msg>      Feature completa: branch + commit + push + PR
+  
 Exemplos:
   node scripts/git-safe.js status
   node scripts/git-safe.js create-branch feature/nova-func
   node scripts/git-safe.js commit "Minha mensagem"
   node scripts/git-safe.js feature feature/x "feat: nova funcionalidade"
+  node scripts/git-safe.js feature-pr feature/x "feat: nova funcionalidade"
 `);
 }
 
@@ -582,6 +714,68 @@ function main() {
     case 'hard-reset':
       result = workflows.hardReset(args[1]);
       console.log(result.success ? `✅ Reset to ${result.target}` : `❌ Failed`);
+      break;
+
+    case 'pr':
+      result = git.createPR({
+        title: args[1] || 'PR: Changes',
+        body: args.slice(2).join(' ') || '',
+        base: 'main',
+        draft: false
+      });
+      console.log(result.success 
+        ? `✅ PR criado: ${result.url}` 
+        : `❌ ${result.error}`);
+      break;
+
+    case 'pr-draft':
+      result = git.createPR({
+        title: args[1] || 'Draft: Changes',
+        body: args.slice(2).join(' ') || '',
+        base: 'main',
+        draft: true
+      });
+      console.log(result.success 
+        ? `📝 Draft PR criado: ${result.url}` 
+        : `❌ ${result.error}`);
+      break;
+
+    case 'pr-list':
+      result = git.listPRs({ state: args[1] || 'open', limit: parseInt(args[2]) || 10 });
+      if (result.success) {
+        console.log(`\n📋 PRs (${result.prs.length}):`);
+        result.prs.forEach(p => {
+          console.log(`  #${p.number}: ${p.title} by @${p.author.login}`);
+          console.log(`     ${p.url}`);
+        });
+      } else {
+        console.log(`❌ ${result.error}`);
+      }
+      break;
+
+    case 'pr-view':
+      result = git.viewPR(args[1] || 'HEAD');
+      if (result.success) {
+        console.log(`\n🔍 PR #${result.pr.number}: ${result.pr.title}`);
+        console.log(`   State: ${result.pr.state}`);
+        console.log(`   URL: ${result.pr.url}`);
+      } else {
+        console.log(`❌ ${result.error}`);
+      }
+      break;
+
+    case 'feature-pr':
+      result = workflows.featureComplete(
+        args[1], // branch
+        args.slice(2).join(' '), // commit message
+        { 
+          prTitle: args.slice(2).join(' '),
+          base: 'main' 
+        }
+      );
+      console.log(result.success 
+        ? `✅ Feature + PR criados:\n   Branch: ${result.branch}\n   PR: ${result.pr.url}` 
+        : `❌ ${result.error} (stage: ${result.stage || 'unknown'})`);
       break;
 
     default:
