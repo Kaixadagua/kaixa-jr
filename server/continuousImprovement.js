@@ -16,6 +16,31 @@ const path = require('path');
  */
 const ImprovementLogger = {
   /**
+   * Garante que um arquivo existe, criando-o se necessário
+   * @param {string} filePath - Caminho do arquivo
+   * @param {string} [defaultContent=''] - Conteúdo padrão se arquivo não existir
+   * @returns {Object} Resultado da operação
+   */
+  ensureFileExists(filePath, defaultContent = '') {
+    const fullPath = path.resolve(process.cwd(), filePath);
+    const dir = path.dirname(fullPath);
+    
+    // Cria diretórios recursivamente se não existirem
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      this.info(`📁 Diretório criado: ${dir}`);
+    }
+    
+    // Cria arquivo se não existir
+    if (!fs.existsSync(fullPath)) {
+      fs.writeFileSync(fullPath, defaultContent);
+      this.info(`📄 Arquivo criado: ${filePath}`);
+      return { created: true, file: filePath };
+    }
+    
+    return { created: false, file: filePath };
+  },
+  /**
    * Níveis de log
    * @readonly
    * @enum {string}
@@ -32,6 +57,7 @@ const ImprovementLogger = {
    * @param {string} level - Nível do log
    * @param {string} message - Mensagem
    * @param {Object} [meta] - Metadados opcionais
+   * @returns {Object} Entry do log
    */
   log(level, message, meta = {}) {
     const timestamp = new Date().toISOString();
@@ -193,9 +219,14 @@ function getTimestamp() {
 
 /**
  * Adiciona JSDoc
+ * @returns {Object} Resultado da melhoria
  */
 function addJSDoc() {
   const file = 'src/core/utils.js';
+  
+  // Garante que o arquivo existe
+  ImprovementLogger.ensureFileExists(file, '// Utils module\n');
+  
   const content = `/**
  * Função utilitária adicionada em ${new Date().toISOString()}
  * @param {string} input - Input string
@@ -214,9 +245,19 @@ module.exports = { processInput };
 
 /**
  * Adiciona teste
+ * @returns {Object} Resultado da melhoria
  */
 function addTest() {
   const file = 'tests/core/config.test.js';
+  
+  // Garante que o arquivo existe com estrutura básica
+  ImprovementLogger.ensureFileExists(file, `const { Config } = require('../../src/core/config');
+
+describe('Config', () => {
+  // Tests will be added here
+});
+`);
+  
   const test = `
   it('should handle edge case: empty config', () => {
     const config = new Config();
@@ -264,9 +305,14 @@ module.exports = StringUtils;
 
 /**
  * Adiciona comentário
+ * @returns {Object} Resultado da melhoria
  */
 function addComment() {
   const file = 'src/core/config.js';
+  
+  // Garante que o arquivo existe
+  ImprovementLogger.ensureFileExists(file, '// Config module\n');
+  
   const comment = `// NOTE: Configuração carregada em ${new Date().toLocaleString()}
 // Esta classe gerencia todas as configurações do sistema
 `;
@@ -322,9 +368,14 @@ console.log('Valid:', validation.valid);
 
 /**
  * Adiciona validação
+ * @returns {Object} Resultado da melhoria
  */
 function addValidation() {
   const file = 'src/core/logger.js';
+  
+  // Garante que o arquivo existe
+  ImprovementLogger.ensureFileExists(file, '// Logger module\n');
+  
   const validation = `
   /**
    * Valida nível de log
@@ -347,9 +398,14 @@ function addValidation() {
 
 /**
  * Atualiza CHANGELOG
+ * @returns {Object} Resultado da melhoria
  */
 function updateChangelog() {
   const file = 'CHANGELOG.md';
+  
+  // Garante que o arquivo existe
+  ImprovementLogger.ensureFileExists(file, '# Changelog\n\n## [Unreleased]\n\n');
+  
   const entry = `\n## [1.0.3] - ${new Date().toISOString().slice(0, 10)}
 
 ### Melhorias Automáticas
@@ -366,13 +422,19 @@ function updateChangelog() {
 }
 
 /**
- * Cria branch
+ * Cria branch para melhoria
+ * @param {string} timestamp - Timestamp único
+ * @returns {Object|null} Dados da branch criada ou null se falhou
  */
 function createBranch(timestamp) {
   const branchName = `feature/auto-improvement-${timestamp}`;
   try {
     execSync(`git checkout -b ${branchName}`, { cwd: process.cwd() });
-    return branchName;
+    return {
+      name: branchName,
+      created: true,
+      timestamp: new Date().toISOString()
+    };
   } catch (e) {
     console.log('⚠️ Erro ao criar branch:', e.message);
     return null;
@@ -380,7 +442,9 @@ function createBranch(timestamp) {
 }
 
 /**
- * Faz commit
+ * Faz commit das mudanças
+ * @param {string} message - Mensagem do commit
+ * @returns {boolean} Sucesso da operação
  */
 function commitChanges(message) {
   try {
@@ -394,7 +458,9 @@ function commitChanges(message) {
 }
 
 /**
- * Faz push
+ * Faz push da branch
+ * @param {string} branch - Nome da branch
+ * @returns {boolean} Sucesso da operação
  */
 function pushBranch(branch) {
   try {
@@ -442,6 +508,9 @@ function cleanOldMetrics() {
 
 /**
  * Documenta melhoria local
+ * @param {Object} improvement - Dados da melhoria
+ * @param {Object} result - Resultado da execução
+ * @returns {string} Caminho do arquivo criado
  */
 function documentLocal(improvement, result) {
   const timestamp = getTimestamp();
@@ -474,6 +543,7 @@ ${improvement.title}
   
   fs.writeFileSync(filename, content);
   console.log(`📝 Documentado: ${filename}`);
+  return filename;
 }
 
 /**
@@ -505,14 +575,14 @@ async function run() {
   const timestamp = Date.now().toString(36);
   const branch = createBranch(timestamp);
   
-  if (branch) {
+  if (branch && branch.name) {
     const committed = commitChanges(improvement.title);
     
     if (committed) {
-      const pushed = pushBranch(branch);
+      const pushed = pushBranch(branch.name);
       
       if (pushed) {
-        logger.info('🚀 Push realizado com sucesso', { branch });
+        logger.info('🚀 Push realizado com sucesso', { branch: branch.name });
         
         // Documenta
         documentLocal(improvement, result);
@@ -524,11 +594,11 @@ async function run() {
         
         logger.info('✅ MELHORIA COMPLETA!', { 
           success: true, 
-          branch, 
+          branch: branch.name, 
           file: result.file 
         });
         
-        return { success: true, branch, file: result.file };
+        return { success: true, branch: branch.name, file: result.file };
       }
     }
   }
