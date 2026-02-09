@@ -15,6 +15,12 @@
 | `system-cleanup.js` | Limpeza e manutenção | `node scripts/system-cleanup.js` |
 | `improvement-quickview.js` | QuickView de melhorias | `node scripts/improvement-quickview.js` |
 
+### Lib (Utilitários)
+| Módulo | Descrição | Uso |
+|--------|-----------|-----|
+| `cacheManager.js` | **Cache com TTL** | `require('./scripts/lib/cacheManager')` |
+| `logger.js` | Logger estruturado | `require('./scripts/lib/logger')` |
+
 ### PowerShell
 | Script | Descrição | Uso |
 |--------|-----------|-----|
@@ -59,5 +65,5 @@ node scripts/kaixa-metrics.js --mini  # 1 linha
 ```
 
 ---
-*Índice atualizado: 2026-02-08 18:45*
-*Melhoria #60 - Kaixa Metrics adicionado*
+*Índice atualizado: 2026-02-09 02:07*
+*Melhoria #72 - Cache Manager com TTL adicionado*
