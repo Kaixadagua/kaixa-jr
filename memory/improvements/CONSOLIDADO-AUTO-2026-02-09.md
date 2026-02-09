@@ -1,8 +1,8 @@
 # 📦 CONSOLIDADO DE MELHORIAS
 
-**Gerado em:** 09/02/2026, 05:50:52  
-**Total de melhorias:** 136  
-**Locais (backpressure):** 3  
+**Gerado em:** 09/02/2026, 16:56:35  
+**Total de melhorias:** 154  
+**Locais (backpressure):** 4  
 **PRs enviados:** 0  
 
 ---
@@ -11,10 +11,10 @@
 
 | Data | Quantidade | Locais | PRs |
 |------|-----------|--------|-----|
-| undefined/undefined/unknown | 2 | 0 | 0 |
-| 09/02/2026 | 9 | 0 | 0 |
+| undefined/undefined/unknown | 3 | 0 | 0 |
+| 09/02/2026 | 24 | 1 | 0 |
 | 08/02/2026 | 41 | 0 | 0 |
-| 07/02/2026 | 19 | 3 | 0 |
+| 07/02/2026 | 21 | 3 | 0 |
 | 04/02/2026 | 1 | 0 | 0 |
 | 03/02/2026 | 4 | 0 | 0 |
 | 02/02/2026 | 60 | 0 | 0 |
@@ -24,19 +24,33 @@
 ## undefined/undefined/unknown
 
 - 📝 **Geral**: - **Total de melhorias:** 12
-- 📝 **� https://github.com/Kaixadagua/kaixa-jr/pull/14**: **Branch:** `feature/backup-metrics-65` → **backupMetrics() - Backup versionado ...
+- 📝 **Geral**: **Quando liberar (≤5 PRs), executar:**
+- 📝 **� https://github.com/Kaixadagua/kaixa-jr/pull/14**: **Arquivo:** `scripts/reports/guardian-2026-02-09.json` → **Nova entrada de métr...
 
 ## 09/02/2026
 
 - 📝 **� Docs**: Atualiza índice de melhorias com métricas recentes
+- 📝 **�️ Tooling**: 🔧 Local (Backpressure ativo)
+- 📝 **� Métricas / Docs**: 📊 Métricas / Docs
+- 📝 **� **Local** (Backpressure ativo: 12 PRs)**: 📍 **Local** (Backpressure ativo: 12 PRs)
 - 📝 **� Aguardando janela de merge**: 🚀 Melhoria Contínua (Auto)
 - 📝 **Geral**: **Arquivo:** `scripts/reports/guardian-2026-02-08.json` → **Nova entrada de métr...
+- 📝 **� *Melhoria local executada durante backpressure ativo***: **Tipo:** Integração de Ferramenta
 - 📝 **� Aguardando merge para criar PR**: 🚀 Melhoria Contínua (Auto)
 - 📝 **� Aguardando merge para criar PR**: 🚀 Melhoria Contínua (Auto)
 - 📝 **� Código**: Adiciona script git-safe.js - wrapper seguro para operações git com retry, fallb...
 - 📝 **� Aguardando merge**: 🚀 Melhoria Contínua (Auto)
 - 📝 **� Aguardando merge para criar PR**: 🚀 Melhoria Contínua (Auto)
 - 📝 **� Aguardando merge**: 🚀 Melhoria Contínua (Auto)
+- 📝 **Geral**: **Data:** 2026-02-09 09:53
+- 📝 **� Kaixa Jr - Melhoria Contínua**: **Data:** 2026-02-09 10:38 (America/Sao_Paulo)
+- 📝 **� Aguardando merge para criar PR**: 🚀 Melhoria Contínua (Auto)
+- 📝 **� Aguardando merge para criar PR**: 🚀 Melhoria Contínua (Auto)
+- 📝 **� Aguardando merge para criar PR**: 🚀 Melhoria Contínua (Auto)
+- 📝 **� Aguardando merge para criar PR**: 🚀 Melhoria Contínua (Auto)
+- 📝 **Geral**: **Data:** 2026-02-09 14:26
+
+_E mais 4 melhorias..._
 
 ## 08/02/2026
 
@@ -81,9 +95,12 @@ _E mais 21 melhorias..._
 - 📝 **� Aguardando backpressure liberar para implementação**: 📝 Local (Backpressure ativo)
 - 📝 **� Aguardando backpressure liberar para implementação**: 📝 Local (Backpressure ativo)
 - 📝 **� Aguardando backpressure liberar para implementação**: 📝 Local (Backpressure ativo)
+- 📝 **� Aguardando backpressure liberar para implementação**: 📝 Local (Backpressure ativo)
+- 📝 **� Aguardando backpressure liberar para implementação**: 📝 Local (Backpressure ativo)
 - 📝 **Geral**: **Data:** 2026-02-07 21:36
 - 📝 **� Aguardando review**: 🚀 Melhoria Contínua (Auto)
-- 📝 **� Aguardando merge para criar PR**: 🚀 Melhoria Contínua (Auto)
+
+_E mais 1 melhorias..._
 
 ## 04/02/2026
 
@@ -109,17 +126,17 @@ Quando o backpressure liberar (≤5 PRs), estas melhorias devem ser implementada
 - [ ] **Geral**: Local (sem PR - backpressure ativo)
 - [ ] **Geral**: Local (sem PR - backpressure ativo)
 
-_E mais 67 pendentes..._
+_E mais 76 pendentes..._
 
 ---
 
 ## 📊 Estatísticas
 
 ### Por Categoria
-- 📝 Geral: 33
+- 📝 Geral: 37
 - 📝 � Código: 21
-- 📝 � Aguardando backpressure liberar para implementação: 15
-- 📝 � Aguardando merge para criar PR: 14
+- 📝 � Aguardando merge para criar PR: 21
+- 📝 � Aguardando backpressure liberar para implementação: 17
 - 📝 � Docs: 13
 - 📝 � Aguardando merge: 3
 - 📝 � Fix: 2
@@ -156,7 +173,12 @@ _E mais 67 pendentes..._
 - 📝 � Melhoria #60 - Sempre executando, nunca parando.: 1
 - 📝 � PR disponível em: https://github.com/Kaixadagua/kaixa-jr/pull/new/feature/ci-error-handling-2026-02-08: 1
 - 📝 � Docs: 1
+- 📝 �️ Tooling: 1
+- 📝 � Métricas / Docs: 1
+- 📝 � **Local** (Backpressure ativo: 12 PRs): 1
 - 📝 � Aguardando janela de merge: 1
+- 📝 � *Melhoria local executada durante backpressure ativo*: 1
+- 📝 � Kaixa Jr - Melhoria Contínua: 1
 - 📝 � https://github.com/Kaixadagua/kaixa-jr/pull/14: 1
 
 ---
