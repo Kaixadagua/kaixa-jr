@@ -32,6 +32,7 @@ Ferramentas utilitárias para o sistema de melhoria contínua.
 | `agent-guardian.js` | Guardian de agentes (legado) | `node scripts/agent-guardian.js` |
 | `setup-agentcorp.js` | Setup inicial do AgentCorp | `node scripts/setup-agentcorp.js` |
 | `kaixa-snapshot.js` | Captura snapshot do estado do sistema | `node scripts/kaixa-snapshot.js` |
+| `improvement-consolidator.js` | Consolida melhorias locais em relatórios | `node scripts/improvement-consolidator.js --auto` |
 
 ### PowerShell
 
@@ -151,6 +152,7 @@ Indicadores de maturidade e manutenção:
 | `smart-merge.ps1` | 🆕 Novo | Merge inteligente, em testes |
 | `git-safe.js` | 🆕 Novo | Wrapper seguro para git, validação em andamento |
 | `kaixa-snapshot.js` | 🆕 Novo | Snapshot de estado do sistema, em testes |
+| `improvement-consolidator.js` | 🆕 Novo | Consolidação automática de melhorias, recém criado |
 | `kaixa-watchdog.ps1` | ⚠️ Legado | Funcional mas será substituído |
 | `agent-guardian.js` | ⚠️ Legado | Versão anterior do guardian |
 

@@ -86,5 +86,38 @@
       "count": 12,
       "status": "red"
     }
+  },
+  {
+    "timestamp": "2026-02-09T08:28:06.870Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-09T08:33:23.604Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-09T08:40:02.302Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
   }
 ]
