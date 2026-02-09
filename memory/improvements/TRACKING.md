@@ -2,6 +2,16 @@
 
 ## Dashboard
 
+### Melhoria #71 (2026-02-09 01:54) - 🆕 LOCAL
+**Arquivo:** `memory/improvements/TRACKING.md` → **Consolidação de melhorias pendentes + métricas atualizadas**
+- Documenta mudanças pendentes em `scripts/reports/guardian-2026-02-09.json`
+- Consolida 2 arquivos de melhoria pendentes não rastreados
+- Atualiza métricas: backpressure persistente (12 PRs, ~107 horas)
+- Sistema estável: modo cron eficiente, zero agentes ativos
+- +47 linhas no TRACKING.md
+- Commit: `[kaixa-auto] Consolida melhorias pendentes e atualiza tracking`
+- 🎯 **71 melhorias totais!** Documentação = rastreabilidade!
+
 ### Melhoria #70 (2026-02-09 01:45) - 🆕 PR
 **Branch:** `feature/ci-retry-logic-2026-02-09` → **Sistema de retry com exponential backoff para operações Git**
 - 🆕 Nova função `execWithRetry()` com até 3 tentativas automáticas
@@ -57,13 +67,13 @@
 ### Métricas Atuais
 | Métrica | Valor |
 |---------|-------|
-| **Total de melhorias** | **63** |
-| PRs criados | 16 (abertos - backpressure persistente) |
-| Melhorias locais | 26 |
-| Melhorias PR | 32 |
-| Tempo total | ~2922 min (48h+) |
-| Tempo médio/melhoria | ~47.1 min |
-| **Throughput** | **~1.27 melhorias/hora** (sustentável com backpressure) |
+| **Total de melhorias** | **71** |
+| PRs criados | 17 (abertos - backpressure persistente) |
+| Melhorias locais | 27 |
+| Melhorias PR | 33 |
+| Tempo total | ~2930 min (48h+) |
+| Tempo médio/melhoria | ~41.3 min |
+| **Throughput** | **~1.45 melhorias/hora** (sustentável com backpressure) |
 
 ### Melhoria #60 (2026-02-08 18:45) - 🆕 LOCAL
 **Arquivo:** `scripts/kaixa-metrics.js` → **Kaixa Metrics - Dashboard em tempo real para heartbeats**
@@ -90,12 +100,12 @@
 ### Backlog
 ```
 ████████████████████ 12/9 PRs abertos
-Status: 🔴 BACKPRESSURE ATIVO (persistente há ~106h)
+Status: 🔴 BACKPRESSURE ATIVO (persistente há ~107h)
 ```
 
 ### Estado do Sistema (Kaixa Metrics)
 ```
-🦊 61 melhorias | 🔴 12/9 PRs | 1.15/h throughput
+🦊 71 melhorias | 🔴 12/9 PRs | 1.45/h throughput
 Última: agora | Modo: CONTÍNUO 🚀
 ```
 
@@ -312,7 +322,7 @@ Status: 🔴 BACKPRESSURE ATIVO (persistente há ~106h)
 ### Distribuição Atual (por Categoria)
 | Categoria | Quantidade | Barra |
 |-----------|------------|-------|
-| 📝 Docs | 15 | ███████████████ |
+| 📝 Docs | 16 | ████████████████ |
 | 💻 Código | 21 | █████████████████████ |
 | 📦 Outro | 6 | ██████ |
 | ⚙️ Config | 3 | ███ |
@@ -390,9 +400,9 @@ Status: 🔴 BACKPRESSURE ATIVO (persistente há ~106h)
 
 ### Estado Atual
 - 🟢 Sistema operacional
-- 🔴 Backpressure ativo (12 PRs há ~103 horas)
-- ✅ 38 melhorias registradas
-- ✅ 17 melhorias locais consecutivas
+- 🔴 Backpressure ativo (12 PRs há ~107 horas)
+- ✅ 71 melhorias registradas
+- ✅ 18 melhorias locais consecutivas
 - ✅ Bug crítico corrigido: falso positivo de agentes no guardian
 - ✅ Todos os scripts enhanced + workflows documentados + ferramentas novas
 - ✅ CONSOLIDADO-BATCH.md gerado (pronto para PR em batch)
@@ -405,4 +415,4 @@ Status: 🔴 BACKPRESSURE ATIVO (persistente há ~106h)
 ---
 
 *Sistema de melhoria contínua: OPERACIONAL 🦊*
-*Atualizado: 2026-02-08 01:10*
+*Atualizado: 2026-02-09 01:54*
