@@ -1,6 +1,19 @@
 # 📊 Tracking de Melhorias Contínuas
 
-## Dashboard - 2026-02-09 08:29
+## Dashboard - 2026-02-09 08:41
+
+### Melhoria #67 (2026-02-09 08:41) - 🆕 LOCAL
+**Arquivo:** `scripts/reports/guardian-2026-02-09.json` → **Consolidação de métricas do guardian**
+- +3 novas entradas de métricas (11:31, 11:37, 11:41) - execução cron atual
+- Commit: `[kaixa-auto] Melhoria #67 - Consolidação de métricas do guardian (08:41)`
+- Sistema estável: 0 agentes, 0 tokens, modo cron eficiente
+- Backpressure persistente: 12 PRs (🔴 110+ horas)
+- Arquivo de melhoria documentado: `2026-02-09T11-31-10-melhoria.md`
+- Pushado para branch `improve/scripts-readme`
+- Status: HEALTHY contínuo ✅
+- 🎯 **67 melhorias totais!** Observabilidade constante!
+
+### Melhoria #66 (2026-02-09 08:29) - 🆕 LOCAL
 
 ### Melhoria #66 (2026-02-09 08:29) - 🆕 LOCAL
 **Arquivo:** `scripts/reports/guardian-2026-02-09.json` → **Nova entrada de métricas do Guardian**
