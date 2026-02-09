@@ -2,6 +2,21 @@
 
 ## Dashboard
 
+### Melhoria #72 (2026-02-09 02:07) - 🆕 PR
+**Branch:** `feature/cache-manager-ttl-2026-02-09` → **Cache Manager com TTL - sistema de cache em memória**
+- **Novo módulo:** `scripts/lib/cacheManager.js` (260 linhas, JSDoc completo)
+  - `set/get/has/delete` - Operações básicas com TTL
+  - `memoize(fn, ttlMs)` - Memoização automática de funções
+  - `getOrSet(key, factory, ttlMs)` - Lazy loading com cache
+  - `getStats()` - Estatísticas de hit/miss rate
+- **Testes:** `tests/cacheManager.test.js` (7 testes automatizados)
+- **Uso prático:** Cachear resultados de comandos git, métricas, dados computacionalmente caros
+- **Zero dependências externas** - pure Node.js
+- Atualização do `scripts/INDEX.md` com nova seção "Lib (Utilitários)"
+- Commit: `[kaixa-auto] Cache Manager com TTL - sistema de cache em memória`
+- 🎯 **72 melhorias totais!** Cache inteligente = performance! 🚀
+🔗 https://github.com/Kaixadagua/kaixa-jr/pull/69
+
 ### Melhoria #71 (2026-02-09 01:54) - 🆕 LOCAL
 **Arquivo:** `memory/improvements/TRACKING.md` → **Consolidação de melhorias pendentes + métricas atualizadas**
 - Documenta mudanças pendentes em `scripts/reports/guardian-2026-02-09.json`
