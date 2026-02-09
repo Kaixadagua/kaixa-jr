@@ -2,47 +2,84 @@
 
 Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
 
-## Scripts Personalizados (Kaixa Jr)
+## Scripts - Estrutura Atual (2026-02-09)
 
 Localizados em `scripts/`:
 
-- **kaixa-watchdog.ps1** → Monitora sessões ativas, reinicia se travado
-- **context-compactor.ps1** → Flush contexto quando >200k tokens
-- **state-backup.ps1** → Snapshot a cada 10min (git + contexto)
-- **smart-merge.ps1** → Pré-check de PRs com rollback automático
-- **git-sync.ps1** → Sincronização segura com remote (dry-run, force)
-- **check-backpressure.ps1** → Verifica backlog de PRs (JSON + verbose + oldest PR)
-- **melhoria-status.js** → Dashboard de melhorias (categorização, metadados, stats)
-- **cron-report.js** → Report elegante para execuções de melhoria contínua
-- **scripts-index.js** → Índice interativo de todos os scripts
-- **context-compactor.js** → Análise e gestão de contexto
-- **repo-init.js** → Inicialização e organização do repositório
-- **health-check.js** → Health check com backpressure e sessões
-- **auto-commit.js** → Auxilia commits com mensagens sugeridas + backpressure check
-- **melhoria-consolidator.js** → Consolida melhorias locais para batch PR
-- **status.bat** → Status rápido (git, backpressure, 5 principais scripts)
-- **scripts/README.md** → Documentação completa dos scripts
-- **scripts/INDEX.md** → Índice rápido de referência
+### 🦊 Core Kaixa
+| Script | Descrição |
+|--------|-----------|
+| **kaixa-guardian.js** | Guardian principal - orquestra melhorias e health checks |
+| **kaixa-watchdog.ps1** | Monitora sessões ativas, reinicia se travado |
+| **kaixa-metrics.js** | Coleta métricas de execução |
+| **kaixa-snapshot.js** | Snapshot do estado atual |
+| **kaixa-report-35min.js** | Report periódico (35min) |
 
-### Uso Rápido
-```bash
-# Status rápido (Windows)
-.\status.bat
+### 🩺 Health & Monitoring
+| Script | Descrição |
+|--------|-----------|
+| **health-check.js** | Health check geral do sistema |
+| **agent-guardian.js** | Monitoramento de agentes |
+| **improvement-health.js** | Saúde do pipeline de melhorias |
+| **backpressure-analyzer.js** | Análise de backlog de PRs |
 
-# Verificar saúde do ambiente
-node scripts/health-check.js
+### 📝 Melhorias & Tracking
+| Script | Descrição |
+|--------|-----------|
+| **cron-improvement.js** | Execução de melhorias (cron) |
+| **improvement-consolidator.js** | Consolida melhorias para batch PR |
+| **improvement-quickview.js** | Visualização rápida de melhorias |
 
-# Verificar backpressure
-.\scripts\check-backpressure.ps1
+### 💾 Contexto & Estado
+| Script | Descrição |
+|--------|-----------|
+| **context-compactor.js** / **.ps1** | Flush contexto quando grande |
+| **state-backup.ps1** | Snapshot a cada 10min (git + contexto) |
+| **system-cleanup.js** | Limpeza de arquivos temporários |
 
-# Status de melhorias
-node scripts/melhoria-status.js
-```
+### 🔧 Git & Deploy
+| Script | Descrição |
+|--------|-----------|
+| **git-safe.js** | Operações seguras de git |
+| **auto-commit.js** | Auxilia commits com mensagens sugeridas |
+| **smart-merge.ps1** | Pré-check de PRs com rollback |
+| **pr-auto-queue.js** | Fila automática de PRs |
+| **deploy.sh** | Script de deploy |
+
+### 📊 Relatórios
+| Script | Descrição |
+|--------|-----------|
+| **cron-report.js** | Report elegante para execuções |
+| **reports/** | Pasta com relatórios gerados |
+
+### 📚 Documentação
+| Arquivo | Descrição |
+|---------|-----------|
+| **README.md** | Documentação completa dos scripts |
+| **INDEX.md** | Índice rápido de referência |
+| **QUICK-REF.md** | Referência rápida |
+
+### 🔄 Sync & Lib
+| Script | Descrição |
+|--------|-----------|
+| **sync/** | Scripts de sincronização |
+| **lib/** | Bibliotecas compartilhadas |
+| **health/** | Checks específicos de saúde |
+
+### 🛠️ Setup & Utilitários
+| Script | Descrição |
+|--------|-----------|
+| **repo-init.js** | Inicialização e organização do repositório |
+| **setup-agentcorp.js** | Setup do agentcorp |
+| **submodule-manager.js** | Gerenciamento de submódulos |
+| **scripts-index.js** | Índice interativo de scripts |
+
+---
 
 ## Métricas do Sistema
 
 - **Workspace:** `C:\Users\joaov\.openclaw\workspace`
-- **Melhorias:** `memory/improvements/` (36 melhorias + CONSOLIDADO-BATCH.md)
+- **Melhorias:** `memory/improvements/` (36+ melhorias)
 - **Cadência:** Cron 5min + Heartbeat 30min
 - **Backpressure:** Ativo quando ≥9 PRs abertos
 
@@ -53,4 +90,4 @@ node scripts/melhoria-status.js
 
 ---
 
-*Atualizado: 2026-02-02 - scripts/README.md atualizado com novos scripts*
+*Atualizado: 2026-02-09 - Reestruturação completa de scripts*
