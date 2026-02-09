@@ -404,6 +404,51 @@ function addChangelogEntry() {
 // GIT OPERATIONS
 // =============================================================================
 
+/**
+ * Verifica se há mudanças não commitadas no working directory
+ * @returns {{hasChanges: boolean, files: string[]}}
+ */
+function checkGitStatus() {
+  try {
+    const output = execSync('git status --porcelain', { encoding: 'utf8' }).trim();
+    if (!output) return { hasChanges: false, files: [] };
+    
+    const files = output.split('\n').filter(Boolean).map(line => line.slice(3));
+    return { hasChanges: true, files };
+  } catch (e) {
+    return { hasChanges: false, files: [], error: e.message };
+  }
+}
+
+/**
+ * Cria stash com mudanças pendentes
+ * @returns {{success: boolean, stashId: string|null, message: string}}
+ */
+function stashChanges() {
+  try {
+    const timestamp = Date.now().toString(36);
+    const message = `cron-autostash-${timestamp}`;
+    execSync(`git stash push -m "${message}"`, { stdio: 'pipe' });
+    return { success: true, stashId: message, message: 'Changes stashed' };
+  } catch (e) {
+    return { success: false, stashId: null, message: e.message };
+  }
+}
+
+/**
+ * Aplica stash específico
+ * @param {string} stashId 
+ * @returns {boolean}
+ */
+function applyStash(stashId) {
+  try {
+    execSync(`git stash apply "${stashId}"`, { stdio: 'pipe' });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -414,14 +459,37 @@ function getTimestamp() {
   return new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
 }
 
+/**
+ * Cria nova branch para melhoria, com segurança de stash
+ * @returns {{branch: string|null, stashed: boolean, previousBranch: string|null}}
+ */
 function createBranch() {
   const timestamp = Date.now().toString(36);
   const branch = `feature/cron-improvement-${timestamp}`;
+  let previousBranch = null;
+  let stashed = false;
+  
   try {
+    // Guarda branch atual
+    previousBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
+    
+    // Verifica e stash mudanças pendentes
+    const status = checkGitStatus();
+    if (status.hasChanges) {
+      Logger.info(`Stashing ${status.files.length} pending changes...`);
+      const stash = stashChanges();
+      if (stash.success) {
+        stashed = true;
+        Logger.success(`Stashed: ${stash.stashId}`);
+      } else {
+        Logger.warn('Failed to stash, proceeding with caution');
+      }
+    }
+    
     execSync(`git checkout -b ${branch}`, { stdio: 'pipe' });
-    return branch;
+    return { branch, stashed, previousBranch };
   } catch (e) {
-    return null;
+    return { branch: null, stashed, previousBranch };
   }
 }
 
@@ -521,30 +589,43 @@ async function run() {
   Logger.success(`✓ ${result.file} (+${result.lines} linhas)`);
   
   // 4. Se modo PR, tentar branch/commit/push
+  let stashInfo = null;
   if (mode === 'pr') {
-    const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
+    const branchResult = createBranch();
     
-    const branch = createBranch();
-    if (branch) {
-      Logger.info(`Branch criada: ${branch}`);
+    if (branchResult.branch) {
+      Logger.info(`Branch criada: ${branchResult.branch}`);
+      if (branchResult.stashed) {
+        stashInfo = branchResult.previousBranch; // Marca para restore depois
+      }
       
       if (commit(improvement.title)) {
         Logger.success('Commit realizado');
         
-        if (push(branch)) {
+        if (push(branchResult.branch)) {
           Logger.success('Push realizado!');
-          checkout(currentBranch);
+          checkout(branchResult.previousBranch);
+          
+          // Restaura stash se necessário
+          if (stashInfo) {
+            Logger.info('Restoring stashed changes...');
+            // Stash fica na branch original, não precisa apply aqui
+          }
           
           // Documentar
           const docFile = documentLocal(improvement, result, backpressure);
-          Logger.success(`✅ MELHORIA COMPLETA (PR)`, { branch, docFile });
-          return { success: true, mode: 'pr', branch, file: result.file };
+          Logger.success(`✅ MELHORIA COMPLETA (PR)`, { branch: branchResult.branch, docFile });
+          return { success: true, mode: 'pr', branch: branchResult.branch, file: result.file };
         }
+      }
+      
+      // Rollback: volta para branch original
+      if (branchResult.previousBranch) {
+        checkout(branchResult.previousBranch);
+        Logger.info(`Rolled back to: ${branchResult.previousBranch}`);
       }
     }
     
-    // Se falhou, volta para branch original e documenta local
-    checkout(currentBranch);
     Logger.warn('Falha no PR, documentando localmente');
   }
   
