@@ -70,6 +70,58 @@ const ImprovementLogger = {
 };
 
 /**
+ * Executa função com retry e backoff exponencial
+ * @param {Function} fn - Função a executar (sync ou async)
+ * @param {Object} [options] - Opções de retry
+ * @param {number} [options.maxRetries=3] - Número máximo de tentativas
+ * @param {number} [options.baseDelay=1000] - Delay base em ms
+ * @param {number} [options.maxDelay=30000] - Delay máximo em ms
+ * @param {Function} [options.shouldRetry] - Função para decidir se deve retry (recebe erro, retorna boolean)
+ * @returns {Promise<*>} Resultado da função
+ * @throws {Error} Último erro após esgotar retries
+ * @example
+ * const result = await retryWithBackoff(() => fetchData(), { maxRetries: 5 });
+ */
+async function retryWithBackoff(fn, options = {}) {
+  const {
+    maxRetries = 3,
+    baseDelay = 1000,
+    maxDelay = 30000,
+    shouldRetry = () => true
+  } = options;
+  
+  let lastError;
+  
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      ImprovementLogger.info(`🔄 Retry attempt ${attempt + 1}/${maxRetries + 1}`);
+      const result = await fn();
+      
+      if (attempt > 0) {
+        ImprovementLogger.info(`✅ Sucesso após ${attempt + 1} tentativas`);
+      }
+      
+      return result;
+    } catch (error) {
+      lastError = error;
+      
+      if (attempt === maxRetries || !shouldRetry(error)) {
+        ImprovementLogger.error(`❌ Falhou após ${attempt + 1} tentativas`, { error: error.message });
+        throw error;
+      }
+      
+      // Backoff exponencial: delay = min(baseDelay * 2^attempt, maxDelay)
+      const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
+      ImprovementLogger.warn(`⏳ Aguardando ${delay}ms antes do retry...`, { attempt: attempt + 1 });
+      
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  
+  throw lastError;
+}
+
+/**
  * Detecta arquivos modificados no git
  * @returns {string[]} Lista de arquivos modificados
  */
@@ -137,6 +189,11 @@ function documentPendingChanges(files) {
  * Lista de melhorias possíveis
  */
 const IMPROVEMENTS = [
+  {
+    type: 'code',
+    title: 'retryWithBackoff() - Resiliência com retry exponencial',
+    action: () => ({ file: 'server/continuousImprovement.js', type: 'code', lines: 58 })
+  },
   {
     type: 'cleanup',
     title: 'Limpa métricas antigas do guardian (mantém últimas 50)',
