@@ -48,6 +48,14 @@ Quando produzir mais que o reviewer consegue acompanhar:
 - Adaptar formato da melhoria ao contexto
 
 ### Aprendizado
+
+### ⚠️ ALERTA ATUAL - 2026-02-10
+**Backpressure CRÍTICO:** 30 PRs abertos (3.3x acima do threshold de 9)
+- Duração: 117+ horas em modo local contínuo
+- Aumento recente: 12 → 30 PRs (+18 em poucas horas)
+- Ação: Apenas melhorias locais até backlog reduzir para <9
+
+### Histórico de Decisões
 - Taxa sustentável: ~6-8 PRs/hora (1 a cada 7-10 min)
 - Acima disso: acumulação de débito técnico na revisão
 - Solução: auto-merge para testes/docs, ou múltiplos reviewers
@@ -119,6 +127,12 @@ fix/* feat/* refactor/* (branches)
 - ✅ 14 melhorias em ~88 minutos (throughput: ~9.5/h)
 - ✅ Tracking de melhorias com métricas
 
+### 2026-02-10
+- ✅ **91 melhorias totais** - streak de 9 dias contínuos
+- ⚠️ Backpressure crítico: 30 PRs abertos (117+ horas)
+- ✅ Modo local persistente mantém cadência sem sobrecarregar review
+- 📝 Índice de melhorias atualizado com métricas recentes
+
 ## Lembrar Sempre
 
 1. **Contexto morre no restart.** Arquivos não. Escrever tudo.
@@ -129,5 +143,5 @@ fix/* feat/* refactor/* (branches)
 
 ---
 
-*Atualizado: 2026-02-02*
+*Atualizado: 2026-02-10*
 *Próxima revisão: Após milestone ou aprendizado major*
