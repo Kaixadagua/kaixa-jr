@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-09T21:27:11.000Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": "metrics_consolidation",
+    "backpressure": {
+      "count": 12,
+      "status": "red",
+      "duration": "113+ horas"
+    }
+  },
+  {
     "timestamp": "2026-02-09T20:56:58.000Z",
     "agentCount": 0,
     "totalTokens": 0,
