@@ -32,7 +32,7 @@ function getTimestamp() {
 function countImprovements() {
   try {
     const files = fs.readdirSync(IMPROVEMENTS_DIR);
-    return files.filter(f => f.endsWith('.json')).length;
+    return files.filter(f => f.endsWith('.md') && f.includes('melhoria')).length;
   } catch {
     return 0;
   }
@@ -41,7 +41,7 @@ function countImprovements() {
 function getLatestImprovements(limit = 5) {
   try {
     const files = fs.readdirSync(IMPROVEMENTS_DIR)
-      .filter(f => f.endsWith('.json'))
+      .filter(f => f.endsWith('.md') && f.includes('melhoria'))
       .map(f => ({
         name: f,
         path: path.join(IMPROVEMENTS_DIR, f),
@@ -52,15 +52,19 @@ function getLatestImprovements(limit = 5) {
 
     return files.map(f => {
       try {
-        const data = JSON.parse(fs.readFileSync(f.path, 'utf8'));
+        const content = fs.readFileSync(f.path, 'utf8');
+        // Extrai tipo da linha ## Tipo
+        const typeMatch = content.match(/## Tipo\s*\n([^\n]+)/);
+        // Extrai descrição da linha ## Descrição
+        const descMatch = content.match(/## Descri(?:ç|c)(?:ã|a)o\s*\n([^\n]+)/);
         return {
-          id: data.id || path.basename(f.name, '.json'),
-          type: data.type || 'unknown',
-          description: data.description || 'Sem descrição',
-          timestamp: data.timestamp || f.mtime.toISOString()
+          id: path.basename(f.name, '.md'),
+          type: typeMatch ? typeMatch[1].trim().replace(/^[^a-zA-Z]+/, '') : 'unknown',
+          description: descMatch ? descMatch[1].trim() : 'Sem descrição',
+          timestamp: f.mtime.toISOString()
         };
       } catch {
-        return { id: path.basename(f.name, '.json'), type: 'unknown', description: 'Erro ao ler', timestamp: f.mtime.toISOString() };
+        return { id: path.basename(f.name, '.md'), type: 'unknown', description: 'Erro ao ler', timestamp: f.mtime.toISOString() };
       }
     });
   } catch {
@@ -89,7 +93,7 @@ function getBackpressureStatus() {
 function getLastImprovementTime() {
   try {
     const files = fs.readdirSync(IMPROVEMENTS_DIR)
-      .filter(f => f.endsWith('.json'))
+      .filter(f => f.endsWith('.md') && f.includes('melhoria'))
       .map(f => fs.statSync(path.join(IMPROVEMENTS_DIR, f)).mtime)
       .sort((a, b) => b - a);
     
