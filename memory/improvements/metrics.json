@@ -1,10 +1,10 @@
 {
-  "totalRuns": 112,
-  "successfulRuns": 112,
+  "totalRuns": 113,
+  "successfulRuns": 113,
   "localImprovements": 38,
-  "prImprovements": 34,
+  "prImprovements": 35,
   "byType": {
-    "docs": 20,
+    "docs": 21,
     "code": 24,
     "refactor": 10,
     "config": 3,
@@ -32,15 +32,16 @@
     }
   ],
   "throughput24h": "0.97",
-  "lastUpdated": "2026-02-09T21:27:11.000Z",
-  "backpressureDuration": 113,
-  "totalImprovements": 76,
+  "lastUpdated": "2026-02-10T01:01:37.000Z",
+  "backpressureDuration": 114,
+  "totalImprovements": 77,
   "lastImprovement": {
-    "timestamp": "2026-02-09T21:29:00.000Z",
-    "type": "code",
-    "title": "Melhoria #76 - Guardian Report Consolidator",
-    "local": true,
-    "backpressure": true
+    "timestamp": "2026-02-10T01:01:37.000Z",
+    "type": "docs",
+    "title": "Melhoria #75 - Documenta mudanças pendentes em TRACKING.md",
+    "local": false,
+    "backpressure": true,
+    "prUrl": "https://github.com/Kaixadagua/kaixa-jr/pull/108"
   },
   "milestones": [
     {"n": 10, "date": "2026-02-02", "note": "Primeira dezena"},
