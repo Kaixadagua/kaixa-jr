@@ -71,7 +71,7 @@ function getLatestImprovements(limit = 5) {
 function getBackpressureStatus() {
   try {
     // Tenta obter de gh
-    const result = execSync('gh pr list --repo aura-io-saas/aurahub --state open --json number 2>nul || echo "[]"', { encoding: 'utf8', timeout: 10000 });
+    const result = execSync('gh pr list --repo Kaixadagua/kaixa-jr --state open --json number 2>nul || echo "[]"', { encoding: 'utf8', timeout: 10000 });
     const prs = JSON.parse(result || '[]');
     const count = Array.isArray(prs) ? prs.length : 0;
     

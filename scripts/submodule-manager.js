@@ -16,7 +16,7 @@ const path = require('path');
  * @constant {Object}
  */
 const CONFIG = {
-    submodules: ['aurahub'],
+    submodules: [],
     fixMode: process.argv.includes('--fix') || process.argv.includes('-f'),
     statusOnly: process.argv.includes('--status') || process.argv.includes('-s')
 };

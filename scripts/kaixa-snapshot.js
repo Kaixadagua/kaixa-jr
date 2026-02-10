@@ -119,7 +119,7 @@ function getImprovementMetrics() {
  */
 function getBackpressureStatus() {
     try {
-        const output = execSync('gh pr list --repo aura-io-saas/aurahub --state open --json number', { 
+        const output = execSync('gh pr list --repo Kaixadagua/kaixa-jr --state open --json number', { 
             encoding: 'utf8',
             timeout: 10000 
         });

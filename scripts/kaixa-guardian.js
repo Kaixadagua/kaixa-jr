@@ -44,14 +44,14 @@ function getSessionStatus() {
 }
 
 /**
- * Verifica backpressure de PRs no repositório aurahub
+ * Verifica backpressure de PRs no repositório kaixa-jr
  * @returns {Object} Status de backpressure { count: number, status: string }
  * @property {number} count - Quantidade de PRs abertos
  * @property {string} status - 'green'|'yellow'|'red' baseado nos thresholds
  */
 function checkBackpressure() {
     try {
-        const output = execSync('gh pr list --repo aura-io-saas/aurahub --state open --json number', { 
+        const output = execSync('gh pr list --repo Kaixadagua/kaixa-jr --state open --json number', { 
             encoding: 'utf8',
             timeout: 10000 
         });

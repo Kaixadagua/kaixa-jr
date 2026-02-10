@@ -12,7 +12,7 @@ const path = require('path');
 const logger = require('./lib/logger');
 
 const WORKSPACE = 'C:\\Users\\joaov\\.openclaw\\workspace';
-const REPO = 'aura-io-saas/aurahub';
+const REPO = 'Kaixadagua/kaixa-jr';
 
 logger.section('🦊 Kaixa Jr - Health Check');
 
@@ -69,7 +69,44 @@ if (fs.existsSync(memDir)) {
 
 // Verificar sessões
 logger.section('💓 Sessões');
-logger.info('Verificar status via: openclaw status');
+try {
+    const statusOutput = execSync('openclaw status --json', { encoding: 'utf8', cwd: WORKSPACE });
+    const status = JSON.parse(statusOutput);
+    
+    const activeSessions = status.sessions?.filter(s => s.status === 'active') || [];
+    const cronSessions = activeSessions.filter(s => s.id?.includes('cron:'));
+    const userSessions = activeSessions.filter(s => !s.id?.includes('cron:') && !s.id?.includes('system:'));
+    
+    logger.metric('Sessões ativas', activeSessions.length);
+    logger.metric('Cron jobs', cronSessions.length);
+    logger.metric('Sessões usuário', userSessions.length);
+    
+    // Alerta se sessões estão rodando há muito tempo
+    const now = Date.now();
+    const longRunning = activeSessions.filter(s => {
+        const startTime = s.startedAt ? new Date(s.startedAt).getTime() : 0;
+        return startTime && (now - startTime) > 30 * 60 * 1000; // >30min
+    });
+    
+    if (longRunning.length > 0) {
+        logger.warn(`${longRunning.length} sessão(ões) rodando há >30min`, 'Pode ser normal para tarefas longas');
+    }
+} catch (err) {
+    logger.info('Verificar status via: openclaw status');
+}
+
+// Verificar cron jobs
+logger.section('⏰ Cron Jobs');
+try {
+    const cronOutput = execSync('openclaw cron list', { encoding: 'utf8', cwd: WORKSPACE });
+    const cronLines = cronOutput.trim().split('\n').filter(l => l.includes('|'));
+    const activeCrons = cronLines.filter(l => !l.toLowerCase().includes('disabled'));
+    
+    logger.metric('Jobs configurados', cronLines.length - 1); // -1 for header
+    logger.metric('Jobs ativos', activeCrons.length - 1);
+} catch (err) {
+    logger.info('Não foi possível verificar cron jobs');
+}
 
 // Quick stats
 logger.section('⚡ Quick Stats');

@@ -17,7 +17,7 @@ const path = require('path');
 // =============================================================================
 
 const CONFIG = {
-  repo: 'aura-io-saas/aurahub',
+  repo: 'Kaixadagua/kaixa-jr',
   backpressureThreshold: 9,
   improvementsDir: 'memory/improvements',
   gitUser: 'Kaixa Jr',

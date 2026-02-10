@@ -1,0 +1,552 @@
+[
+  {
+    "timestamp": "2026-02-10T06:41:56.726Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T06:47:12.945Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T06:52:28.128Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T06:57:41.373Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:02:58.385Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:08:22.275Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:13:36.036Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:18:49.665Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:24:05.314Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:29:19.116Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:34:34.217Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:39:48.426Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:45:05.362Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:50:20.847Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T07:55:41.341Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:01:33.523Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:06:46.937Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:12:00.863Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:17:15.208Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:22:33.480Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:27:52.085Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:33:07.292Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:38:21.141Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:43:39.175Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:49:05.522Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:54:21.032Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T08:59:35.727Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:05:10.009Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:10:26.011Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:16:17.719Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:21:32.431Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:26:46.570Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:32:16.340Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:37:32.272Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:42:45.696Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:48:00.382Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:53:54.775Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T09:59:52.556Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:05:07.448Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:11:05.861Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:16:21.612Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:21:36.511Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:26:49.362Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:32:30.567Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:37:44.411Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:43:22.723Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:48:37.289Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:53:53.959Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T10:59:08.452Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-10T11:04:22.396Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 12,
+      "status": "red"
+    }
+  }
+]

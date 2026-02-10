@@ -63,7 +63,7 @@ function getImprovements() {
  */
 function getBackpressure() {
     try {
-        const output = execSync('gh pr list --repo aura-io-saas/aurahub --state open --json number', { 
+        const output = execSync('gh pr list --repo Kaixadagua/kaixa-jr --state open --json number', { 
             encoding: 'utf8',
             stdio: ['pipe', 'pipe', 'ignore']
         });

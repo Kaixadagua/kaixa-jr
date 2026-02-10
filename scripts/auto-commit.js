@@ -77,7 +77,7 @@ function main() {
     // Verificar backpressure via gh
     console.log('\n📊 Backpressure:');
     try {
-        const prOutput = run('gh pr list --repo aura-io-saas/aurahub --state open');
+        const prOutput = run('gh pr list --repo Kaixadagua/kaixa-jr --state open');
         const prCount = prOutput ? prOutput.split('\n').filter(l => l.trim()).length : 0;
         const status = prCount >= 9 ? '🔴' : prCount >= 6 ? '🟡' : '🟢';
         const warning = prCount >= 9 ? '\n  ⚠️  BACKPRESSURE ATIVO - Commit local recomendado' : '';
