@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-02-10T00:29:44.058Z",
+  "totalReports": 6,
+  "trends": {
+    "daysAnalyzed": 6,
+    "averageHealth": 0,
+    "averagePRs": 0,
+    "totalImprovements": 0,
+    "trendDirection": "➡️",
+    "healthTrend": 0
+  },
+  "history": [
+    {
+      "date": "2026-02-03"
+    },
+    {
+      "date": "2026-02-04"
+    },
+    {
+      "date": "2026-02-07"
+    },
+    {
+      "date": "2026-02-08"
+    },
+    {
+      "date": "2026-02-09"
+    },
+    {
+      "date": "2026-02-10"
+    }
+  ]
+}
