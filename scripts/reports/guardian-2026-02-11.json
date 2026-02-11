@@ -1,0 +1,112 @@
+[
+  {
+    "timestamp": "2026-02-11T00:04:44.599Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:09:57.836Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:15:56.067Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:21:08.593Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:26:21.718Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:31:35.585Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:36:50.297Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:42:09.505Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:47:52.371Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T00:53:07.035Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
+  }
+]
