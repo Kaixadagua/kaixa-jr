@@ -1,0 +1,16 @@
+{
+  "lastChecks": {
+    "guardian": 1739221380000,
+    "prQueue": 1739221380000,
+    "backpressure": 1739221380000
+  },
+  "streakDays": 9,
+  "totalImprovements": 95,
+  "throughput": 1.38,
+  "lastImprovement": "2026-02-10T18:03:00",
+  "mode": "local-backpressure",
+  "backpressureHours": 117,
+  "openPRs": 30,
+  "threshold": 9,
+  "status": "HEALTHY"
+}
