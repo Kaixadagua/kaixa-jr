@@ -1,0 +1,13 @@
+[
+  {
+    "timestamp": "2026-02-11T02:18:54.961Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 5,
+      "status": "green"
+    }
+  }
+]
