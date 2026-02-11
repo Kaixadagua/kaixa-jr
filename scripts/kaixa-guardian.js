@@ -3,7 +3,7 @@
  * @fileoverview Kaixa Guardian - Sistema de gestão saudável de agentes
  * @description Monitora sessões do OpenClaw, tokens e saúde do sistema
  * @author Kaixa Jr 🦊
- * @version 1.3.0
+ * @version 1.4.0
  * @usage node scripts/kaixa-guardian.js [--silent|-s]
  */
 
@@ -36,24 +36,34 @@ const CONFIG = {
  */
 function getSessionStatus() {
     try {
-        const output = execSync('openclaw sessions list --json', { encoding: 'utf8' });
+        const output = execSync('openclaw sessions list --json', { 
+            encoding: 'utf8',
+            timeout: 10000,
+            stdio: ['pipe', 'pipe', 'pipe']
+        });
         return JSON.parse(output);
-    } catch {
+    } catch (err) {
+        if (!CONFIG.silentMode) {
+            console.error('⚠️  Erro ao obter sessões:', err.message);
+        }
         return { sessions: [] };
     }
 }
 
 /**
  * Verifica backpressure de PRs no repositório kaixa-jr
- * @returns {Object} Status de backpressure { count: number, status: string }
+ * @returns {Object} Status de backpressure { count: number, status: string, repo: string }
  * @property {number} count - Quantidade de PRs abertos
  * @property {string} status - 'green'|'yellow'|'red' baseado nos thresholds
+ * @property {string} repo - Nome do repositório verificado
  */
 function checkBackpressure() {
+    const repo = 'Kaixadagua/kaixa-jr';
     try {
-        const output = execSync('gh pr list --repo Kaixadagua/kaixa-jr --state open --json number', { 
+        const output = execSync(`gh pr list --repo ${repo} --state open --json number`, { 
             encoding: 'utf8',
-            timeout: 10000 
+            timeout: 10000,
+            stdio: ['pipe', 'pipe', 'pipe']
         });
         const prs = JSON.parse(output);
         const count = prs.length;
@@ -62,9 +72,12 @@ function checkBackpressure() {
         if (count >= 9) status = 'red';
         else if (count >= 6) status = 'yellow';
         
-        return { count, status };
-    } catch {
-        return { count: -1, status: 'unknown' };
+        return { count, status, repo };
+    } catch (err) {
+        if (!CONFIG.silentMode) {
+            console.error(`⚠️  Erro ao verificar PRs em ${repo}:`, err.message);
+        }
+        return { count: -1, status: 'unknown', repo };
     }
 }
 
@@ -252,6 +265,13 @@ function main() {
     const bpIcon = { green: '🟢', yellow: '🟡', red: '🔴', unknown: '⚪' };
     const bpLabel = health.backpressure.count >= 0 ? `${health.backpressure.count} PRs` : 'N/A';
     console.log(`   ${bpIcon[health.backpressure.status]} Backpressure: ${bpLabel}`);
+    
+    // Sugestão baseada no backpressure
+    if (health.backpressure.status === 'yellow') {
+        console.log('   💡 Modo: apenas melhorias críticas');
+    } else if (health.backpressure.status === 'red') {
+        console.log('   📝 Modo: documentação/local apenas');
+    }
     
     if (health.systemCount > 0) {
         console.log(`   🖥️  Sessões sistema ignoradas: ${health.systemCount}`);

@@ -1,0 +1,37 @@
+[
+  {
+    "timestamp": "2026-02-11T03:18:06.731Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 8,
+      "status": "yellow"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T03:18:42.308Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 8,
+      "status": "yellow",
+      "repo": "Kaixadagua/kaixa-jr"
+    }
+  },
+  {
+    "timestamp": "2026-02-11T03:18:56.722Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 8,
+      "status": "yellow",
+      "repo": "Kaixadagua/kaixa-jr"
+    }
+  }
+]
