@@ -457,10 +457,11 @@ function checkout(branch) {
 // DOCUMENTAÇÃO LOCAL
 // =============================================================================
 
-function documentLocal(improvement, result, backpressure) {
+function documentLocal(improvement, result, backpressure, branch = null) {
   const timestamp = getTimestamp();
   const filename = `${CONFIG.improvementsDir}/${timestamp}-melhoria.md`;
   
+  const isPR = !!branch;
   const content = `# Melhoria: ${timestamp}
 
 ## Tipo
@@ -472,25 +473,28 @@ ${improvement.title}
 ## Contexto
 - **Backpressure:** ${backpressure.active ? '🔴 ATIVO' : '🟢 INATIVO'}
 - **PRs abertos:** ${backpressure.count}
-- **Modo:** Local (documentação)
+- **Modo:** ${isPR ? 'PR (código)' : 'Local (documentação)'}
 - **Trigger:** Cron job
+${branch ? `- **Branch:** \`${branch}\`` : ''}
 
 ## Arquivos Alterados
 - \`${result.file}\` (+${result.lines} linhas)
 
 ## Status
-✅ Implementada localmente
-⏳ Aguardando backpressure liberar para PR
+✅ ${isPR ? 'PR criado e enviado' : 'Implementada localmente'}
+${isPR ? '🔄 Aguardando review' : '⏳ Aguardando backpressure liberar para PR'}
 
-## Próximos Passos
+${isPR ? `## Próximos Passos
+1. Revisão de código
+2. Merge após aprovação` : `## Próximos Passos
 Quando backpressure < ${CONFIG.backpressureThreshold}:
 1. Criar branch \`feature/cron-improvement-<timestamp>\`
 2. Mover mudanças para branch
-3. Criar PR com referência a este documento
+3. Criar PR com referência a este documento`}
 
 ---
 *Melhoria automática gerada em ${new Date().toLocaleString('pt-BR')}* 🦊
-`;
+`
 
   fs.writeFileSync(filename, content);
   return filename;
@@ -515,41 +519,46 @@ async function run() {
   const improvement = selectImprovement(mode);
   Logger.info(`Melhoria: ${improvement.title}`);
   
-  // 3. Executar melhoria
+  // 3. Se modo PR, criar branch primeiro
+  let branch = null;
+  let currentBranch = null;
+  
+  if (mode === 'pr') {
+    currentBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
+    branch = createBranch();
+    if (branch) {
+      Logger.info(`Branch criada: ${branch}`);
+    }
+  }
+  
+  // 4. Executar melhoria (DEPOIS do checkout da branch)
   Logger.info('Executando melhoria...');
   const result = improvement.execute();
   Logger.success(`✓ ${result.file} (+${result.lines} linhas)`);
   
-  // 4. Se modo PR, tentar branch/commit/push
-  if (mode === 'pr') {
-    const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
-    
-    const branch = createBranch();
-    if (branch) {
-      Logger.info(`Branch criada: ${branch}`);
+  // 5. Se modo PR, tentar commit/push
+  if (mode === 'pr' && branch) {
+    if (commit(improvement.title)) {
+      Logger.success('Commit realizado');
       
-      if (commit(improvement.title)) {
-        Logger.success('Commit realizado');
+      if (push(branch)) {
+        Logger.success('Push realizado!');
+        checkout(currentBranch);
         
-        if (push(branch)) {
-          Logger.success('Push realizado!');
-          checkout(currentBranch);
-          
-          // Documentar
-          const docFile = documentLocal(improvement, result, backpressure);
-          Logger.success(`✅ MELHORIA COMPLETA (PR)`, { branch, docFile });
-          return { success: true, mode: 'pr', branch, file: result.file };
-        }
+        // Documentar
+        const docFile = documentLocal(improvement, result, backpressure, branch);
+        Logger.success(`✅ MELHORIA COMPLETA (PR)`, { branch, docFile });
+        return { success: true, mode: 'pr', branch, file: result.file };
       }
     }
     
     // Se falhou, volta para branch original e documenta local
-    checkout(currentBranch);
+    if (currentBranch) checkout(currentBranch);
     Logger.warn('Falha no PR, documentando localmente');
   }
   
   // 5. Documentar local
-  const docFile = documentLocal(improvement, result, backpressure);
+  const docFile = documentLocal(improvement, result, backpressure, branch);
   Logger.success(`✅ MELHORIA DOCUMENTADA (local)`, { docFile, file: result.file });
   
   return { success: true, mode: 'local', file: result.file, docFile };
