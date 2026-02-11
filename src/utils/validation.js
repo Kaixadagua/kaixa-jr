@@ -1,6 +1,6 @@
 
 /**
- * Validação de entrada adicionada em 2026-02-11T00:53:50.894Z
+ * Validação de entrada adicionada em 2026-02-11T01:09:54.081Z
  * @param {any} input - Valor a validar
  * @param {string} type - Tipo esperado
  * @returns {boolean}
