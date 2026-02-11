@@ -1,0 +1,36 @@
+{
+  "name": "agent-corp",
+  "version": "1.0.0",
+  "description": "Sistema de agentes de IA autônomos com fluxo contínuo de melhorias",
+  "main": "server/agentCorpWorker.js",
+  "scripts": {
+    "start": "node server/agentCorpWorker.js",
+    "worker": "node server/agentCorpWorker.js",
+    "improve": "node scripts/cron-improvement.js",
+    "health": "node scripts/health-check.js",
+    "guardian": "node scripts/kaixa-guardian.js",
+    "report": "node scripts/kaixa-report-35min.js",
+    "dev": "npm run worker"
+  },
+  "keywords": [
+    "agent",
+    "ai",
+    "automation",
+    "cron",
+    "continuous-improvement",
+    "kaixa"
+  ],
+  "author": "Kaixa Jr 🦊",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kaixadagua/kaixa-jr.git"
+  }
+}
