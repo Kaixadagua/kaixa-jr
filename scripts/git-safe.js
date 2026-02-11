@@ -311,6 +311,81 @@ class GitOperations {
   }
 
   // ---------------------------------------------------------------------------
+  // Sync & Rebase
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Sincroniza branch atual com remoto usando rebase
+   * @returns {{success: boolean, rebased: boolean, error?: string}}
+   */
+  sync() {
+    const current = this.currentBranch();
+    if (!current.success) {
+      return { success: false, rebased: false, error: 'Cannot get current branch' };
+    }
+
+    const branch = current.branch;
+    
+    // Fetch primeiro
+    const fetch = this.fetch();
+    if (!fetch.success) {
+      return { success: false, rebased: false, error: 'Fetch failed' };
+    }
+
+    // Tentar rebase
+    const result = this.executor.execute(`git rebase origin/${branch}`, { ignoreError: true });
+    
+    if (result.success) {
+      this.logger.success('SYNC', { branch, action: 'rebase' });
+      return { success: true, rebased: true };
+    }
+
+    // Se falhou, verificar se é conflito
+    const status = this.executor.execute('git diff --name-only --diff-filter=U', { ignoreError: true });
+    const hasConflicts = status.success && status.output.trim().length > 0;
+
+    if (hasConflicts) {
+      // Abortar rebase e avisar
+      this.executor.execute('git rebase --abort', { ignoreError: true });
+      this.logger.error('SYNC', { branch, error: 'Conflicts detected, rebase aborted' });
+      return { 
+        success: false, 
+        rebased: false, 
+        error: `Merge conflicts in: ${status.output.trim().split('\n').join(', ')}` 
+      };
+    }
+
+    // Outro erro
+    this.logger.error('SYNC', { branch, error: result.error });
+    return { success: false, rebased: false, error: result.error };
+  }
+
+  /**
+   * Sincroniza com stash automático
+   */
+  syncWithStash() {
+    const status = this.status();
+    let stashed = false;
+
+    if (!status.clean) {
+      const stash = this.stash('auto-stash-before-sync');
+      if (stash.success) stashed = true;
+    }
+
+    const sync = this.sync();
+    
+    if (stashed) {
+      if (sync.success) {
+        this.stashPop();
+      } else {
+        this.logger.warn('SYNC', { message: 'Sync failed, stash preserved' });
+      }
+    }
+
+    return { ...sync, stashed };
+  }
+
+  // ---------------------------------------------------------------------------
   // Stash
   // ---------------------------------------------------------------------------
 
@@ -460,12 +535,14 @@ Comandos:
   feature <branch> <msg>    Workflow: criar branch, commit, push
   safe-pull                 Pull com stash automático
   hard-reset [target]       Reset hard para target (padrão: HEAD)
+  sync                      Sincroniza com origin usando rebase (com stash automático)
   
 Exemplos:
   node scripts/git-safe.js status
   node scripts/git-safe.js create-branch feature/nova-func
   node scripts/git-safe.js commit "Minha mensagem"
   node scripts/git-safe.js feature feature/x "feat: nova funcionalidade"
+  node scripts/git-safe.js sync              # Rebase com origin, com stash automático
 `);
 }
 
@@ -582,6 +659,15 @@ function main() {
     case 'hard-reset':
       result = workflows.hardReset(args[1]);
       console.log(result.success ? `✅ Reset to ${result.target}` : `❌ Failed`);
+      break;
+
+    case 'sync':
+      result = git.syncWithStash();
+      if (result.success) {
+        console.log(`✅ Synced${result.rebased ? ' (rebased)' : ''}${result.stashed ? ' + stash' : ''}`);
+      } else {
+        console.log(`❌ ${result.error}`);
+      }
       break;
 
     default:
