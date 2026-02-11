@@ -119,5 +119,16 @@
       "count": 30,
       "status": "red"
     }
+  },
+  {
+    "timestamp": "2026-02-11T01:04:12.491Z",
+    "agentCount": 0,
+    "totalTokens": 0,
+    "status": "healthy",
+    "action": null,
+    "backpressure": {
+      "count": 30,
+      "status": "red"
+    }
   }
 ]
