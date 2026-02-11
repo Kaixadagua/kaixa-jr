@@ -1,91 +1,10 @@
 {
-  "runs": [
-    {
-      "timestamp": "2026-02-10T01:58:49.380Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T02:49:20.717Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T03:37:33.530Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T04:25:09.875Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T05:06:57.214Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T05:39:17.247Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T06:10:41.253Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T06:42:04.469Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T07:13:43.379Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T07:45:14.615Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T08:12:08.325Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T08:38:32.997Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T09:05:27.533Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T09:27:02.101Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T09:48:47.326Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T10:11:14.843Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    },
-    {
-      "timestamp": "2026-02-10T10:32:38.867Z",
-      "mode": "local",
-      "triggeredBy": "cron"
-    }
-  ],
-  "totalImprovements": 17,
-  "lastRun": "2026-02-10T10:32:38.867Z"
+  "runs": [],
+  "totalImprovements": 0,
+  "lastRun": null,
+  "currentProject": "agent-corp",
+  "projectPhase": "v1.0-init",
+  "previousTotal": 17,
+  "resetAt": "2026-02-10T22:55:00.000Z",
+  "message": "Contador zerado para fase Agent Corp - dev-kaixa"
 }

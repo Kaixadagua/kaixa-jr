@@ -17,12 +17,13 @@ const path = require('path');
 
 const CONFIG = {
   repo: 'Kaixadagua/kaixa-jr',
-  baseBranch: 'dev',
+  baseBranch: 'dev-kaixa',
   backpressureThreshold: 50,
   improvementsDir: 'memory/improvements',
   gitUser: 'Kaixa Jr',
   gitEmail: 'kaixa@aurahub.ai',
-  autoMerge: true
+  autoMerge: true,
+  currentProject: 'agent-corp'
 };
 
 // =============================================================================
