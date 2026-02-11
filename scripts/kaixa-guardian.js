@@ -292,3 +292,80 @@ function main() {
 }
 
 main();
+
+// ============================================================
+// UTILIDADES ADICIONADAS POR MELHORIA CONTÍNUA
+// ============================================================
+
+/**
+ * Formata uma duração em milissegundos para string legível
+ * @param {number} ms - Duração em milissegundos
+ * @returns {string} Duração formatada (ex: "2h 30m", "45s", "5d 12h")
+ * @example
+ * formatDuration(900000) // "15m"
+ * formatDuration(86400000) // "1d"
+ * formatDuration(3661000) // "1h 1m"
+ */
+function formatDuration(ms) {
+    if (ms < 0) return '0s';
+    if (ms < 1000) return `${ms}ms`;
+    
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) {
+        const remainingHours = hours % 24;
+        return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days}d`;
+    }
+    if (hours > 0) {
+        const remainingMinutes = minutes % 60;
+        return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+    }
+    if (minutes > 0) {
+        const remainingSeconds = seconds % 60;
+        return remainingSeconds > 0 ? `${minutes}m ${remainingSeconds}s` : `${minutes}m`;
+    }
+    return `${seconds}s`;
+}
+
+/**
+ * Calcula tempo relativo desde um timestamp
+ * @param {string|Date|number} timestamp - Timestamp de referência
+ * @returns {string} Tempo relativo (ex: "há 2 minutos", "há 1 hora")
+ * @example
+ * timeAgo(Date.now() - 120000) // "há 2 minutos"
+ * timeAgo('2026-02-08T23:00:00Z') // "há 30 minutos"
+ */
+function timeAgo(timestamp) {
+    const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+    
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return days === 1 ? 'há 1 dia' : `há ${days} dias`;
+    if (hours > 0) return hours === 1 ? 'há 1 hora' : `há ${hours} horas`;
+    if (minutes > 0) return minutes === 1 ? 'há 1 minuto' : `há ${minutes} minutos`;
+    return 'agora mesmo';
+}
+
+/**
+ * Exporta utilitários para uso em outros módulos
+ * @namespace GuardianUtils
+ */
+const GuardianUtils = {
+    formatDuration,
+    timeAgo,
+    isCronSession,
+    checkBackpressure
+};
+
+// Exporta para módulos Node.js
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { GuardianUtils, formatDuration, timeAgo };
+}
