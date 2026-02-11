@@ -1,0 +1,297 @@
+# ============================================================================
+# AGENT CORP - CONFIGURAÇÃO (.KIMI)
+# ============================================================================
+# Arquivo de configuração robusto para sistema de agentes autônomos
+# Última atualização: 2026-02-10
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# IDENTIDADE
+# ----------------------------------------------------------------------------
+agent:
+  name: "Kaixa Jr"
+  codename: "agent-corp"
+  version: "1.0.0"
+  emoji: "🦊"
+  motto: "Task → Done → Next Task → Keep"
+  
+# ----------------------------------------------------------------------------
+# REPOSITÓRIO
+# ----------------------------------------------------------------------------
+repository:
+  owner: "Kaixadagua"
+  name: "kaixa-jr"
+  full_name: "Kaixadagua/kaixa-jr"
+  base_branch: "dev"
+  stable_branch: "main"
+  remote: "origin"
+  
+# ----------------------------------------------------------------------------
+# GIT CONFIG
+# ----------------------------------------------------------------------------
+git:
+  user:
+    name: "Kaixa Jr"
+    email: "kaixa@aurahub.ai"
+  commit_prefix: "[kaixa-auto]"
+  branch_pattern: "feature/cron-improvement-{timestamp}"
+  auto_merge: true
+  delete_branch_after_merge: true
+  
+# ----------------------------------------------------------------------------
+# BACKPRESSURE (CONTROLE DE FLUXO)
+# ----------------------------------------------------------------------------
+backpressure:
+  enabled: true
+  thresholds:
+    green:
+      max_prs: 20
+      mode: "pr"
+      action: "create_pr_and_merge"
+    yellow:
+      max_prs: 35
+      mode: "pr_cautious"
+      action: "create_pr_batch"
+    red:
+      max_prs: 50
+      mode: "local"
+      action: "document_only"
+  current_threshold: 50
+  
+# ----------------------------------------------------------------------------
+# CRON CONFIGURAÇÕES
+# ----------------------------------------------------------------------------
+cron:
+  improvement:
+    enabled: true
+    interval_minutes: 5
+    script: "scripts/cron-improvement.js"
+    timeout_seconds: 60
+    retry_attempts: 3
+    retry_delay_ms: 5000
+    
+  worker:
+    enabled: true
+    interval_minutes: 10
+    script: "server/agentCorpWorker.js"
+    timeout_seconds: 120
+    
+  guardian:
+    enabled: true
+    interval_minutes: 5
+    script: "scripts/kaixa-guardian.js"
+    args: ["--silent"]
+    timeout_seconds: 30
+    
+  report:
+    enabled: true
+    interval_minutes: 35
+    script: "scripts/kaixa-report-35min.js"
+    
+# ----------------------------------------------------------------------------
+# LIMITES DO SISTEMA
+# ----------------------------------------------------------------------------
+limits:
+  agents:
+    max_concurrent: 2
+    max_per_session: 1
+    
+  tokens:
+    max_per_agent: 360000
+    warning_threshold: 300000
+    critical_threshold: 350000
+    
+  improvements:
+    max_per_hour: 12
+    cooldown_seconds: 300
+    
+  prs:
+    max_open: 50
+    auto_merge_timeout_seconds: 30
+    
+# ----------------------------------------------------------------------------
+# MELHORIAS - TIPOS E PRIORIDADES
+# ----------------------------------------------------------------------------
+improvements:
+  types:
+    - id: "code"
+      name: "Código"
+      priority: 1
+      can_pr: true
+      extensions: [".js", ".ts", ".py"]
+      
+    - id: "test"
+      name: "Testes"
+      priority: 2
+      can_pr: true
+      extensions: [".test.js", ".spec.js"]
+      
+    - id: "refactor"
+      name: "Refatoração"
+      priority: 3
+      can_pr: true
+      extensions: [".js", ".ts"]
+      
+    - id: "docs"
+      name: "Documentação"
+      priority: 4
+      can_pr: true
+      extensions: [".md", ".txt"]
+      
+    - id: "config"
+      name: "Configuração"
+      priority: 5
+      can_pr: true
+      extensions: [".json", ".yml", ".yaml"]
+      
+  categories:
+    - "core"
+    - "utils"
+    - "scripts"
+    - "docs"
+    - "config"
+    
+# ----------------------------------------------------------------------------
+# DIRETÓRIOS
+# ----------------------------------------------------------------------------
+directories:
+  improvements: "memory/improvements"
+  reports: "memory/reports"
+  scripts: "scripts"
+  server: "server"
+  docs: "docs"
+  logs: "logs"
+  temp: ".temp"
+  
+# ----------------------------------------------------------------------------
+# ARQUIVOS DE ESTADO
+# ----------------------------------------------------------------------------
+state:
+  heartbeat: "memory/heartbeat-state.json"
+  tracking: "memory/improvements/TRACKING.md"
+  tracking_meta: "memory/improvements/.tracking-meta.json"
+  report_pending: "memory/.report-pending"
+  guardian_report: "scripts/reports/guardian-{date}.json"
+  
+# ----------------------------------------------------------------------------
+# LOGGING
+# ----------------------------------------------------------------------------
+logging:
+  level: "info"  # debug, info, warn, error
+  colors: true
+  timestamps: true
+  output:
+    console: true
+    file: "logs/agent-corp.log"
+  rotation:
+    enabled: true
+    max_size_mb: 10
+    max_files: 5
+    
+# ----------------------------------------------------------------------------
+# HEALTH CHECK
+# ----------------------------------------------------------------------------
+health_check:
+  enabled: true
+  checks:
+    - name: "git"
+      command: "git status"
+      timeout_ms: 5000
+      
+    - name: "github_api"
+      command: "gh pr list --limit 1"
+      timeout_ms: 10000
+      
+    - name: "disk_space"
+      threshold_gb: 1
+      
+    - name: "memory"
+      threshold_percent: 90
+      
+# ----------------------------------------------------------------------------
+# WORKER CONFIG
+# ----------------------------------------------------------------------------
+worker:
+  enabled: true
+  endpoint: "http://localhost:8080/api"
+  port: 8080
+  host: "localhost"
+  tasks:
+    - "health-check"
+    - "metrics-update"
+    - "log-cleanup"
+    - "backup-state"
+    - "improvement-track"
+    - "code-improvement"
+  
+# ----------------------------------------------------------------------------
+# NOTIFICAÇÕES
+# ----------------------------------------------------------------------------
+notifications:
+  enabled: false
+  channels:
+    - type: "telegram"
+      enabled: false
+      chat_id: null
+      
+    - type: "discord"
+      enabled: false
+      webhook_url: null
+      
+    - type: "slack"
+      enabled: false
+      webhook_url: null
+      
+  events:
+    - "milestone"
+    - "backpressure_critical"
+    - "error_fatal"
+    
+# ----------------------------------------------------------------------------
+# SEGURANÇA
+# ----------------------------------------------------------------------------
+security:
+  auto_merge_bypass: true
+  admin_merge: true
+  force_push_branches: ["feature/*"]
+  protected_branches: ["main"]
+  require_approval: false
+  require_checks: false
+  
+# ----------------------------------------------------------------------------
+# MÉTRICAS
+# ----------------------------------------------------------------------------
+metrics:
+  enabled: true
+  collect:
+    - "improvements_count"
+    - "prs_open"
+    - "prs_merged"
+    - "prs_closed"
+    - "tokens_used"
+    - "execution_time"
+    - "success_rate"
+  
+  export:
+    format: "json"
+    destination: "memory/metrics/"
+    
+# ----------------------------------------------------------------------------
+# MODO DE DEBUG
+# ----------------------------------------------------------------------------
+debug:
+  enabled: false
+  dry_run: false  # Se true, não faz commits/pushes reais
+  verbose: false
+  
+# ----------------------------------------------------------------------------
+# VERSÃO E COMPATIBILIDADE
+# ----------------------------------------------------------------------------
+version:
+  config: "1.0.0"
+  min_agent_version: "1.0.0"
+  max_agent_version: "1.9.9"
+  
+# ============================================================================
+# FIM DO ARQUIVO .KIMI
+# ============================================================================
