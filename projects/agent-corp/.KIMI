@@ -22,3 +22,8 @@ limits:
   tokens: 360000
 
 auto_merge: true
+
+environment:
+  node_env: "production"
+  log_level: "info"
+  max_memory_mb: 512
