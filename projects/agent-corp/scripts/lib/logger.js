@@ -97,6 +97,16 @@ class Logger {
   success(msg, meta) { this._write('success', msg, meta); }
   fox(msg, meta) { this._write('fox', msg, meta); }
   
+  /**
+   * Log de métricas de performance
+   * @param {string} operation - Nome da operação
+   * @param {number} durationMs - Duração em ms
+   * @param {object} meta - Metadados adicionais
+   */
+  perf(operation, durationMs, meta = {}) {
+    this._write('info', `[PERF] ${operation}: ${durationMs}ms`, { duration: durationMs, ...meta });
+  }
+  
   section(title) {
     console.log('\n' + this._colorize('fox', `═══ ${title} ═══`) + '\n');
   }
